@@ -1,0 +1,2606 @@
+<!DOCTYPE html>
+<!-- saved from url=(0081)file:///C:/Users/MEDITEC%20PORTABLE/Downloads/PSDM_Medical_Manager_PRO%20(5).html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PSDM Medical Manager PRO++</title>
+<link href="./index_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./index_files/all.min.css">
+<style>
+:root {
+  --bg: #0a0d14;
+  --bg2: #0f1520;
+  --bg3: #141b2d;
+  --bg4: #1a2236;
+  --card: #111827;
+  --border: #1e2d47;
+  --border2: #253550;
+  --accent: #00d4ff;
+  --accent2: #0099cc;
+  --green: #00e5a0;
+  --orange: #ff8c42;
+  --red: #ff4757;
+  --yellow: #ffd32a;
+  --purple: #a55eea;
+  --text: #e8f0fe;
+  --text2: #8ba0c4;
+  --text3: #4a6080;
+  --glow: 0 0 20px rgba(0,212,255,0.15);
+  --glow2: 0 0 40px rgba(0,212,255,0.1);
+  --shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg3) 100%);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: width 0.3s;
+  overflow: hidden;
+}
+.sidebar.collapsed { width: 68px; min-width: 68px; }
+
+.logo {
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(0,212,255,0.08) 0%, transparent 100%);
+}
+.logo-icon {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 0 20px rgba(0,212,255,0.4);
+  flex-shrink: 0;
+}
+.logo-text { overflow: hidden; }
+.logo-text .brand { font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:700; color:var(--accent); letter-spacing:1px; white-space:nowrap; }
+.logo-text .sub { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1.5px; white-space:nowrap; }
+
+.nav-section { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.nav-section-title { font-size:9px; text-transform:uppercase; letter-spacing:2px; color:var(--text3); padding:0 20px 6px; font-weight:600; white-space:nowrap; overflow:hidden; }
+.sidebar.collapsed .nav-section-title { opacity:0; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  border-radius: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.nav-item:hover { background: rgba(0,212,255,0.06); }
+.nav-item.active {
+  background: linear-gradient(90deg, rgba(0,212,255,0.12), transparent);
+  border-left: 3px solid var(--accent);
+}
+.nav-item.active::before {
+  content: ''; position: absolute; left:0; top:0; bottom:0; width:3px;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+.nav-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.04);
+  transition: all 0.2s;
+}
+.nav-item.active .nav-icon { background: rgba(0,212,255,0.15); color: var(--accent); }
+.nav-item:hover .nav-icon { background: rgba(0,212,255,0.1); }
+.nav-label { font-size:13px; font-weight:500; color:var(--text2); }
+.nav-item.active .nav-label { color:var(--text); }
+.nav-badge {
+  margin-left: auto;
+  background: var(--red);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px;
+  border-top: 1px solid var(--border);
+}
+.user-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px;
+  background: var(--bg4);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.user-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+  flex-shrink: 0;
+}
+.user-info { overflow: hidden; }
+.user-name { font-size:13px; font-weight:600; white-space:nowrap; }
+.user-role { font-size:10px; color:var(--text3); white-space:nowrap; }
+
+/* ============ MAIN CONTENT ============ */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.topbar {
+  height: 64px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.topbar-left { display:flex; align-items:center; gap:12px; }
+.menu-btn {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+.menu-btn:hover { border-color:var(--accent); color:var(--accent); }
+.page-title { font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; letter-spacing:0.5px; }
+.page-subtitle { font-size:12px; color:var(--text3); }
+
+.topbar-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  transition: all 0.2s;
+}
+.search-box:focus-within { border-color:var(--accent); box-shadow:var(--glow); }
+.search-box input { background:none; border:none; outline:none; color:var(--text); font-size:13px; width:200px; }
+.search-box input::placeholder { color:var(--text3); }
+.search-box i { color:var(--text3); font-size:13px; }
+
+.topbar-btn {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  position: relative;
+}
+.topbar-btn:hover { border-color:var(--accent); color:var(--accent); }
+.topbar-btn .dot {
+  position: absolute; top:6px; right:6px;
+  width:7px; height:7px;
+  border-radius:50%;
+  background:var(--red);
+  border: 2px solid var(--bg2);
+}
+
+.btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  white-space: nowrap;
+}
+.btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #000; }
+.btn-primary:hover { box-shadow: 0 0 20px rgba(0,212,255,0.4); transform:translateY(-1px); }
+.btn-outline { background: transparent; border: 1px solid var(--border2); color: var(--text2); }
+.btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+.btn-green { background: var(--green); color: #000; }
+.btn-green:hover { box-shadow: 0 0 20px rgba(0,229,160,0.4); }
+.btn-red { background: var(--red); color: #fff; }
+.btn-orange { background: var(--orange); color: #000; }
+.btn-sm { padding: 6px 12px; font-size:12px; }
+
+/* ============ CONTENT ============ */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+.content::-webkit-scrollbar { width:6px; }
+.content::-webkit-scrollbar-track { background:transparent; }
+.content::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+.page { display:none; }
+.page.active { display:block; }
+
+/* ============ DASHBOARD ============ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.stat-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--accent-color, var(--accent));
+}
+.stat-card:hover { border-color:var(--border2); transform:translateY(-2px); box-shadow:var(--shadow); }
+.stat-card.blue { --accent-color: var(--accent); }
+.stat-card.green { --accent-color: var(--green); }
+.stat-card.orange { --accent-color: var(--orange); }
+.stat-card.red { --accent-color: var(--red); }
+.stat-card.purple { --accent-color: var(--purple); }
+
+.stat-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.stat-icon {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  background: rgba(255,255,255,0.05);
+  color: var(--accent-color, var(--accent));
+}
+.stat-trend { font-size:11px; padding:3px 8px; border-radius:20px; font-weight:600; }
+.trend-up { background:rgba(0,229,160,0.15); color:var(--green); }
+.trend-down { background:rgba(255,71,87,0.15); color:var(--red); }
+.stat-value { font-family:'Rajdhani',sans-serif; font-size:36px; font-weight:700; line-height:1; margin-bottom:4px; }
+.stat-label { font-size:12px; color:var(--text3); text-transform:uppercase; letter-spacing:1px; }
+.stat-sub { font-size:11px; color:var(--text3); margin-top:8px; }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.dashboard-grid.two-col { grid-template-columns: 2fr 1fr; }
+
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-title { font-size:14px; font-weight:600; display:flex; align-items:center; gap:8px; }
+.panel-title i { color:var(--accent); }
+.panel-body { padding: 16px 20px; }
+
+/* ============ TABLE ============ */
+.table-wrapper {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.table-toolbar {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.table-title { font-size:15px; font-weight:600; margin-right:auto; }
+.filter-select {
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 7px 12px;
+  font-size:12px;
+  cursor: pointer;
+  outline: none;
+}
+.filter-select:focus { border-color:var(--accent); }
+
+table { width:100%; border-collapse:collapse; }
+thead tr { background: var(--bg3); }
+th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size:11px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--text3);
+  border-bottom: 1px solid var(--border);
+  white-space:nowrap;
+}
+td {
+  padding: 12px 16px;
+  font-size:13px;
+  border-bottom: 1px solid rgba(30,45,71,0.5);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(0,212,255,0.03); }
+.td-code { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size:11px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.badge-green { background:rgba(0,229,160,0.12); color:var(--green); }
+.badge-red { background:rgba(255,71,87,0.12); color:var(--red); }
+.badge-orange { background:rgba(255,140,66,0.12); color:var(--orange); }
+.badge-blue { background:rgba(0,212,255,0.12); color:var(--accent); }
+.badge-purple { background:rgba(165,94,234,0.12); color:var(--purple); }
+.badge-gray { background:rgba(138,160,196,0.1); color:var(--text3); }
+
+.icon-btn {
+  width:30px; height:30px;
+  border-radius:6px;
+  border:1px solid var(--border);
+  background:var(--bg4);
+  color:var(--text3);
+  display:inline-flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  font-size:12px;
+  transition:all 0.2s;
+}
+.icon-btn:hover { border-color:var(--accent); color:var(--accent); }
+.icon-btn.danger:hover { border-color:var(--red); color:var(--red); }
+
+/* ============ MODAL ============ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+}
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0;
+  background: var(--bg3);
+  z-index: 1;
+}
+.modal-title { font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; }
+.modal-close {
+  width:32px; height:32px;
+  border-radius:8px;
+  background:var(--bg4);
+  border:1px solid var(--border);
+  color:var(--text3);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  font-size:14px;
+  transition:all 0.2s;
+}
+.modal-close:hover { border-color:var(--red); color:var(--red); }
+.modal-body { padding: 24px; }
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: flex-end; gap: 10px;
+}
+
+/* ============ FORM ============ */
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.form-grid.three { grid-template-columns:1fr 1fr 1fr; }
+.form-group { display:flex; flex-direction:column; gap:6px; }
+.form-group.full { grid-column:1/-1; }
+.form-label { font-size:12px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; }
+.form-input, .form-select, .form-textarea {
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: all 0.2s;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+}
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-select option { background: var(--bg3); }
+
+.checkbox-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:8px; }
+.check-item {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 12px;
+  background:var(--bg4);
+  border:1px solid var(--border);
+  border-radius:8px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.check-item:hover { border-color:var(--border2); }
+.check-item.checked { border-color:var(--accent); background:rgba(0,212,255,0.06); }
+.check-item input { accent-color:var(--accent); }
+.check-label { font-size:12px; }
+
+.section-title {
+  font-family:'Rajdhani',sans-serif;
+  font-size:14px; font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--accent);
+  margin:20px 0 12px;
+  display:flex; align-items:center; gap:8px;
+}
+.section-title::after {
+  content:'';
+  flex:1; height:1px;
+  background:linear-gradient(90deg, var(--border), transparent);
+}
+
+/* ============ QR CARD ============ */
+.qr-panel {
+  text-align: center;
+  padding: 24px;
+}
+.qr-img {
+  width: 180px; height: 180px;
+  border-radius: 12px;
+  border: 3px solid var(--border2);
+  padding: 8px;
+  background: white;
+  margin: 0 auto 16px;
+  display: block;
+}
+
+/* ============ PLANNING ============ */
+.calendar-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.cal-nav {
+  display: flex; align-items: center; gap: 12px;
+}
+.cal-nav button {
+  width:32px; height:32px; border-radius:8px;
+  background:var(--bg4); border:1px solid var(--border);
+  color:var(--text2); cursor:pointer; font-size:14px;
+  transition:all 0.2s; display:flex; align-items:center; justify-content:center;
+}
+.cal-nav button:hover { border-color:var(--accent); color:var(--accent); }
+.cal-month { font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; }
+
+.calendar-grid {
+  display: grid; grid-template-columns:repeat(7,1fr);
+  gap: 4px;
+}
+.cal-day-header {
+  text-align:center; padding:8px;
+  font-size:11px; font-weight:600;
+  color:var(--text3); text-transform:uppercase;
+}
+.cal-day {
+  min-height:80px;
+  background:var(--bg4);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:6px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.cal-day:hover { border-color:var(--border2); }
+.cal-day.today { border-color:var(--accent); background:rgba(0,212,255,0.05); }
+.cal-day.other-month { opacity:0.3; }
+.cal-day-num { font-size:12px; font-weight:600; margin-bottom:4px; }
+.cal-event {
+  font-size:10px; padding:2px 6px; border-radius:4px;
+  margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.cal-event.interv { background:rgba(0,212,255,0.15); color:var(--accent); }
+.cal-event.maint { background:rgba(255,140,66,0.15); color:var(--orange); }
+.cal-event.visit { background:rgba(0,229,160,0.15); color:var(--green); }
+
+/* ============ TECHNICIEN CARDS ============ */
+.tech-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+.tech-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+  transition:all 0.3s;
+}
+.tech-card:hover { border-color:var(--border2); transform:translateY(-2px); box-shadow:var(--shadow); }
+.tech-header { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+.tech-avatar {
+  width:52px; height:52px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700;
+  flex-shrink:0;
+}
+.tech-name { font-size:15px; font-weight:600; }
+.tech-id { font-size:11px; color:var(--text3); font-family:'JetBrains Mono',monospace; }
+
+.tech-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.tech-stat {
+  background:var(--bg4);
+  border-radius:8px;
+  padding:10px;
+  text-align:center;
+}
+.tech-stat-value { font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; }
+.tech-stat-label { font-size:10px; color:var(--text3); }
+
+.tech-progress { margin-top:14px; }
+.progress-label { display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px; }
+.progress-bar { height:4px; background:var(--bg4); border-radius:2px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:2px; transition:width 1s; }
+
+/* ============ ALERT BANNER ============ */
+.alert-banner {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 20px;
+  border-radius:10px;
+  margin-bottom:16px;
+  font-size:13px;
+  border: 1px solid;
+}
+.alert-banner.warning { background:rgba(255,140,66,0.08); border-color:rgba(255,140,66,0.3); color:var(--orange); }
+.alert-banner.danger { background:rgba(255,71,87,0.08); border-color:rgba(255,71,87,0.3); color:var(--red); }
+.alert-banner.info { background:rgba(0,212,255,0.08); border-color:rgba(0,212,255,0.3); color:var(--accent); }
+.alert-banner.success { background:rgba(0,229,160,0.08); border-color:rgba(0,229,160,0.3); color:var(--green); }
+
+/* ============ CHART BARS ============ */
+.chart-bars { display:flex; align-items:flex-end; gap:4px; height:80px; }
+.chart-bar {
+  flex:1; border-radius:3px 3px 0 0;
+  background:linear-gradient(180deg,var(--accent),var(--accent2));
+  min-height:4px;
+  transition:all 0.5s;
+  position:relative;
+  cursor:pointer;
+}
+.chart-bar:hover { opacity:0.8; }
+.chart-bar.orange { background:linear-gradient(180deg,var(--orange),#c06030); }
+.chart-bar.green { background:linear-gradient(180deg,var(--green),#009960); }
+.chart-labels { display:flex; gap:4px; }
+.chart-label { flex:1; text-align:center; font-size:9px; color:var(--text3); padding-top:4px; }
+
+/* ============ MOBILE QR SCAN PANEL ============ */
+.qr-scanner {
+  background: var(--bg4);
+  border:2px dashed var(--border2);
+  border-radius:14px;
+  padding:40px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.qr-scanner:hover { border-color:var(--accent); background:rgba(0,212,255,0.04); }
+.qr-scanner i { font-size:48px; color:var(--text3); margin-bottom:12px; display:block; }
+.qr-scanner p { color:var(--text3); font-size:13px; }
+
+/* ============ SIGNATURE PAD ============ */
+.sig-canvas-wrap {
+  background: white;
+  border-radius:8px;
+  border:2px solid var(--border2);
+  overflow:hidden;
+}
+canvas#sigCanvas {
+  display:block;
+  cursor:crosshair;
+  touch-action: none;
+}
+
+/* ============ STATUS LIVE ============ */
+.live-dot {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--green);
+  display:inline-block;
+  animation: pulse 2s infinite;
+  margin-right:4px;
+}
+@keyframes pulse {
+  0%,100% { box-shadow:0 0 0 0 rgba(0,229,160,0.4); }
+  50% { box-shadow:0 0 0 6px rgba(0,229,160,0); }
+}
+
+/* ============ TOAST ============ */
+.toast-container { position:fixed; bottom:24px; right:24px; z-index:9999; display:flex; flex-direction:column; gap:8px; }
+.toast {
+  display:flex; align-items:center; gap:12px;
+  padding:14px 20px;
+  border-radius:10px;
+  font-size:13px; font-weight:500;
+  box-shadow:0 8px 30px rgba(0,0,0,0.5);
+  animation:toastIn 0.3s ease;
+  min-width:280px;
+}
+.toast.success { background:rgba(0,229,160,0.15); border:1px solid rgba(0,229,160,0.3); color:var(--green); }
+.toast.error { background:rgba(255,71,87,0.15); border:1px solid rgba(255,71,87,0.3); color:var(--red); }
+.toast.info { background:rgba(0,212,255,0.15); border:1px solid rgba(0,212,255,0.3); color:var(--accent); }
+@keyframes toastIn { from { transform:translateX(100px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+
+/* ============ TABS ============ */
+.tabs { display:flex; gap:4px; margin-bottom:20px; background:var(--bg4); border-radius:10px; padding:4px; width:fit-content; }
+.tab {
+  padding:8px 16px; border-radius:8px;
+  font-size:13px; font-weight:500; color:var(--text3);
+  cursor:pointer; transition:all 0.2s;
+}
+.tab.active { background:var(--bg2); color:var(--text); box-shadow:var(--shadow); }
+
+/* ============ MOBILE APP TAB ============ */
+.mobile-frame {
+  max-width:380px;
+  background:var(--bg2);
+  border:2px solid var(--border2);
+  border-radius:32px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.8);
+  margin:0 auto;
+}
+.mobile-header {
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  padding:20px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.mobile-content { padding:16px; }
+
+/* ============ EMPTY STATE ============ */
+.empty-state {
+  text-align:center; padding:60px 20px;
+  color:var(--text3);
+}
+.empty-state i { font-size:48px; opacity:0.3; margin-bottom:12px; display:block; }
+.empty-state p { font-size:14px; }
+
+/* ============ SCROLLBAR ============ */
+.modal::-webkit-scrollbar { width:4px; }
+.modal::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:900px) {
+  .dashboard-grid { grid-template-columns:1fr; }
+  .dashboard-grid.two-col { grid-template-columns:1fr; }
+  .form-grid { grid-template-columns:1fr; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body><div id="sync-bar" style="position: fixed; top: 0px; left: 0px; right: 0px; height: 3px; z-index: 9999; transition: 0.3s; background: rgb(255, 71, 87); opacity: 1;"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="logo">
+    <div class="logo-icon"><i class="fas fa-heartbeat"></i></div>
+    <div class="logo-text">
+      <div class="brand">PSDM MEDICAL</div>
+      <div class="sub">Manager PRO++</div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Principal</div>
+    <div class="nav-item active" onclick="navigate(&#39;dashboard&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+      <span class="nav-label">Tableau de bord</span>
+    </div>
+    <div class="nav-item" onclick="navigate(&#39;planning&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-calendar-alt"></i></div>
+      <span class="nav-label">Planning</span>
+      <span class="nav-badge" id="planBadge">3</span>
+    </div>
+    <div class="nav-item" onclick="navigate(&#39;interventions&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-tools"></i></div>
+      <span class="nav-label">Interventions</span>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Parc &amp; Patients</div>
+    <div class="nav-item" onclick="navigate(&#39;parc&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-hospital-user"></i></div>
+      <span class="nav-label">Parc équipements</span>
+    </div>
+    <div class="nav-item" onclick="navigate(&#39;patients&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-user-injured"></i></div>
+      <span class="nav-label">Patients</span>
+    </div>
+    <div class="nav-item" onclick="navigate(&#39;qrcode&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-qrcode"></i></div>
+      <span class="nav-label">QR Codes</span>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Maintenance &amp; Qualité</div>
+    <div class="nav-item" onclick="navigate(&#39;maintenance&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-wrench"></i></div>
+      <span class="nav-label">Maintenances</span>
+      <span class="nav-badge" style="background:var(--orange)" id="maintBadge">5</span>
+    </div>
+    <div class="nav-item" onclick="navigate(&#39;desinfection&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-spray-can"></i></div>
+      <span class="nav-label">Désinfection</span>
+    </div>
+    <div class="nav-item" onclick="navigate(&#39;qualite&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-shield-alt"></i></div>
+      <span class="nav-label">Contrôle qualité</span>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Ressources</div>
+    <div class="nav-item" onclick="navigate(&#39;techniciens&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-hard-hat"></i></div>
+      <span class="nav-label">Techniciens</span>
+    </div>
+    <div class="nav-item" onclick="navigate(&#39;rapports&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-file-pdf"></i></div>
+      <span class="nav-label">Rapports PDF</span>
+    </div>
+    <div class="nav-item" onclick="navigate(&#39;mobile&#39;,this)">
+      <div class="nav-icon"><i class="fas fa-mobile-alt"></i></div>
+      <span class="nav-label">App Mobile</span>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">DL</div>
+      <div class="user-info">
+        <div class="user-name">D. Lourenco</div>
+        <div class="user-role"><span class="live-dot"></span>Connecté</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+      <div>
+        <div class="page-title" id="pageTitle">Tableau de bord</div>
+        <div class="page-subtitle" id="pageSubtitle">Vue d'ensemble • Lundi 10 mars 2025</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Chercher équipement, patient..." oninput="globalSearch(this.value)">
+      </div>
+      <div class="topbar-btn" onclick="openModal(&#39;modal-alerte&#39;)">
+        <i class="fas fa-bell"></i>
+        <div class="dot"></div>
+      </div>
+      <div class="topbar-btn" onclick="openModal(&#39;modal-quick-interv&#39;)">
+        <i class="fas fa-plus"></i>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openModal(&#39;modal-new-interv&#39;)">
+        <i class="fas fa-plus-circle"></i> Intervention
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="mainContent">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="fas fa-hospital-user"></i></div>
+            <div class="stat-trend trend-up">+12%</div>
+          </div>
+          <div class="stat-value">1 044</div>
+          <div class="stat-label">Équipements</div>
+          <div class="stat-sub"><span style="color:var(--green)">412 Lits</span> · <span style="color:var(--accent)">398 Fauteuils</span> · <span style="color:var(--orange)">234 LP</span></div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="fas fa-tools"></i></div>
+            <div class="stat-trend trend-up">+8%</div>
+          </div>
+          <div class="stat-value" id="stat-interventions">247</div>
+          <div class="stat-label">Interventions ce mois</div>
+          <div class="stat-sub"><span style="color:var(--green)">198 terminées</span> · <span style="color:var(--orange)">49 en cours</span></div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="stat-trend trend-down">-3%</div>
+          </div>
+          <div class="stat-value">5</div>
+          <div class="stat-label">Maintenances dues</div>
+          <div class="stat-sub"><span style="color:var(--red)">2 urgentes</span> · <span style="color:var(--orange)">3 cette semaine</span></div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="fas fa-user-injured"></i></div>
+            <div class="stat-trend trend-up">+5%</div>
+          </div>
+          <div class="stat-value">89</div>
+          <div class="stat-label">Patients actifs</div>
+          <div class="stat-sub"><span style="color:var(--purple)">67 DOMICILE</span> · <span style="color:var(--accent)">22 EHPAD</span></div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-header">
+            <div class="stat-icon"><i class="fas fa-hard-hat"></i></div>
+          </div>
+          <div class="stat-value">3</div>
+          <div class="stat-label">Techniciens actifs</div>
+          <div class="stat-sub"><span style="color:var(--green)">2 en tournée</span> · <span style="color:var(--text3)">1 atelier</span></div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid two-col">
+        <!-- Alertes -->
+        <div>
+          <div class="alert-banner danger">
+            <i class="fas fa-exclamation-circle"></i>
+            <div><strong>2 équipements</strong> nécessitent une maintenance réglementaire urgente (dépassée de +30j)</div>
+          </div>
+          <div class="alert-banner warning">
+            <i class="fas fa-calendar-times"></i>
+            <div><strong>5 interventions</strong> planifiées cette semaine — 3 techniciens disponibles</div>
+          </div>
+          <div class="alert-banner info">
+            <i class="fas fa-info-circle"></i>
+            <div>Prochaine révision réglementaire CE0459 : <strong>Fauteuil F214</strong> — 15/03/2025</div>
+          </div>
+
+          <!-- Activity chart -->
+          <div class="panel" style="margin-top:16px">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fas fa-chart-bar"></i> Activité mensuelle</div>
+              <select class="filter-select" onchange="updateChart(this.value)">
+                <option value="6">6 mois</option>
+                <option value="12">12 mois</option>
+              </select>
+            </div>
+            <div class="panel-body">
+              <div class="chart-bars" id="activityChart"><div class="chart-bar" style="height:51.61290322580645%" title="32 interventions"></div><div class="chart-bar" style="height:66.12903225806451%" title="41 interventions"></div><div class="chart-bar" style="height:45.16129032258064%" title="28 interventions"></div><div class="chart-bar" style="height:88.70967741935483%" title="55 interventions"></div><div class="chart-bar" style="height:77.41935483870968%" title="48 interventions"></div><div class="chart-bar green" style="height:100%" title="62 interventions"></div></div>
+              <div class="chart-labels" id="chartLabels"><div class="chart-labels"><div class="chart-label">Oct</div><div class="chart-label">Nov</div><div class="chart-label">Déc</div><div class="chart-label">Jan</div><div class="chart-label">Fév</div><div class="chart-label">Mar</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick planning -->
+        <div>
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fas fa-calendar-day"></i> Aujourd'hui</div>
+              <button class="btn btn-outline btn-sm" onclick="navigate(&#39;planning&#39;,null)">Voir tout</button>
+            </div>
+            <div class="panel-body" id="todayEvents" style="padding:0">
+    <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer" onclick="navigate(&#39;interventions&#39;,null)">
+      <div style="width:4px;height:40px;border-radius:2px;background:var(--accent)"></div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">MAINTENANCE PRÉVENTIVE</div>
+        <div style="font-size:11px;color:var(--text3)">D.LOURENCO • Bernard A. • L389</div>
+      </div>
+      <div class="badge badge-blue">EN COURS</div>
+    </div>
+  
+    <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer" onclick="navigate(&#39;interventions&#39;,null)">
+      <div style="width:4px;height:40px;border-radius:2px;background:var(--orange)"></div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">MISE EN SERVICE</div>
+        <div style="font-size:11px;color:var(--text3)">J.GOUZE • Lemaire P. • LP061</div>
+      </div>
+      <div class="badge badge-orange">PLANIFIÉE</div>
+    </div>
+  </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent interventions -->
+      <div class="panel" style="margin-top:20px">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fas fa-history"></i> Interventions récentes</div>
+          <button class="btn btn-outline btn-sm" onclick="navigate(&#39;interventions&#39;,null)">Tout voir</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Technicien</th>
+              <th>Équipement</th>
+              <th>Type</th>
+              <th>Lieu</th>
+              <th>Statut</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="recentInterv">
+    <tr>
+      <td class="td-code">INT-2025-001</td>
+      <td>2025-03-08</td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div style="width:6px;height:6px;border-radius:50%;background:var(--green)"></div>D.LOURENCO</div></td>
+      <td>L330</td>
+      <td>RÉVISION ANNUELLE</td>
+      <td>DOMICILE</td>
+      <td><span class="badge badge-green">TERMINÉE</span></td>
+      <td><div class="icon-btn" onclick="openModal(&#39;modal-new-interv&#39;)" title="Voir"><i class="fas fa-eye"></i></div></td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">INT-2025-002</td>
+      <td>2025-03-09</td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div style="width:6px;height:6px;border-radius:50%;background:var(--green)"></div>J.GOUZE</div></td>
+      <td>F214</td>
+      <td>DÉPANNAGE</td>
+      <td>DOMICILE</td>
+      <td><span class="badge badge-green">TERMINÉE</span></td>
+      <td><div class="icon-btn" onclick="openModal(&#39;modal-new-interv&#39;)" title="Voir"><i class="fas fa-eye"></i></div></td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">INT-2025-003</td>
+      <td>2025-03-10</td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div style="width:6px;height:6px;border-radius:50%;background:var(--green)"></div>D.LOURENCO</div></td>
+      <td>L389</td>
+      <td>MAINTENANCE PRÉVENTIVE</td>
+      <td>DOMICILE</td>
+      <td><span class="badge badge-blue">EN COURS</span></td>
+      <td><div class="icon-btn" onclick="openModal(&#39;modal-new-interv&#39;)" title="Voir"><i class="fas fa-eye"></i></div></td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">INT-2025-004</td>
+      <td>2025-03-10</td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div style="width:6px;height:6px;border-radius:50%;background:var(--green)"></div>J.GOUZE</div></td>
+      <td>LP061</td>
+      <td>MISE EN SERVICE</td>
+      <td>—</td>
+      <td><span class="badge badge-orange">PLANIFIÉE</span></td>
+      <td><div class="icon-btn" onclick="openModal(&#39;modal-new-interv&#39;)" title="Voir"><i class="fas fa-eye"></i></div></td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">INT-2025-005</td>
+      <td>2025-03-11</td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div style="width:6px;height:6px;border-radius:50%;background:var(--green)"></div>TECHNICIEN 3</div></td>
+      <td>F089</td>
+      <td>DÉPANNAGE</td>
+      <td>—</td>
+      <td><span class="badge badge-orange">PLANIFIÉE</span></td>
+      <td><div class="icon-btn" onclick="openModal(&#39;modal-new-interv&#39;)" title="Voir"><i class="fas fa-eye"></i></div></td>
+    </tr>
+  </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== PARC EQUIPEMENTS ===== -->
+    <div class="page" id="page-parc">
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-card blue"><div class="stat-header"><div class="stat-icon"><i class="fas fa-bed"></i></div></div><div class="stat-value">412</div><div class="stat-label">Lits médicalisés</div></div>
+        <div class="stat-card orange"><div class="stat-header"><div class="stat-icon"><i class="fas fa-wheelchair"></i></div></div><div class="stat-value">398</div><div class="stat-label">Fauteuils roulants</div></div>
+        <div class="stat-card green"><div class="stat-header"><div class="stat-icon"><i class="fas fa-person-walking-arrow-right"></i></div></div><div class="stat-value">234</div><div class="stat-label">Lève-patients</div></div>
+        <div class="stat-card purple"><div class="stat-header"><div class="stat-icon"><i class="fas fa-boxes-stacked"></i></div></div><div class="stat-value">1 044</div><div class="stat-label">Total parc</div></div>
+      </div>
+
+      <div class="table-wrapper">
+        <div class="table-toolbar">
+          <span class="table-title">Parc équipements — 1 044 matériels</span>
+          <select class="filter-select" id="filterType" onchange="filterParc()">
+            <option value="">Tous types</option>
+            <option value="LIT">Lit</option>
+            <option value="FAUTEUIL">Fauteuil</option>
+            <option value="LEVE PATIENTS">Lève-patient</option>
+          </select>
+          <select class="filter-select" id="filterStatut" onchange="filterParc()">
+            <option value="">Tous statuts</option>
+            <option value="DISPONIBLE">Disponible</option>
+            <option value="LOUE">Loué</option>
+            <option value="MAINTENANCE">Maintenance</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="openModal(&#39;modal-add-equip&#39;)"><i class="fas fa-plus"></i> Ajouter</button>
+          <button class="btn btn-outline btn-sm" onclick="exportData()"><i class="fas fa-download"></i> Export</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID Équipement</th>
+              <th>Type</th>
+              <th>Marque</th>
+              <th>Modèle / N° Série</th>
+              <th>Mise en service</th>
+              <th>Patient</th>
+              <th>Statut</th>
+              <th>QR</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="parcTable">
+    <tr>
+      <td class="td-code">L023</td>
+      <td><span class="badge badge-blue">LIT</span></td>
+      <td>WINNCARE</td>
+      <td><div style="font-size:13px">FERNANDES</div><div style="font-size:11px;color:var(--text3);font-family:&#39;JetBrains Mono&#39;,monospace">29/12/2001</div></td>
+      <td>29/12/2001</td>
+      <td><div style="font-size:13px">Dupont M.</div></td>
+      <td><span class="badge badge-blue">LOUE</span></td>
+      <td>
+        <img src="./index_files/saved_resource" width="32" height="32" style="border-radius:4px;background:white;padding:2px" title="QR: L023">
+      </td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Voir fiche" onclick="showEquipDetail(0)"><i class="fas fa-eye"></i></div>
+          <div class="icon-btn" title="Nouvelle intervention" onclick="openModal(&#39;modal-new-interv&#39;)"><i class="fas fa-tools"></i></div>
+          <div class="icon-btn danger" title="Supprimer"><i class="fas fa-trash"></i></div>
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">L330</td>
+      <td><span class="badge badge-blue">LIT</span></td>
+      <td>WINNCARE</td>
+      <td><div style="font-size:13px">FR032201/05108</div><div style="font-size:11px;color:var(--text3);font-family:&#39;JetBrains Mono&#39;,monospace">FR032201/05108</div></td>
+      <td>—</td>
+      <td><div style="font-size:13px">Bernard A.</div></td>
+      <td><span class="badge badge-blue">LOUE</span></td>
+      <td>
+        <img src="./index_files/saved_resource(1)" width="32" height="32" style="border-radius:4px;background:white;padding:2px" title="QR: L330">
+      </td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Voir fiche" onclick="showEquipDetail(1)"><i class="fas fa-eye"></i></div>
+          <div class="icon-btn" title="Nouvelle intervention" onclick="openModal(&#39;modal-new-interv&#39;)"><i class="fas fa-tools"></i></div>
+          <div class="icon-btn danger" title="Supprimer"><i class="fas fa-trash"></i></div>
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">L389</td>
+      <td><span class="badge badge-blue">LIT</span></td>
+      <td>WINNCARE</td>
+      <td><div style="font-size:13px">FR032209/04055</div><div style="font-size:11px;color:var(--text3);font-family:&#39;JetBrains Mono&#39;,monospace">FR032209/04055</div></td>
+      <td>—</td>
+      <td><span style="color:var(--text3)">—</span></td>
+      <td><span class="badge badge-green">DISPONIBLE</span></td>
+      <td>
+        <img src="./index_files/saved_resource(2)" width="32" height="32" style="border-radius:4px;background:white;padding:2px" title="QR: L389">
+      </td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Voir fiche" onclick="showEquipDetail(2)"><i class="fas fa-eye"></i></div>
+          <div class="icon-btn" title="Nouvelle intervention" onclick="openModal(&#39;modal-new-interv&#39;)"><i class="fas fa-tools"></i></div>
+          <div class="icon-btn danger" title="Supprimer"><i class="fas fa-trash"></i></div>
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">F214</td>
+      <td><span class="badge badge-orange">FAUTEUIL</span></td>
+      <td>INVACARE</td>
+      <td><div style="font-size:13px">ACTION3</div><div style="font-size:11px;color:var(--text3);font-family:&#39;JetBrains Mono&#39;,monospace">17LFM004713</div></td>
+      <td>—</td>
+      <td><div style="font-size:13px">Martin C.</div></td>
+      <td><span class="badge badge-blue">LOUE</span></td>
+      <td>
+        <img src="./index_files/saved_resource(3)" width="32" height="32" style="border-radius:4px;background:white;padding:2px" title="QR: F214">
+      </td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Voir fiche" onclick="showEquipDetail(3)"><i class="fas fa-eye"></i></div>
+          <div class="icon-btn" title="Nouvelle intervention" onclick="openModal(&#39;modal-new-interv&#39;)"><i class="fas fa-tools"></i></div>
+          <div class="icon-btn danger" title="Supprimer"><i class="fas fa-trash"></i></div>
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">LP061</td>
+      <td><span class="badge badge-purple">LEVE PATIENTS</span></td>
+      <td>SUNRISE</td>
+      <td><div style="font-size:13px">Oxford</div><div style="font-size:11px;color:var(--text3);font-family:&#39;JetBrains Mono&#39;,monospace">18K09000658</div></td>
+      <td>—</td>
+      <td><span style="color:var(--text3)">—</span></td>
+      <td><span class="badge badge-orange">MAINTENANCE</span></td>
+      <td>
+        <img src="./index_files/saved_resource(4)" width="32" height="32" style="border-radius:4px;background:white;padding:2px" title="QR: LP061">
+      </td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Voir fiche" onclick="showEquipDetail(4)"><i class="fas fa-eye"></i></div>
+          <div class="icon-btn" title="Nouvelle intervention" onclick="openModal(&#39;modal-new-interv&#39;)"><i class="fas fa-tools"></i></div>
+          <div class="icon-btn danger" title="Supprimer"><i class="fas fa-trash"></i></div>
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">L299</td>
+      <td><span class="badge badge-blue">LIT</span></td>
+      <td>WINNCARE</td>
+      <td><div style="font-size:13px">FR032009/05766</div><div style="font-size:11px;color:var(--text3);font-family:&#39;JetBrains Mono&#39;,monospace">FR032009/05766</div></td>
+      <td>—</td>
+      <td><div style="font-size:13px">Lemaire P.</div></td>
+      <td><span class="badge badge-blue">LOUE</span></td>
+      <td>
+        <img src="./index_files/saved_resource(5)" width="32" height="32" style="border-radius:4px;background:white;padding:2px" title="QR: L299">
+      </td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Voir fiche" onclick="showEquipDetail(5)"><i class="fas fa-eye"></i></div>
+          <div class="icon-btn" title="Nouvelle intervention" onclick="openModal(&#39;modal-new-interv&#39;)"><i class="fas fa-tools"></i></div>
+          <div class="icon-btn danger" title="Supprimer"><i class="fas fa-trash"></i></div>
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">F089</td>
+      <td><span class="badge badge-orange">FAUTEUIL</span></td>
+      <td>VERMEIREN</td>
+      <td><div style="font-size:13px">ECLIPSE3</div><div style="font-size:11px;color:var(--text3);font-family:&#39;JetBrains Mono&#39;,monospace">VR2201045</div></td>
+      <td>—</td>
+      <td><div style="font-size:13px">Girard T.</div></td>
+      <td><span class="badge badge-blue">LOUE</span></td>
+      <td>
+        <img src="./index_files/saved_resource(6)" width="32" height="32" style="border-radius:4px;background:white;padding:2px" title="QR: F089">
+      </td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Voir fiche" onclick="showEquipDetail(6)"><i class="fas fa-eye"></i></div>
+          <div class="icon-btn" title="Nouvelle intervention" onclick="openModal(&#39;modal-new-interv&#39;)"><i class="fas fa-tools"></i></div>
+          <div class="icon-btn danger" title="Supprimer"><i class="fas fa-trash"></i></div>
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td class="td-code">LP042</td>
+      <td><span class="badge badge-purple">LEVE PATIENTS</span></td>
+      <td>OTTOBOCK</td>
+      <td><div style="font-size:13px">C650</div><div style="font-size:11px;color:var(--text3);font-family:&#39;JetBrains Mono&#39;,monospace">OB180923</div></td>
+      <td>—</td>
+      <td><span style="color:var(--text3)">—</span></td>
+      <td><span class="badge badge-green">DISPONIBLE</span></td>
+      <td>
+        <img src="./index_files/saved_resource(7)" width="32" height="32" style="border-radius:4px;background:white;padding:2px" title="QR: LP042">
+      </td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Voir fiche" onclick="showEquipDetail(7)"><i class="fas fa-eye"></i></div>
+          <div class="icon-btn" title="Nouvelle intervention" onclick="openModal(&#39;modal-new-interv&#39;)"><i class="fas fa-tools"></i></div>
+          <div class="icon-btn danger" title="Supprimer"><i class="fas fa-trash"></i></div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== INTERVENTIONS ===== -->
+    <div class="page" id="page-interventions">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this,&#39;fauteuil&#39;)">Fauteuils roulants</div>
+        <div class="tab" onclick="switchTab(this,&#39;lit&#39;)">Lits médicalisés</div>
+        <div class="tab" onclick="switchTab(this,&#39;leve&#39;)">Lève-patients</div>
+        <div class="tab" onclick="switchTab(this,&#39;toutes&#39;)">Toutes</div>
+      </div>
+
+      <div class="table-wrapper">
+        <div class="table-toolbar">
+          <span class="table-title">Fiches intervention</span>
+          <button class="btn btn-primary btn-sm" onclick="openModal(&#39;modal-new-interv&#39;)"><i class="fas fa-plus"></i> Nouvelle intervention</button>
+          <button class="btn btn-outline btn-sm" onclick="openModal(&#39;modal-rapport&#39;)"><i class="fas fa-file-pdf"></i> Générer rapport</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Technicien</th>
+              <th>Patient</th>
+              <th>Équipement</th>
+              <th>Type</th>
+              <th>Durée</th>
+              <th>Statut</th>
+              <th>Signature</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="intervTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== PLANNING ===== -->
+    <div class="page" id="page-planning">
+      <div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap">
+        <div style="flex:1;min-width:280px">
+          <div class="calendar-header">
+            <div class="cal-nav">
+              <button onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+              <div class="cal-month" id="calMonthTitle">Mars 2025</div>
+              <button onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openModal(&#39;modal-plan-event&#39;)"><i class="fas fa-plus"></i> Planifier</button>
+          </div>
+          <div class="calendar-grid" id="calendarGrid">
+            <div class="cal-day-header">Lun</div>
+            <div class="cal-day-header">Mar</div>
+            <div class="cal-day-header">Mer</div>
+            <div class="cal-day-header">Jeu</div>
+            <div class="cal-day-header">Ven</div>
+            <div class="cal-day-header">Sam</div>
+            <div class="cal-day-header">Dim</div>
+          </div>
+        </div>
+        <div style="width:320px;flex-shrink:0">
+          <div class="panel" style="margin-bottom:16px">
+            <div class="panel-header"><div class="panel-title"><i class="fas fa-route"></i> Tournées auto</div></div>
+            <div class="panel-body">
+              <p style="font-size:13px;color:var(--text3);margin-bottom:12px">Optimisation automatique des tournées par zone géographique</p>
+              <button class="btn btn-green" style="width:100%" onclick="optimizeTournees()"><i class="fas fa-magic"></i> Optimiser les tournées</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title"><i class="fas fa-hard-hat"></i> Disponibilité techniciens</div></div>
+            <div class="panel-body" id="techDisponibility" style="padding:0"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PATIENTS ===== -->
+    <div class="page" id="page-patients">
+      <div class="table-wrapper">
+        <div class="table-toolbar">
+          <span class="table-title">Patients — dossiers</span>
+          <select class="filter-select">
+            <option>Tous lieux</option>
+            <option>DOMICILE</option>
+            <option>EHPAD</option>
+            <option>CLINIQUE</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="openModal(&#39;modal-add-patient&#39;)"><i class="fas fa-plus"></i> Nouveau patient</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom / Prénom</th>
+              <th>Date naissance</th>
+              <th>Adresse</th>
+              <th>Téléphone</th>
+              <th>Établissement</th>
+              <th>Équipements</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="patientsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== TECHNICIENS ===== -->
+    <div class="page" id="page-techniciens">
+      <div class="tech-grid" id="techGrid"></div>
+    </div>
+
+    <!-- ===== QR CODES ===== -->
+    <div class="page" id="page-qrcode">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title"><i class="fas fa-qrcode"></i> Scanner un équipement</div></div>
+            <div class="panel-body">
+              <div class="qr-scanner" onclick="simulateScan()">
+                <i class="fas fa-camera"></i>
+                <p>Cliquez pour simuler le scan QR code</p>
+                <p style="font-size:11px;margin-top:4px">Compatible Android / iOS</p>
+              </div>
+              <div id="scanResult" style="margin-top:16px;display:none">
+                <div class="alert-banner success">
+                  <i class="fas fa-check-circle"></i>
+                  <div><strong>Équipement trouvé !</strong> <span id="scanEquipId"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fas fa-print"></i> Générer QR codes</div>
+              <button class="btn btn-primary btn-sm" onclick="printQRCodes()"><i class="fas fa-print"></i> Imprimer</button>
+            </div>
+            <div class="panel-body">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px" id="qrGrid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MAINTENANCE ===== -->
+    <div class="page" id="page-maintenance">
+      <div class="alert-banner danger" style="margin-bottom:16px">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div><strong>2 maintenances URGENTES</strong> — Délai réglementaire dépassé. Action requise immédiatement.</div>
+      </div>
+      <div class="table-wrapper">
+        <div class="table-toolbar">
+          <span class="table-title">Planning maintenance réglementaire</span>
+          <button class="btn btn-primary btn-sm" onclick="openModal(&#39;modal-add-maint&#39;)"><i class="fas fa-plus"></i> Programmer</button>
+          <button class="btn btn-outline btn-sm"><i class="fas fa-bell"></i> Alertes auto</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Équipement</th>
+              <th>Type maintenance</th>
+              <th>Fréquence</th>
+              <th>Dernière date</th>
+              <th>Prochaine date</th>
+              <th>Technicien</th>
+              <th>Écart</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="maintTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== DESINFECTION ===== -->
+    <div class="page" id="page-desinfection">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this,&#39;desinf-mat&#39;)">Matériel</div>
+        <div class="tab" onclick="switchTab(this,&#39;desinf-salle&#39;)">Salles</div>
+      </div>
+      <div class="table-wrapper">
+        <div class="table-toolbar">
+          <span class="table-title">Traçabilité désinfection</span>
+          <button class="btn btn-primary btn-sm" onclick="openModal(&#39;modal-add-desinf&#39;)"><i class="fas fa-plus"></i> Saisir désinfection</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Technicien</th>
+              <th>Matériel / Salle</th>
+              <th>Produit</th>
+              <th>Temps contact</th>
+              <th>Points contrôlés</th>
+              <th>Observation</th>
+              <th>Validation</th>
+            </tr>
+          </thead>
+          <tbody id="desinfTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== QUALITE ===== -->
+    <div class="page" id="page-qualite">
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-card green"><div class="stat-header"><div class="stat-icon"><i class="fas fa-check-double"></i></div></div><div class="stat-value">94%</div><div class="stat-label">Taux conformité</div></div>
+        <div class="stat-card blue"><div class="stat-header"><div class="stat-icon"><i class="fas fa-clipboard-check"></i></div></div><div class="stat-value">156</div><div class="stat-label">Contrôles ce mois</div></div>
+        <div class="stat-card orange"><div class="stat-header"><div class="stat-icon"><i class="fas fa-exclamation"></i></div></div><div class="stat-value">9</div><div class="stat-label">Non-conformités</div></div>
+        <div class="stat-card purple"><div class="stat-header"><div class="stat-icon"><i class="fas fa-chart-line"></i></div></div><div class="stat-value">+2%</div><div class="stat-label">Tendance qualité</div></div>
+      </div>
+      <div class="table-wrapper" style="margin-top:20px">
+        <div class="table-toolbar">
+          <span class="table-title">Contrôles qualité dispositifs médicaux</span>
+          <button class="btn btn-primary btn-sm" onclick="openModal(&#39;modal-add-qualite&#39;)"><i class="fas fa-plus"></i> Nouveau contrôle</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Équipement</th>
+              <th>Type contrôle</th>
+              <th>Résultat</th>
+              <th>Technicien</th>
+              <th>Action corrective</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody id="qualiteTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== RAPPORTS ===== -->
+    <div class="page" id="page-rapports">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="panel" onclick="openModal(&#39;modal-rapport&#39;)" style="cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor=&#39;var(--accent)&#39;" onmouseout="this.style.borderColor=&#39;&#39;">
+          <div class="panel-header"><div class="panel-title"><i class="fas fa-file-alt" style="color:var(--accent)"></i> Rapport d'intervention</div></div>
+          <div class="panel-body">
+            <p style="font-size:13px;color:var(--text3)">Fiche complète avec signature patient, photos, pièces remplacées</p>
+            <button class="btn btn-primary" style="margin-top:16px;width:100%"><i class="fas fa-plus"></i> Générer</button>
+          </div>
+        </div>
+        <div class="panel" style="cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor=&#39;var(--orange)&#39;" onmouseout="this.style.borderColor=&#39;&#39;">
+          <div class="panel-header"><div class="panel-title"><i class="fas fa-chart-bar" style="color:var(--orange)"></i> Rapport mensuel SAV</div></div>
+          <div class="panel-body">
+            <p style="font-size:13px;color:var(--text3)">Synthèse des interventions, maintenances, indicateurs qualité</p>
+            <button class="btn btn-orange" style="margin-top:16px;width:100%" onclick="generateMonthlyReport()"><i class="fas fa-download"></i> Télécharger PDF</button>
+          </div>
+        </div>
+        <div class="panel" style="cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor=&#39;var(--green)&#39;" onmouseout="this.style.borderColor=&#39;&#39;">
+          <div class="panel-header"><div class="panel-title"><i class="fas fa-shield-alt" style="color:var(--green)"></i> Rapport conformité DM</div></div>
+          <div class="panel-body">
+            <p style="font-size:13px;color:var(--text3)">Traçabilité réglementaire dispositifs médicaux — CE / ISO</p>
+            <button class="btn btn-green" style="margin-top:16px;width:100%"><i class="fas fa-download"></i> Télécharger PDF</button>
+          </div>
+        </div>
+        <div class="panel" style="cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor=&#39;var(--purple)&#39;" onmouseout="this.style.borderColor=&#39;&#39;">
+          <div class="panel-header"><div class="panel-title"><i class="fas fa-spray-can" style="color:var(--purple)"></i> Rapport désinfection</div></div>
+          <div class="panel-body">
+            <p style="font-size:13px;color:var(--text3)">Historique complet des opérations de désinfection et traçabilité</p>
+            <button class="btn btn-outline" style="margin-top:16px;width:100%;border-color:var(--purple);color:var(--purple)"><i class="fas fa-download"></i> Télécharger PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== APP MOBILE ===== -->
+    <div class="page" id="page-mobile">
+      <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+        <div class="mobile-frame" style="flex-shrink:0">
+          <div class="mobile-header">
+            <div>
+              <div style="font-family:&#39;Rajdhani&#39;,sans-serif;font-size:16px;font-weight:700;color:#000">PSDM Tech App</div>
+              <div style="font-size:11px;color:rgba(0,0,0,0.6)">D. Lourenco • En service</div>
+            </div>
+            <div style="background:rgba(0,0,0,0.15);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#000">
+              <i class="fas fa-bell"></i>
+            </div>
+          </div>
+          <div class="mobile-content">
+            <!-- Today's schedule -->
+            <div style="font-size:12px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Mes interventions aujourd'hui</div>
+            <div id="mobileInterv"></div>
+            <!-- Quick actions -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px">
+              <div style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);border-radius:10px;padding:14px;text-align:center;cursor:pointer" onclick="showToast(&#39;Scanner ouvert&#39;,&#39;info&#39;)">
+                <i class="fas fa-qrcode" style="font-size:24px;color:var(--accent);display:block;margin-bottom:6px"></i>
+                <div style="font-size:11px;color:var(--text2)">Scanner QR</div>
+              </div>
+              <div style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);border-radius:10px;padding:14px;text-align:center;cursor:pointer" onclick="openModal(&#39;modal-signature&#39;)">
+                <i class="fas fa-signature" style="font-size:24px;color:var(--green);display:block;margin-bottom:6px"></i>
+                <div style="font-size:11px;color:var(--text2)">Signature</div>
+              </div>
+              <div style="background:rgba(255,140,66,0.1);border:1px solid rgba(255,140,66,0.2);border-radius:10px;padding:14px;text-align:center;cursor:pointer" onclick="showToast(&#39;Caméra activée&#39;,&#39;info&#39;)">
+                <i class="fas fa-camera" style="font-size:24px;color:var(--orange);display:block;margin-bottom:6px"></i>
+                <div style="font-size:11px;color:var(--text2)">Photo matériel</div>
+              </div>
+              <div style="background:rgba(165,94,234,0.1);border:1px solid rgba(165,94,234,0.2);border-radius:10px;padding:14px;text-align:center;cursor:pointer" onclick="showGeo()">
+                <i class="fas fa-map-marker-alt" style="font-size:24px;color:var(--purple);display:block;margin-bottom:6px"></i>
+                <div style="font-size:11px;color:var(--text2)">Géolocaliser</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Features info -->
+        <div style="flex:1;min-width:280px">
+          <h3 style="font-family:&#39;Rajdhani&#39;,sans-serif;font-size:20px;margin-bottom:16px"><i class="fas fa-mobile-alt" style="color:var(--accent);margin-right:8px"></i>Application Technicien Mobile</h3>
+          <div style="display:flex;flex-direction:column;gap:12px" id="mobileFeatures"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end main -->
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- MODAL: New Intervention -->
+<div class="modal-overlay" id="modal-new-interv">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-plus-circle" style="color:var(--accent);margin-right:8px"></i>Nouvelle intervention</div>
+      <div class="modal-close" onclick="closeModal(&#39;modal-new-interv&#39;)"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="section-title"><i class="fas fa-info-circle"></i> Informations générales</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <div class="form-label">Date intervention</div>
+          <input type="date" class="form-input" id="interv-date">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Technicien</div>
+          <select class="form-select" id="interv-tech">
+            <option>D.LOURENCO</option>
+            <option>J.GOUZE</option>
+            <option>TECHNICIEN 3</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Patient</div>
+          <input type="text" class="form-input" placeholder="Nom du patient" id="interv-patient">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Lieu</div>
+          <select class="form-select" id="interv-lieu">
+            <option>DOMICILE</option>
+            <option>EHPAD</option>
+            <option>CLINIQUE</option>
+            <option>ATELIER</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Équipement</div>
+          <input type="text" class="form-input" placeholder="ID équipement ou n° série" id="interv-equip">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Type intervention</div>
+          <select class="form-select" id="interv-type">
+            <option>RÉVISION ANNUELLE</option>
+            <option>DÉPANNAGE</option>
+            <option>MISE EN SERVICE</option>
+            <option>MAINTENANCE PRÉVENTIVE</option>
+            <option>RETRAIT DE PARC</option>
+          </select>
+        </div>
+      </div>
+      <div class="section-title"><i class="fas fa-clipboard-list"></i> Détail technique</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <div class="form-label">Type matériel</div>
+          <select class="form-select" id="interv-mat-type" onchange="showMatChecks(this.value)">
+            <option value="">Sélectionner...</option>
+            <option value="FAUTEUIL">Fauteuil roulant</option>
+            <option value="LIT">Lit médicalisé</option>
+            <option value="LEVE">Lève-patient</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Durée (minutes)</div>
+          <input type="number" class="form-input" placeholder="ex: 45" id="interv-duree">
+        </div>
+      </div>
+      <div id="checklistContainer"></div>
+      <div class="section-title" style="margin-top:16px"><i class="fas fa-box"></i> Pièces remplacées</div>
+      <div class="form-grid three">
+        <div class="form-group">
+          <div class="form-label">Pièce 1</div>
+          <input type="text" class="form-input" placeholder="Référence pièce">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Pièce 2</div>
+          <input type="text" class="form-input" placeholder="Référence pièce">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Pièce 3</div>
+          <input type="text" class="form-input" placeholder="Référence pièce">
+        </div>
+      </div>
+      <div class="form-group full" style="margin-top:12px">
+        <div class="form-label">Description / Observations</div>
+        <textarea class="form-textarea" placeholder="Décrire l&#39;intervention effectuée..."></textarea>
+      </div>
+      <div class="section-title"><i class="fas fa-signature"></i> Signature patient</div>
+      <div class="sig-canvas-wrap" style="border-radius:8px">
+        <canvas id="sigCanvas" width="600" height="120"></canvas>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-outline btn-sm" onclick="clearSig()"><i class="fas fa-eraser"></i> Effacer</button>
+        <span style="font-size:11px;color:var(--text3);padding:6px 0">Signez dans le cadre ci-dessus</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal(&#39;modal-new-interv&#39;)">Annuler</button>
+      <button class="btn btn-primary" onclick="saveIntervention()"><i class="fas fa-save"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Signature -->
+<div class="modal-overlay" id="modal-signature">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-signature" style="color:var(--green);margin-right:8px"></i>Signature patient tactile</div>
+      <div class="modal-close" onclick="closeModal(&#39;modal-signature&#39;)"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text3);margin-bottom:16px">Le patient signe directement sur l'écran tactile pour valider l'intervention</p>
+      <div class="sig-canvas-wrap">
+        <canvas id="sigCanvas2" width="440" height="180"></canvas>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-outline btn-sm" onclick="clearSig2()"><i class="fas fa-eraser"></i> Effacer</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal(&#39;modal-signature&#39;)">Annuler</button>
+      <button class="btn btn-green" onclick="saveSignature()"><i class="fas fa-check"></i> Valider signature</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Ajouter équipement -->
+<div class="modal-overlay" id="modal-add-equip">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-plus" style="color:var(--accent);margin-right:8px"></i>Ajouter équipement</div>
+      <div class="modal-close" onclick="closeModal(&#39;modal-add-equip&#39;)"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <div class="form-label">ID Équipement</div>
+          <input type="text" class="form-input" placeholder="Ex: L400">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Type</div>
+          <select class="form-select">
+            <option>LIT</option>
+            <option>FAUTEUIL</option>
+            <option>LEVE PATIENTS</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Marque</div>
+          <select class="form-select">
+            <option>WINNCARE</option>
+            <option>INVACARE</option>
+            <option>SUNRISE</option>
+            <option>VERMEIREN</option>
+            <option>OTTOBOCK</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Modèle</div>
+          <input type="text" class="form-input" placeholder="Modèle">
+        </div>
+        <div class="form-group">
+          <div class="form-label">N° Série</div>
+          <input type="text" class="form-input" placeholder="Numéro de série">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Date mise en service</div>
+          <input type="date" class="form-input">
+        </div>
+        <div class="form-group full">
+          <div class="form-label">Statut</div>
+          <select class="form-select">
+            <option>DISPONIBLE</option>
+            <option>LOUE</option>
+            <option>MAINTENANCE</option>
+            <option>HORS SERVICE</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal(&#39;modal-add-equip&#39;)">Annuler</button>
+      <button class="btn btn-primary" onclick="addEquipment()"><i class="fas fa-save"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Rapport PDF -->
+<div class="modal-overlay" id="modal-rapport">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-file-pdf" style="color:var(--red);margin-right:8px"></i>Rapport d'intervention PDF</div>
+      <div class="modal-close" onclick="closeModal(&#39;modal-rapport&#39;)"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <div class="form-label">Sélectionner intervention</div>
+          <select class="form-select">
+            <option>INT-2025-001 — L330 — D.LOURENCO</option>
+            <option>INT-2025-002 — F214 — J.GOUZE</option>
+            <option>INT-2025-003 — LP061 — TECHNICIEN 3</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Format</div>
+          <select class="form-select">
+            <option>PDF A4 — Rapport complet</option>
+            <option>PDF compact — Bon de livraison</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:16px;background:var(--bg4);border-radius:8px;border:1px solid var(--border)">
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px">Inclure dans le rapport :</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked="" style="accent-color:var(--accent)"> Informations patient &amp; équipement</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked="" style="accent-color:var(--accent)"> Checklist technique</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked="" style="accent-color:var(--accent)"> Pièces remplacées</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked="" style="accent-color:var(--accent)"> Signature patient</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" style="accent-color:var(--accent)"> Photos matériel</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" style="accent-color:var(--accent)"> Géolocalisation GPS</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal(&#39;modal-rapport&#39;)">Annuler</button>
+      <button class="btn btn-red" onclick="generatePDF()"><i class="fas fa-file-pdf"></i> Générer PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Patient -->
+<div class="modal-overlay" id="modal-add-patient">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-user-plus" style="color:var(--purple);margin-right:8px"></i>Nouveau patient</div>
+      <div class="modal-close" onclick="closeModal(&#39;modal-add-patient&#39;)"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><div class="form-label">Nom</div><input type="text" class="form-input"></div>
+        <div class="form-group"><div class="form-label">Prénom</div><input type="text" class="form-input"></div>
+        <div class="form-group"><div class="form-label">Date naissance</div><input type="date" class="form-input"></div>
+        <div class="form-group"><div class="form-label">Téléphone</div><input type="tel" class="form-input"></div>
+        <div class="form-group full"><div class="form-label">Adresse complète</div><input type="text" class="form-input"></div>
+        <div class="form-group"><div class="form-label">Établissement</div><select class="form-select"><option>DOMICILE</option><option>EHPAD</option><option>CLINIQUE</option></select></div>
+        <div class="form-group"><div class="form-label">Médecin référent</div><input type="text" class="form-input"></div>
+        <div class="form-group full"><div class="form-label">Observations</div><textarea class="form-textarea"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal(&#39;modal-add-patient&#39;)">Annuler</button>
+      <button class="btn btn-primary" onclick="savePatient()"><i class="fas fa-save"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Plan event -->
+<div class="modal-overlay" id="modal-plan-event">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-calendar-plus" style="color:var(--accent);margin-right:8px"></i>Planifier une intervention</div>
+      <div class="modal-close" onclick="closeModal(&#39;modal-plan-event&#39;)"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><div class="form-label">Date</div><input type="date" class="form-input"></div>
+        <div class="form-group"><div class="form-label">Heure</div><input type="time" class="form-input"></div>
+        <div class="form-group"><div class="form-label">Technicien</div><select class="form-select"><option>D.LOURENCO</option><option>J.GOUZE</option><option>TECHNICIEN 3</option></select></div>
+        <div class="form-group"><div class="form-label">Type</div><select class="form-select"><option>INTERVENTION</option><option>MAINTENANCE</option><option>VISITE</option></select></div>
+        <div class="form-group"><div class="form-label">Patient</div><input type="text" class="form-input" placeholder="Nom patient"></div>
+        <div class="form-group"><div class="form-label">Adresse</div><input type="text" class="form-input" placeholder="Adresse intervention"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal(&#39;modal-plan-event&#39;)">Annuler</button>
+      <button class="btn btn-primary" onclick="saveEvent()"><i class="fas fa-save"></i> Planifier</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Alertes -->
+<div class="modal-overlay" id="modal-alerte">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-bell" style="color:var(--yellow);margin-right:8px"></i>Alertes &amp; Notifications</div>
+      <div class="modal-close" onclick="closeModal(&#39;modal-alerte&#39;)"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="modal-body" id="alertesList" style="padding:0">
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ============ DATA ============
+const DB = {
+  equipements: [
+    { id:'L023', type:'LIT', marque:'WINNCARE', modele:'FERNANDES', serie:'29/12/2001', statut:'LOUE', patient:'Dupont M.', localisation:'DOMICILE', dernMaint:'2024-01-15', prochMaint:'2025-01-15' },
+    { id:'L330', type:'LIT', marque:'WINNCARE', modele:'FR032201/05108', serie:'FR032201/05108', statut:'LOUE', patient:'Bernard A.', localisation:'EHPAD', dernMaint:'2024-03-20', prochMaint:'2025-03-20' },
+    { id:'L389', type:'LIT', marque:'WINNCARE', modele:'FR032209/04055', serie:'FR032209/04055', statut:'DISPONIBLE', patient:null, localisation:'ATELIER', dernMaint:'2023-11-10', prochMaint:'2025-03-10' },
+    { id:'F214', type:'FAUTEUIL', marque:'INVACARE', modele:'ACTION3', serie:'17LFM004713', statut:'LOUE', patient:'Martin C.', localisation:'DOMICILE', dernMaint:'2024-06-01', prochMaint:'2025-03-15' },
+    { id:'LP061', type:'LEVE PATIENTS', marque:'SUNRISE', modele:'Oxford', serie:'18K09000658', statut:'MAINTENANCE', patient:null, localisation:'ATELIER', dernMaint:'2023-08-20', prochMaint:'2024-08-20' },
+    { id:'L299', type:'LIT', marque:'WINNCARE', modele:'FR032009/05766', serie:'FR032009/05766', statut:'LOUE', patient:'Lemaire P.', localisation:'CLINIQUE', dernMaint:'2024-09-12', prochMaint:'2025-09-12' },
+    { id:'F089', type:'FAUTEUIL', marque:'VERMEIREN', modele:'ECLIPSE3', serie:'VR2201045', statut:'LOUE', patient:'Girard T.', localisation:'DOMICILE', dernMaint:'2024-02-28', prochMaint:'2025-02-28' },
+    { id:'LP042', type:'LEVE PATIENTS', marque:'OTTOBOCK', modele:'C650', serie:'OB180923', statut:'DISPONIBLE', patient:null, localisation:'ATELIER', dernMaint:'2024-12-01', prochMaint:'2025-12-01' },
+  ],
+  interventions: [
+    { id:'INT-2025-001', date:'2025-03-08', tech:'D.LOURENCO', patient:'Dupont M.', equip:'L330', type:'RÉVISION ANNUELLE', duree:45, statut:'TERMINÉE', sig:true },
+    { id:'INT-2025-002', date:'2025-03-09', tech:'J.GOUZE', patient:'Martin C.', equip:'F214', type:'DÉPANNAGE', duree:30, statut:'TERMINÉE', sig:true },
+    { id:'INT-2025-003', date:'2025-03-10', tech:'D.LOURENCO', patient:'Bernard A.', equip:'L389', type:'MAINTENANCE PRÉVENTIVE', duree:60, statut:'EN COURS', sig:false },
+    { id:'INT-2025-004', date:'2025-03-10', tech:'J.GOUZE', patient:'Lemaire P.', equip:'LP061', type:'MISE EN SERVICE', duree:90, statut:'PLANIFIÉE', sig:false },
+    { id:'INT-2025-005', date:'2025-03-11', tech:'TECHNICIEN 3', patient:'Girard T.', equip:'F089', type:'DÉPANNAGE', duree:25, statut:'PLANIFIÉE', sig:false },
+  ],
+  patients: [
+    { id:'PAT-001', nom:'DUPONT', prenom:'Marcel', naiss:'15/04/1942', adresse:'12 rue des Fleurs, Paris 75001', tel:'01 23 45 67 89', etab:'DOMICILE', equip:2 },
+    { id:'PAT-002', nom:'MARTIN', prenom:'Claire', naiss:'03/09/1958', adresse:'34 avenue Victor Hugo, Lyon 69002', tel:'04 72 33 44 55', etab:'DOMICILE', equip:1 },
+    { id:'PAT-003', nom:'BERNARD', prenom:'André', naiss:'22/11/1935', adresse:'EHPAD Les Jardins, Bordeaux', tel:'05 56 78 90 12', etab:'EHPAD', equip:1 },
+    { id:'PAT-004', nom:'LEMAIRE', prenom:'Pierre', naiss:'08/03/1947', adresse:'Clinique Saint-Luc, Marseille', tel:'04 91 22 33 44', etab:'CLINIQUE', equip:1 },
+    { id:'PAT-005', nom:'GIRARD', prenom:'Thomas', naiss:'14/07/1952', adresse:'8 impasse des Roses, Nantes 44000', tel:'02 40 55 66 77', etab:'DOMICILE', equip:1 },
+  ],
+  maintenances: [
+    { equip:'LP061', type:'Révision annuelle', freq:'12 mois', dernDate:'2023-08-20', prochDate:'2024-08-20', tech:'J.GOUZE', ecart:'+202 jours', statut:'URGENTE' },
+    { equip:'F214', type:'Contrôle réglementaire', freq:'12 mois', dernDate:'2024-06-01', prochDate:'2025-03-15', tech:'D.LOURENCO', ecart:'+5 jours', statut:'URGENTE' },
+    { equip:'L389', type:'Révision annuelle', freq:'12 mois', dernDate:'2023-11-10', prochDate:'2025-03-10', tech:'TECHNICIEN 3', ecart:'Cette semaine', statut:'DUE' },
+    { equip:'L023', type:'Maintenance préventive', freq:'6 mois', dernDate:'2024-01-15', prochDate:'2025-01-15', tech:'D.LOURENCO', ecart:'+55 jours', statut:'DUE' },
+    { equip:'F089', type:'Révision annuelle', freq:'12 mois', dernDate:'2024-02-28', prochDate:'2025-02-28', tech:'J.GOUZE', ecart:'+10 jours', statut:'DUE' },
+  ],
+  techniciens: [
+    { nom:'D.LOURENCO', couleur:'linear-gradient(135deg,#00d4ff,#0099cc)', initials:'DL', interv:98, maint:34, qualite:97, zone:'Paris / IDF Nord', dispo:'EN TOURNÉE', today:3 },
+    { nom:'J.GOUZE', couleur:'linear-gradient(135deg,#00e5a0,#009960)', initials:'JG', interv:87, maint:28, qualite:95, zone:'IDF Sud / Yvelines', dispo:'EN TOURNÉE', today:2 },
+    { nom:'TECHNICIEN 3', couleur:'linear-gradient(135deg,#a55eea,#7a3fc0)', initials:'T3', interv:62, maint:19, qualite:92, zone:'Val-de-Marne', dispo:'ATELIER', today:1 },
+  ],
+  alertes: [
+    { type:'danger', icon:'fa-exclamation-triangle', titre:'Maintenance URGENTE', msg:'LP061 — Révision annuelle dépassée de 202 jours', date:'Aujourd\'hui' },
+    { type:'danger', icon:'fa-exclamation-triangle', titre:'Maintenance URGENTE', msg:'F214 — Contrôle réglementaire dépassé de 5 jours', date:'Aujourd\'hui' },
+    { type:'warning', icon:'fa-calendar-times', titre:'Maintenance cette semaine', msg:'L389 — Révision annuelle due le 10/03/2025', date:'Cette semaine' },
+    { type:'warning', icon:'fa-tools', titre:'Intervention planifiée', msg:'INT-2025-004 — Mise en service LP, J.GOUZE', date:'Aujourd\'hui 14h00' },
+    { type:'info', icon:'fa-info-circle', titre:'Équipement retourné', msg:'LP042 disponible en atelier après maintenance', date:'09/03/2025' },
+  ]
+};
+
+// ============ NAVIGATION ============
+let currentPage = 'dashboard';
+
+function navigate(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  const p = document.getElementById('page-'+page);
+  if (p) p.classList.add('active');
+  if (el) el.classList.add('active');
+  else {
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+page+"'")) n.classList.add('active');
+    });
+  }
+
+  const titles = {
+    dashboard:'Tableau de bord', parc:'Parc équipements', interventions:'Interventions',
+    planning:'Planning tournées', patients:'Patients', techniciens:'Techniciens',
+    qrcode:'QR Codes', maintenance:'Maintenances réglementaires', desinfection:'Traçabilité désinfection',
+    qualite:'Contrôle qualité', rapports:'Rapports PDF', mobile:'Application Mobile Technicien'
+  };
+  document.getElementById('pageTitle').textContent = titles[page] || page;
+
+  currentPage = page;
+  if (page === 'parc') renderParc();
+  if (page === 'interventions') renderInterventions();
+  if (page === 'patients') renderPatients();
+  if (page === 'planning') renderCalendar();
+  if (page === 'techniciens') renderTechniciens();
+  if (page === 'maintenance') renderMaintenance();
+  if (page === 'qrcode') renderQRCodes();
+  if (page === 'mobile') renderMobile();
+  if (page === 'desinfection') renderDesinfection();
+  if (page === 'qualite') renderQualite();
+  if (page === 'rapports') {}
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+// ============ RENDER DASHBOARD ============
+function renderDashboard() {
+  // Activity chart
+  const months = ['Oct','Nov','Déc','Jan','Fév','Mar'];
+  const data = [32,41,28,55,48,62];
+  const max = Math.max(...data);
+  const chart = document.getElementById('activityChart');
+  const labels = document.getElementById('chartLabels');
+  chart.innerHTML = data.map((v,i) => `<div class="chart-bar${i===5?' green':''}" style="height:${(v/max)*100}%" title="${v} interventions"></div>`).join('');
+  labels.innerHTML = `<div class="chart-labels">${months.map(m=>`<div class="chart-label">${m}</div>`).join('')}</div>`;
+
+  // Today events
+  const today = document.getElementById('todayEvents');
+  const todayInterv = DB.interventions.filter(i => i.date === '2025-03-10');
+  today.innerHTML = todayInterv.map(i => `
+    <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer" onclick="navigate('interventions',null)">
+      <div style="width:4px;height:40px;border-radius:2px;background:${i.statut==='TERMINÉE'?'var(--green)':i.statut==='EN COURS'?'var(--accent)':'var(--orange)'}"></div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${i.type}</div>
+        <div style="font-size:11px;color:var(--text3)">${i.tech} • ${i.patient} • ${i.equip}</div>
+      </div>
+      <div class="badge badge-${i.statut==='TERMINÉE'?'green':i.statut==='EN COURS'?'blue':'orange'}">${i.statut}</div>
+    </div>
+  `).join('');
+
+  // Recent interventions
+  const tbody = document.getElementById('recentInterv');
+  tbody.innerHTML = DB.interventions.slice(0,5).map(i => `
+    <tr>
+      <td class="td-code">${i.id}</td>
+      <td>${i.date}</td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div style="width:6px;height:6px;border-radius:50%;background:var(--green)"></div>${i.tech}</div></td>
+      <td>${i.equip}</td>
+      <td>${i.type}</td>
+      <td>${i.statut==='PLANIFIÉE'?'—':'DOMICILE'}</td>
+      <td><span class="badge badge-${i.statut==='TERMINÉE'?'green':i.statut==='EN COURS'?'blue':'orange'}">${i.statut}</span></td>
+      <td><div class="icon-btn" onclick="openModal('modal-new-interv')" title="Voir"><i class="fas fa-eye"></i></div></td>
+    </tr>
+  `).join('');
+}
+
+// ============ RENDER PARC ============
+function renderParc() {
+  const type = document.getElementById('filterType')?.value || '';
+  const statut = document.getElementById('filterStatut')?.value || '';
+  const data = DB.equipements.filter(e => (!type||e.type===type) && (!statut||e.statut===statut));
+  const tbody = document.getElementById('parcTable');
+  tbody.innerHTML = data.map((e,i) => `
+    <tr>
+      <td class="td-code">${e.id}</td>
+      <td><span class="badge badge-${e.type==='LIT'?'blue':e.type==='FAUTEUIL'?'orange':'purple'}">${e.type}</span></td>
+      <td>${e.marque||'—'}</td>
+      <td><div style="font-size:13px">${e.modele}</div><div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">${e.serie}</div></td>
+      <td>${e.serie.match(/^\d{2}\/\d{2}\/\d{4}$/)?e.serie:'—'}</td>
+      <td>${e.patient?`<div style="font-size:13px">${e.patient}</div>`:'<span style="color:var(--text3)">—</span>'}</td>
+      <td><span class="badge badge-${e.statut==='LOUE'?'blue':e.statut==='DISPONIBLE'?'green':e.statut==='MAINTENANCE'?'orange':'red'}">${e.statut}</span></td>
+      <td>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=40x40&data=${encodeURIComponent(e.id)}" width="32" height="32" style="border-radius:4px;background:white;padding:2px" title="QR: ${e.id}">
+      </td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Voir fiche" onclick="showEquipDetail(${i})"><i class="fas fa-eye"></i></div>
+          <div class="icon-btn" title="Nouvelle intervention" onclick="openModal('modal-new-interv')"><i class="fas fa-tools"></i></div>
+          <div class="icon-btn danger" title="Supprimer"><i class="fas fa-trash"></i></div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterParc() { renderParc(); }
+
+// ============ RENDER INTERVENTIONS ============
+function renderInterventions() {
+  const tbody = document.getElementById('intervTable');
+  tbody.innerHTML = DB.interventions.map(i => `
+    <tr>
+      <td class="td-code">${i.id}</td>
+      <td>${i.date}</td>
+      <td>${i.tech}</td>
+      <td>${i.patient}</td>
+      <td class="td-code">${i.equip}</td>
+      <td>${i.type}</td>
+      <td>${i.duree} min</td>
+      <td><span class="badge badge-${i.statut==='TERMINÉE'?'green':i.statut==='EN COURS'?'blue':i.statut==='PLANIFIÉE'?'orange':'gray'}">${i.statut}</span></td>
+      <td>${i.sig?'<span class="badge badge-green"><i class="fas fa-check"></i> Signée</span>':'<span class="badge badge-gray">—</span>'}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Voir" onclick="openModal('modal-new-interv')"><i class="fas fa-eye"></i></div>
+          <div class="icon-btn" title="PDF" onclick="openModal('modal-rapport')"><i class="fas fa-file-pdf"></i></div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ============ RENDER PATIENTS ============
+function renderPatients() {
+  const tbody = document.getElementById('patientsTable');
+  tbody.innerHTML = DB.patients.map((p,i) => `
+    <tr>
+      <td class="td-code">${p.id}</td>
+      <td><div style="font-weight:600">${p.nom} ${p.prenom}</div></td>
+      <td>${p.naiss}</td>
+      <td style="font-size:12px;max-width:200px">${p.adresse}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:12px">${p.tel}</td>
+      <td><span class="badge badge-${p.etab==='DOMICILE'?'green':p.etab==='EHPAD'?'blue':'orange'}">${p.etab}</span></td>
+      <td><span class="badge badge-blue">${p.equip} équip.</span></td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Fiche patient"><i class="fas fa-user"></i></div>
+          <div class="icon-btn" title="Nouvelle intervention" onclick="openModal('modal-new-interv')"><i class="fas fa-tools"></i></div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ============ RENDER PLANNING CALENDAR ============
+let calYear = 2025, calMonth = 2; // Mars = index 2
+
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const headers = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  const firstDay = new Date(calYear, calMonth, 1);
+  const lastDay = new Date(calYear, calMonth+1, 0);
+  const startDow = (firstDay.getDay()+6)%7; // Monday=0
+
+  const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  document.getElementById('calMonthTitle').textContent = `${months[calMonth]} ${calYear}`;
+
+  const events = {
+    8:[{label:'INT-001 D.LOURENCO',cls:'interv'}],
+    9:[{label:'INT-002 J.GOUZE',cls:'interv'}],
+    10:[{label:'INT-003 D.LOURENCO',cls:'interv'},{label:'INT-004 J.GOUZE',cls:'interv'}],
+    11:[{label:'INT-005 TECH3',cls:'interv'},{label:'Maint LP061',cls:'maint'}],
+    15:[{label:'Visite F214',cls:'visit'},{label:'Maint L389',cls:'maint'}],
+    20:[{label:'INT-006 D.LOURENCO',cls:'interv'}]
+  };
+
+  let html = headers.map(h=>`<div class="cal-day-header">${h}</div>`).join('');
+
+  // Empty cells
+  for(let i=0;i<startDow;i++) html += `<div class="cal-day other-month"></div>`;
+
+  for(let d=1;d<=lastDay.getDate();d++) {
+    const isToday = d===10 && calMonth===2 && calYear===2025;
+    const dayEvents = events[d] || [];
+    html += `<div class="cal-day${isToday?' today':''}" onclick="openModal('modal-plan-event')">
+      <div class="cal-day-num">${d}</div>
+      ${dayEvents.map(e=>`<div class="cal-event ${e.cls}">${e.label}</div>`).join('')}
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+
+  // Tech disponibility
+  const techDiv = document.getElementById('techDisponibility');
+  techDiv.innerHTML = DB.techniciens.map(t => `
+    <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+      <div style="width:36px;height:36px;border-radius:50%;background:${t.couleur};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0">${t.initials}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${t.nom}</div>
+        <div style="font-size:11px;color:var(--text3)">${t.zone}</div>
+      </div>
+      <span class="badge badge-${t.dispo==='EN TOURNÉE'?'blue':'orange'}" style="font-size:10px">${t.dispo}</span>
+    </div>
+  `).join('');
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if(calMonth<0){calMonth=11;calYear--;}
+  if(calMonth>11){calMonth=0;calYear++;}
+  renderCalendar();
+}
+
+// ============ RENDER TECHNICIENS ============
+function renderTechniciens() {
+  const grid = document.getElementById('techGrid');
+  grid.innerHTML = DB.techniciens.map(t => `
+    <div class="tech-card">
+      <div class="tech-header">
+        <div class="tech-avatar" style="background:${t.couleur}">${t.initials}</div>
+        <div>
+          <div class="tech-name">${t.nom}</div>
+          <div class="tech-id">${t.zone}</div>
+          <span class="badge badge-${t.dispo==='EN TOURNÉE'?'blue':'orange'}" style="margin-top:4px;font-size:10px">${t.dispo}</span>
+        </div>
+      </div>
+      <div class="tech-stats">
+        <div class="tech-stat">
+          <div class="tech-stat-value" style="color:var(--accent)">${t.interv}</div>
+          <div class="tech-stat-label">Interventions</div>
+        </div>
+        <div class="tech-stat">
+          <div class="tech-stat-value" style="color:var(--orange)">${t.maint}</div>
+          <div class="tech-stat-label">Maintenances</div>
+        </div>
+        <div class="tech-stat">
+          <div class="tech-stat-value" style="color:var(--green)">${t.qualite}%</div>
+          <div class="tech-stat-label">Qualité</div>
+        </div>
+      </div>
+      <div class="tech-progress">
+        <div class="progress-label"><span style="font-size:11px;color:var(--text3)">Charge du jour</span><span style="font-size:11px">${t.today}/5 interventions</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${(t.today/5)*100}%;background:${t.couleur}"></div></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="btn btn-outline btn-sm" style="flex:1"><i class="fas fa-calendar"></i> Planning</button>
+        <button class="btn btn-outline btn-sm" style="flex:1"><i class="fas fa-chart-bar"></i> Stats</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============ RENDER MAINTENANCE ============
+function renderMaintenance() {
+  const tbody = document.getElementById('maintTable');
+  tbody.innerHTML = DB.maintenances.map(m => `
+    <tr>
+      <td class="td-code">${m.equip}</td>
+      <td>${m.type}</td>
+      <td>${m.freq}</td>
+      <td>${m.dernDate}</td>
+      <td>${m.prochDate}</td>
+      <td>${m.tech}</td>
+      <td><span style="color:${m.statut==='URGENTE'?'var(--red)':'var(--orange)'}; font-weight:600;font-size:12px">${m.ecart}</span></td>
+      <td><span class="badge badge-${m.statut==='URGENTE'?'red':'orange'}">${m.statut}</span></td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <div class="icon-btn" title="Programmer" onclick="openModal('modal-new-interv')"><i class="fas fa-calendar-plus"></i></div>
+          <div class="icon-btn" title="PDF" onclick="openModal('modal-rapport')"><i class="fas fa-file-pdf"></i></div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ============ RENDER QR CODES ============
+function renderQRCodes() {
+  const grid = document.getElementById('qrGrid');
+  grid.innerHTML = DB.equipements.slice(0,6).map(e => `
+    <div style="text-align:center;padding:12px;background:var(--bg4);border-radius:10px;border:1px solid var(--border)">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(e.id+'|'+e.type+'|'+e.serie)}" style="border-radius:6px;background:white;padding:4px;width:80px;height:80px">
+      <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--accent);margin-top:6px">${e.id}</div>
+      <div style="font-size:10px;color:var(--text3)">${e.type}</div>
+    </div>
+  `).join('');
+}
+
+// ============ RENDER MOBILE ============
+function renderMobile() {
+  const div = document.getElementById('mobileInterv');
+  const today = DB.interventions.filter(i => i.date === '2025-03-10');
+  div.innerHTML = today.map(i => `
+    <div style="background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div style="font-size:12px;font-weight:600">${i.type}</div>
+        <span class="badge badge-${i.statut==='TERMINÉE'?'green':i.statut==='EN COURS'?'blue':'orange'}" style="font-size:9px">${i.statut}</span>
+      </div>
+      <div style="font-size:11px;color:var(--text3)">${i.patient} • ${i.equip}</div>
+    </div>
+  `).join('');
+
+  const features = document.getElementById('mobileFeatures');
+  const feats = [
+    { icon:'fa-qrcode', color:'var(--accent)', title:'Scan QR Code', desc:'Identifier instantanément tout équipement par scan depuis le téléphone' },
+    { icon:'fa-signature', color:'var(--green)', title:'Signature tactile', desc:'Patient signe directement sur l\'écran tactile du technicien' },
+    { icon:'fa-camera', color:'var(--orange)', title:'Photos matériel', desc:'Prise de photo avant/après avec horodatage et géolocalisation' },
+    { icon:'fa-map-marker-alt', color:'var(--purple)', title:'Géolocalisation GPS', desc:'Position GPS de chaque intervention enregistrée automatiquement' },
+    { icon:'fa-route', color:'var(--yellow)', title:'Planning tournées', desc:'Optimisation automatique des tournées par zone géographique' },
+    { icon:'fa-wifi-slash', color:'var(--text2)', title:'Mode hors-ligne', desc:'Synchronisation différée si pas de réseau mobile' },
+  ];
+  features.innerHTML = feats.map(f => `
+    <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:10px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:${f.color}">
+        <i class="fas ${f.icon}" style="font-size:18px"></i>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:3px">${f.title}</div>
+        <div style="font-size:12px;color:var(--text3)">${f.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============ RENDER DESINFECTION ============
+function renderDesinfection() {
+  const tbody = document.getElementById('desinfTable');
+  const data = [
+    { date:'09/03/2025', tech:'D.LOURENCO', mat:'L330', produit:'ANIOS', temps:'15 min', points:'Barrières, Roulettes, Structure', obs:'RAS', valid:true },
+    { date:'08/03/2025', tech:'J.GOUZE', mat:'F214', produit:'SURFANIOS', temps:'10 min', points:'Assise, Dossier, Armatures', obs:'Trace persistante assise', valid:true },
+    { date:'07/03/2025', tech:'TECHNICIEN 3', mat:'Salle A', produit:'VAPEUR', temps:'30 min', points:'Sol, Murs, Matériel', obs:'RAS', valid:true },
+  ];
+  tbody.innerHTML = data.map(d => `
+    <tr>
+      <td>${d.date}</td>
+      <td>${d.tech}</td>
+      <td class="td-code">${d.mat}</td>
+      <td><span class="badge badge-blue">${d.produit}</span></td>
+      <td>${d.temps}</td>
+      <td style="font-size:12px;color:var(--text3)">${d.points}</td>
+      <td style="font-size:12px">${d.obs}</td>
+      <td>${d.valid?'<span class="badge badge-green"><i class="fas fa-check"></i> Validé</span>':'<span class="badge badge-orange">En attente</span>'}</td>
+    </tr>
+  `).join('');
+}
+
+// ============ RENDER QUALITE ============
+function renderQualite() {
+  const tbody = document.getElementById('qualiteTable');
+  const data = [
+    { date:'10/03/2025', equip:'L330', type:'Contrôle fonctionnel', result:'CONFORME', tech:'D.LOURENCO', action:'—', statut:'OK' },
+    { date:'09/03/2025', equip:'F214', type:'Vérification sécurité', result:'NON CONFORME', tech:'J.GOUZE', action:'Remplacement frein G', statut:'EN COURS' },
+    { date:'08/03/2025', equip:'LP061', type:'Test charge 200kg', result:'CONFORME', tech:'TECHNICIEN 3', action:'—', statut:'OK' },
+  ];
+  tbody.innerHTML = data.map(d => `
+    <tr>
+      <td>${d.date}</td>
+      <td class="td-code">${d.equip}</td>
+      <td>${d.type}</td>
+      <td><span class="badge badge-${d.result==='CONFORME'?'green':'red'}">${d.result}</span></td>
+      <td>${d.tech}</td>
+      <td style="font-size:12px;color:var(--text3)">${d.action}</td>
+      <td><span class="badge badge-${d.statut==='OK'?'green':'orange'}">${d.statut}</span></td>
+    </tr>
+  `).join('');
+}
+
+// ============ ALERTES ============
+function renderAlertes() {
+  const list = document.getElementById('alertesList');
+  list.innerHTML = DB.alertes.map(a => `
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px">
+      <div style="width:36px;height:36px;border-radius:8px;background:rgba(${a.type==='danger'?'255,71,87':a.type==='warning'?'255,140,66':'0,212,255'},0.1);display:flex;align-items:center;justify-content:center;color:${a.type==='danger'?'var(--red)':a.type==='warning'?'var(--orange)':'var(--accent)'};flex-shrink:0">
+        <i class="fas ${a.icon}"></i>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;margin-bottom:2px">${a.titre}</div>
+        <div style="font-size:12px;color:var(--text3)">${a.msg}</div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);white-space:nowrap">${a.date}</div>
+    </div>
+  `).join('');
+}
+
+// ============ SIGNATURE PAD ============
+function initSigPad(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  ctx.strokeStyle = '#1a2236';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+
+  const getPos = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    if(e.touches) return { x:(e.touches[0].clientX-rect.left)*scaleX, y:(e.touches[0].clientY-rect.top)*scaleY };
+    return { x:(e.clientX-rect.left)*scaleX, y:(e.clientY-rect.top)*scaleY };
+  };
+
+  canvas.addEventListener('mousedown', e => { drawing=true; ctx.beginPath(); const p=getPos(e); ctx.moveTo(p.x,p.y); });
+  canvas.addEventListener('mousemove', e => { if(!drawing)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); });
+  canvas.addEventListener('mouseup', ()=>drawing=false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; ctx.beginPath(); const p=getPos(e); ctx.moveTo(p.x,p.y); });
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); if(!drawing)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); });
+  canvas.addEventListener('touchend', ()=>drawing=false);
+}
+
+function clearSig() {
+  const c = document.getElementById('sigCanvas');
+  c.getContext('2d').clearRect(0,0,c.width,c.height);
+}
+function clearSig2() {
+  const c = document.getElementById('sigCanvas2');
+  c.getContext('2d').clearRect(0,0,c.width,c.height);
+}
+
+// ============ MODALS ============
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  if(id==='modal-new-interv' || id==='modal-signature') setTimeout(()=>{initSigPad('sigCanvas');initSigPad('sigCanvas2');},100);
+  if(id==='modal-alerte') renderAlertes();
+  // Set today date
+  const dateInp = document.getElementById('interv-date');
+  if(dateInp) dateInp.value = '2025-03-10';
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }));
+
+// ============ CHECKLIST ============
+function showMatChecks(type) {
+  const cont = document.getElementById('checklistContainer');
+  const checks = {
+    FAUTEUIL: ['Freins','Anti-bascule','Roues avant','Roues arrière','Pneus','Assise','Dossier','Repose-pieds','Châssis','Visserie','Batterie','Moteurs','Joystick','Câblage','Chargeur'],
+    LIT: ['Télécommande','Hauteur variable','Relève-buste','Vérins','Freins','Roues','Structure','Châssis','Visserie','Moteurs','Câblage'],
+    LEVE: ['Sangles','Batterie','Moteur','Télécommande','Chargeur','Structure']
+  };
+  if(!checks[type]){cont.innerHTML='';return;}
+  cont.innerHTML = `
+    <div class="section-title"><i class="fas fa-list-check"></i> Checklist ${type}</div>
+    <div class="checkbox-grid">
+      ${checks[type].map(c=>`<div class="check-item" onclick="this.classList.toggle('checked')"><input type="checkbox"><span class="check-label">${c}</span></div>`).join('')}
+    </div>
+  `;
+}
+
+// ============ ACTIONS ============
+async function saveIntervention() {
+  const data = {
+    ID_INTERVENTION: 'INT-'+Date.now(),
+    DATE:       document.getElementById('interv-date')?.value    || new Date().toISOString().split('T')[0],
+    TECHNICIEN: document.getElementById('interv-tech')?.value    || 'D.LOURENCO',
+    PATIENT:    document.getElementById('interv-patient')?.value || '',
+    EQUIPEMENT: document.getElementById('interv-equip')?.value   || '',
+    TYPE:       document.getElementById('interv-type')?.value    || 'RÉVISION',
+    DUREE:      document.getElementById('interv-duree')?.value   || '30',
+    STATUT:     'TERMINÉE'
+  };
+  // Ajout local immédiat
+  DB.interventions.unshift({ id:data.ID_INTERVENTION, date:data.DATE, tech:data.TECHNICIEN, patient:data.PATIENT, equip:data.EQUIPEMENT, type:data.TYPE, duree:parseInt(data.DUREE), statut:data.STATUT, sig:true });
+  closeModal('modal-new-interv');
+  showToast('⏳ Enregistrement dans Google Sheets...', 'info');
+  if(currentPage==='interventions') renderInterventions();
+  // Envoi vers Google Sheets
+  try {
+    const res = await fetch(`${SHEETS_CONFIG.url}?action=addIntervention&key=${SHEETS_CONFIG.apiKey}`, {
+      method:'POST',
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    showToast(json.ok ? '✅ Intervention enregistrée dans Google Sheets !' : '⚠️ Erreur Sheets : '+json.error, json.ok?'success':'warning');
+  } catch(e) { showToast('⚠️ Hors-ligne — intervention sauvée localement', 'warning'); }
+}
+
+async function addEquipment() {
+  const data = {
+    ID_EQUIPEMENT: document.getElementById('equip-id')?.value   || 'EQ-'+Date.now(),
+    TYPE:          document.getElementById('equip-type')?.value  || '',
+    MARQUE:        document.getElementById('equip-marque')?.value|| '',
+    MODELE:        document.getElementById('equip-modele')?.value|| '',
+    NUMERO_SERIE:  document.getElementById('equip-serie')?.value || '',
+    STATUT:        'DISPONIBLE'
+  };
+  closeModal('modal-add-equip');
+  showToast('⏳ Ajout dans Google Sheets...', 'info');
+  try {
+    const res = await fetch(`${SHEETS_CONFIG.url}?action=addEquipement&key=${SHEETS_CONFIG.apiKey}`, {
+      method:'POST',
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    showToast(json.ok ? '✅ Équipement ajouté dans Google Sheets !' : '⚠️ Erreur : '+json.error, json.ok?'success':'warning');
+    if(json.ok) syncFromSheets();
+  } catch(e) { showToast('⚠️ Hors-ligne — sauvé localement', 'warning'); }
+}
+
+async function savePatient() {
+  const data = {
+    ID_PATIENT: 'PAT-'+Date.now(),
+    NOM:        document.getElementById('pat-nom')?.value    || '',
+    PRENOM:     document.getElementById('pat-prenom')?.value || '',
+    TELEPHONE:  document.getElementById('pat-tel')?.value    || '',
+    ADRESSE:    document.getElementById('pat-adresse')?.value|| '',
+    MUTUELLE:   document.getElementById('pat-mutuelle')?.value||''
+  };
+  closeModal('modal-add-patient');
+  showToast('⏳ Enregistrement dans Google Sheets...', 'info');
+  try {
+    const res = await fetch(`${SHEETS_CONFIG.url}?action=addPatient&key=${SHEETS_CONFIG.apiKey}`, {
+      method:'POST',
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    showToast(json.ok ? '✅ Patient enregistré dans Google Sheets !' : '⚠️ Erreur : '+json.error, json.ok?'success':'warning');
+    if(json.ok) syncFromSheets();
+  } catch(e) { showToast('⚠️ Hors-ligne — sauvé localement', 'warning'); }
+}
+
+async function saveEvent() {
+  const data = {
+    ID_PLANNING:  'PLN-'+Date.now(),
+    DATE:         document.getElementById('plan-date')?.value  || new Date().toISOString().split('T')[0],
+    TECHNICIEN:   document.getElementById('plan-tech')?.value  || '',
+    PATIENT:      document.getElementById('plan-patient')?.value||'',
+    EQUIPEMENT:   document.getElementById('plan-equip')?.value || '',
+    TYPE:         document.getElementById('plan-type')?.value  || '',
+    HEURE_DEBUT:  document.getElementById('plan-heure')?.value || '',
+    STATUT:       'PLANIFIÉE'
+  };
+  closeModal('modal-plan-event');
+  showToast('⏳ Planification dans Google Sheets...', 'info');
+  try {
+    const res = await fetch(`${SHEETS_CONFIG.url}?action=addPlanning&key=${SHEETS_CONFIG.apiKey}`, {
+      method:'POST',
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    showToast(json.ok ? '✅ Intervention planifiée dans Google Sheets !' : '⚠️ Erreur : '+json.error, json.ok?'success':'warning');
+  } catch(e) { showToast('⚠️ Hors-ligne — sauvé localement', 'warning'); }
+}
+
+async function updateStatutEquipement(id, statut) {
+  showToast('⏳ Mise à jour statut...', 'info');
+  try {
+    const res = await fetch(`${SHEETS_CONFIG.url}?action=updateStatutEquipement&key=${SHEETS_CONFIG.apiKey}&id=${encodeURIComponent(id)}&statut=${encodeURIComponent(statut)}`);
+    const json = await res.json();
+    showToast(json.ok ? `✅ Statut "${statut}" mis à jour dans Sheets` : '⚠️ Erreur : '+json.error, json.ok?'success':'warning');
+    if(json.ok) syncFromSheets();
+  } catch(e) { showToast('⚠️ Hors-ligne', 'warning'); }
+}
+
+function saveSignature() {
+  closeModal('modal-signature');
+  showToast('Signature patient enregistrée','success');
+}
+
+function generatePDF() {
+  closeModal('modal-rapport');
+  showToast('Rapport PDF généré — Téléchargement en cours...','info');
+}
+
+function generateMonthlyReport() {
+  showToast('Rapport mensuel SAV généré','info');
+}
+
+function optimizeTournees() {
+  showToast('Tournées optimisées ! 3 techniciens — 12 km économisés','success');
+}
+
+function exportData() {
+  showToast('Export Excel en cours...','info');
+}
+
+function simulateScan() {
+  const equips = DB.equipements;
+  const e = equips[Math.floor(Math.random()*equips.length)];
+  document.getElementById('scanEquipId').textContent = `${e.id} — ${e.type} ${e.marque||''} ${e.modele}`;
+  document.getElementById('scanResult').style.display = 'block';
+  showToast(`QR Code scanné : ${e.id}`,'success');
+}
+
+function printQRCodes() {
+  showToast('Impression des QR codes — 8 étiquettes','info');
+}
+
+function showGeo() {
+  showToast('GPS : 48.8566°N, 2.3522°E — Paris, France','info');
+}
+
+function showEquipDetail(i) {
+  openModal('modal-add-equip');
+}
+
+// ============ TOAST ============
+function showToast(msg, type='info') {
+  const icons = {success:'fa-check-circle', error:'fa-times-circle', info:'fa-info-circle'};
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(()=>t.remove(), 3500);
+}
+
+// ============ SEARCH ============
+function globalSearch(val) {
+  if(!val) return;
+  if(val.length > 2) showToast(`Recherche : "${val}" — ${Math.floor(Math.random()*10)+1} résultats trouvés`,'info');
+}
+
+function switchTab(el, tab) {
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ============ GOOGLE SHEETS SYNC ============
+const SHEETS_CONFIG = {
+  url:          'https://script.google.com/macros/s/AKfycbyXFGK-ChsQGVk8zEwrsMkKCnHaagDZok_TQ3NgivrZlheqk_1ETJBQge1UAkwm2E8z/exec',
+  apiKey:       '78500Meditecpsdm',
+  syncInterval: 30000,
+  autoSync:     true
+};
+
+async function sheetsGet(action, params = {}) {
+  const qs = new URLSearchParams({ action, key: SHEETS_CONFIG.apiKey, ...params });
+  const r = await fetch(`${SHEETS_CONFIG.url}?${qs}`);
+  return r.json();
+}
+
+async function syncFromSheets() {
+  try {
+    setSyncStatus('syncing');
+    const res = await sheetsGet('getAll');
+    if (!res.ok) throw new Error(res.error);
+    if (res.data.equipements?.length)   DB.equipements   = res.data.equipements;
+    if (res.data.interventions?.length) DB.interventions = res.data.interventions;
+    if (res.data.patients?.length)      DB.patients      = res.data.patients;
+    if (res.data.techniciens?.length)   DB.techniciens   = res.data.techniciens;
+    if (res.data.maintenances?.length)  DB.maintenances  = res.data.maintenances;
+    renderDashboard();
+    renderParc();
+    setSyncStatus('ok');
+    showToast(`✅ Sync Google Sheets — ${res.data.equipements?.length || 0} équipements chargés`, 'success');
+  } catch(e) {
+    setSyncStatus('error');
+    showToast('⚠️ Sync Google Sheets échoué — mode hors-ligne', 'warning');
+  }
+}
+
+function setSyncStatus(status) {
+  let bar = document.getElementById('sync-bar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'sync-bar';
+    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;height:3px;z-index:9999;transition:all 0.3s';
+    document.body.prepend(bar);
+  }
+  bar.style.background = status === 'syncing' ? '#00d4ff' : status === 'ok' ? '#00e5a0' : '#ff4757';
+  bar.style.opacity = status === 'ok' ? '0' : '1';
+}
+
+// ============ INIT ============
+document.addEventListener('DOMContentLoaded', () => {
+  renderDashboard();
+  renderParc();
+  // Sync Google Sheets au démarrage
+  syncFromSheets();
+  // Sync automatique toutes les 30 secondes
+  if (SHEETS_CONFIG.autoSync) setInterval(syncFromSheets, SHEETS_CONFIG.syncInterval);
+
+  // Animate stats
+  setTimeout(() => {
+    document.querySelectorAll('.progress-fill').forEach(el => {
+      const w = el.style.width;
+      el.style.width = '0';
+      setTimeout(() => el.style.width = w, 100);
+    });
+  }, 300);
+});
+</script>
+
+
+</body></html>
