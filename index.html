@@ -3182,3 +3182,47 @@ document.getElementById('admin-user').addEventListener('keydown',e=>{if(e.key===
 </script>
 </body>
 </html>
+<script>
+// Cette fonction va forcer l'affichage si le système automatique échoue
+function forceRenderTable(data) {
+    const container = document.getElementById('equipements-list');
+    if (!container) return;
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = '<tr><td colspan="6">Aucune donnée trouvée</td></tr>';
+        return;
+    }
+
+    let html = '';
+    data.forEach(item => {
+        // On essaie de trouver les données même si le nom de la colonne change
+        const id = item.ID_EQUIPEMENT || item.ID || '—';
+        const nom = item.DESIGNATION || item.NOM || item.Equipement || '—';
+        const type = item.TYPE || item.Catégorie || '—';
+        const statut = item.STATUT || item.Etat || '—';
+        
+        html += `<tr>
+            <td>${id}</td>
+            <td><b>${nom}</b></td>
+            <td>${type}</td>
+            <td><span class="badge">${statut}</span></td>
+            <td><button class="btn-api" onclick="alert('ID: ${id}')">Détails</button></td>
+        </tr>`;
+    });
+    container.innerHTML = html;
+}
+
+// On force le déclenchement après 2 secondes si le tableau est toujours vide
+setTimeout(() => {
+    const container = document.getElementById('equipements-list');
+    if (container && container.innerText.includes('Chargement')) {
+        console.log("Tentative de récupération forcée...");
+        // Appelle ton API pour récupérer les données
+        fetch(SCRIPT_URL + "?action=getEquipements&key=78500Meditecpsdm")
+            .then(response => response.json())
+            .then(res => {
+                if(res.ok) forceRenderTable(res.data);
+            });
+    }
+}, 2000);
+</script>
