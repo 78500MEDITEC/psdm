@@ -25,7 +25,50 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;overflow:hidden;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;}
+<div style="position: fixed; top: 10px; right: 10px; z-index: 9999;">
+    <button onclick="testConnexionGoogle()" style="background:red; color:white; padding:15px; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+        ⚡ TESTER CONNEXION EQUIPEMENTS
+    </button>
+</div>
 
+<script>
+async function testConnexionGoogle() {
+    // REMPLACER PAR VOTRE URL WEB APP (Celle qui finit par /exec)
+    const url = "VOTRE_URL_SCRIPT_ICI"; 
+    const key = "78500Meditecpsdm";
+    
+    alert("Tentative de connexion...");
+    
+    try {
+        const response = await fetch(url + "?action=getEquipements&key=" + key);
+        const result = await response.json();
+        
+        if (result.ok) {
+            alert("SUCCÈS ! " + result.data.length + " équipements reçus.");
+            console.log("Données :", result.data);
+            
+            // On cherche le tableau pour le remplir de force
+            const table = document.getElementById('equipements-list');
+            if(table) {
+                table.innerHTML = result.data.map(item => `
+                    <tr>
+                        <td>${item.ID_EQUIPEMENT || 'N/A'}</td>
+                        <td>${item.DESIGNATION || 'N/A'}</td>
+                        <td>${item.STATUT || 'N/A'}</td>
+                    </tr>
+                `).join('');
+                alert("Tableau mis à jour !");
+            } else {
+                alert("Erreur : Impossible de trouver l'emplacement 'equipements-list' dans la page.");
+            }
+        } else {
+            alert("Erreur Google : " + result.error);
+        }
+    } catch (e) {
+        alert("Erreur de connexion : " + e.message);
+    }
+}
+</script>
 /* ── LOGIN SCREEN ── */
 #login-screen{
   position:fixed;inset:0;z-index:9999;
@@ -85,10 +128,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);displ
   box-shadow:0 4px 12px rgba(26,107,204,0.3);flex-shrink:0;}
 .logo-text .brand{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--accent);letter-spacing:1px;white-space:nowrap;}
 .logo-text .sub{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap;}
-.nav-section{padding:12px 0;border-bottom:1px solid var(--border);}
-.nav-section-title{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text3);
+.nav-{padding:12px 0;border-bottom:1px solid var(--border);}
+.nav--title{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text3);
   padding:0 20px 6px;font-weight:600;white-space:nowrap;overflow:hidden;}
-.sidebar.collapsed .nav-section-title{opacity:0;}
+.sidebar.collapsed .nav--title{opacity:0;}
 .nav-item{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;
   transition:all .2s;position:relative;white-space:nowrap;overflow:hidden;}
 .nav-item:hover{background:rgba(0,212,255,0.06);}
@@ -239,10 +282,10 @@ tr:hover td{background:rgba(0,212,255,0.03);}
 .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,255,0.08);}
 .form-textarea{resize:vertical;min-height:80px;}
 .form-select option{background:#ffffff;}
-.section-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;
+.-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;
   text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin:20px 0 12px;
   display:flex;align-items:center;gap:8px;}
-.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+.-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
 .checkbox-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;}
 .check-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg4);
   border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;}
@@ -362,11 +405,11 @@ canvas#sigCanvas,canvas#sigCanvas2{display:block;cursor:crosshair;touch-action:n
 .calc-result-row .val{font-weight:600;font-family:'JetBrains Mono',monospace;}
 
 /* ── RAPPORT TABLE ── */
-.rapport-section{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;}
-.rapport-section-header{background:linear-gradient(90deg,rgba(26,107,204,0.06),transparent);
+.rapport-{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.rapport--header{background:linear-gradient(90deg,rgba(26,107,204,0.06),transparent);
   padding:10px 16px;display:flex;justify-content:space-between;align-items:center;}
-.rapport-section-header .cli-name{font-weight:700;color:var(--accent);font-size:14px;}
-.rapport-section-header .cli-totals{font-size:12px;color:var(--text3);}
+.rapport--header .cli-name{font-weight:700;color:var(--accent);font-size:14px;}
+.rapport--header .cli-totals{font-size:12px;color:var(--text3);}
 
 @media(max-width:900px){
   .dashboard-grid,.dashboard-grid.two-col{grid-template-columns:1fr;}
@@ -423,8 +466,8 @@ canvas#sigCanvas,canvas#sigCanvas2{display:block;cursor:crosshair;touch-action:n
   </div>
 
   <div style="flex:1;overflow-y:auto;overflow-x:hidden;" class="nav-scroll">
-  <div class="nav-section">
-    <div class="nav-section-title">Principal</div>
+  <div class="nav-">
+    <div class="nav--title">Principal</div>
     <div class="nav-item active" onclick="navigate('dashboard',this)">
       <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
       <span class="nav-label">Tableau de bord</span>
@@ -440,8 +483,8 @@ canvas#sigCanvas,canvas#sigCanvas2{display:block;cursor:crosshair;touch-action:n
     </div>
   </div>
 
-  <div class="nav-section">
-    <div class="nav-section-title">Parc &amp; Patients</div>
+  <div class="nav-">
+    <div class="nav--title">Parc &amp; Patients</div>
     <div class="nav-item" onclick="navigate('parc',this)">
       <div class="nav-icon"><i class="fas fa-hospital-user"></i></div>
       <span class="nav-label">Parc équipements</span>
@@ -456,8 +499,8 @@ canvas#sigCanvas,canvas#sigCanvas2{display:block;cursor:crosshair;touch-action:n
     </div>
   </div>
 
-  <div class="nav-section">
-    <div class="nav-section-title">Maintenance &amp; Qualité</div>
+  <div class="nav-">
+    <div class="nav--title">Maintenance &amp; Qualité</div>
     <div class="nav-item" onclick="navigate('maintenance',this)">
       <div class="nav-icon"><i class="fas fa-wrench"></i></div>
       <span class="nav-label">Maintenances</span>
@@ -473,8 +516,8 @@ canvas#sigCanvas,canvas#sigCanvas2{display:block;cursor:crosshair;touch-action:n
     </div>
   </div>
 
-  <div class="nav-section">
-    <div class="nav-section-title">Ressources</div>
+  <div class="nav-">
+    <div class="nav--title">Ressources</div>
     <div class="nav-item" onclick="navigate('techniciens',this)">
       <div class="nav-icon"><i class="fas fa-hard-hat"></i></div>
       <span class="nav-label">Techniciens</span>
@@ -490,8 +533,8 @@ canvas#sigCanvas,canvas#sigCanvas2{display:block;cursor:crosshair;touch-action:n
   </div>
 
   <!-- NOUVEAUX MENUS -->
-  <div class="nav-section">
-    <div class="nav-section-title">Clients &amp; Facturation</div>
+  <div class="nav-">
+    <div class="nav--title">Clients &amp; Facturation</div>
     <div class="nav-item" onclick="navigate('clients',this)">
       <div class="nav-icon"><i class="fas fa-hospital"></i></div>
       <span class="nav-label">Gestion clients</span>
@@ -1162,7 +1205,7 @@ canvas#sigCanvas,canvas#sigCanvas2{display:block;cursor:crosshair;touch-action:n
   <div class="modal">
     <div class="modal-header"><div class="modal-title"><i class="fas fa-plus-circle" style="color:var(--accent);margin-right:8px"></i>Nouvelle intervention</div><div class="modal-close" onclick="closeModal('modal-new-interv')"><i class="fas fa-times"></i></div></div>
     <div class="modal-body">
-      <div class="section-title"><i class="fas fa-info-circle"></i> Informations générales</div>
+      <div class="-title"><i class="fas fa-info-circle"></i> Informations générales</div>
       <div class="form-grid">
         <div class="form-group"><div class="form-label">Date</div><input type="date" class="form-input" id="interv-date"></div>
         <div class="form-group"><div class="form-label">Technicien</div><select class="form-select" id="interv-tech"><option>D.LOURENCO</option><option>J.GOUZE</option><option>TECHNICIEN 3</option></select></div>
@@ -1171,20 +1214,20 @@ canvas#sigCanvas,canvas#sigCanvas2{display:block;cursor:crosshair;touch-action:n
         <div class="form-group"><div class="form-label">Équipement</div><input type="text" class="form-input" placeholder="ID équipement" id="interv-equip"></div>
         <div class="form-group"><div class="form-label">Type intervention</div><select class="form-select" id="interv-type"><option>RÉVISION ANNUELLE</option><option>DÉPANNAGE</option><option>MISE EN SERVICE</option><option>MAINTENANCE PRÉVENTIVE</option><option>RETRAIT DE PARC</option></select></div>
       </div>
-      <div class="section-title"><i class="fas fa-clipboard-list"></i> Détail technique</div>
+      <div class="-title"><i class="fas fa-clipboard-list"></i> Détail technique</div>
       <div class="form-grid">
         <div class="form-group"><div class="form-label">Type matériel</div><select class="form-select" id="interv-mat-type" onchange="showMatChecks(this.value)"><option value="">Sélectionner...</option><option value="FAUTEUIL">Fauteuil roulant</option><option value="LIT">Lit médicalisé</option><option value="LEVE">Lève-patient</option></select></div>
         <div class="form-group"><div class="form-label">Durée (min)</div><input type="number" class="form-input" placeholder="45" id="interv-duree"></div>
       </div>
       <div id="checklistContainer"></div>
-      <div class="section-title" style="margin-top:16px"><i class="fas fa-box"></i> Pièces remplacées</div>
+      <div class="-title" style="margin-top:16px"><i class="fas fa-box"></i> Pièces remplacées</div>
       <div class="form-grid three">
         <div class="form-group"><div class="form-label">Pièce 1</div><input type="text" class="form-input" placeholder="Référence pièce"></div>
         <div class="form-group"><div class="form-label">Pièce 2</div><input type="text" class="form-input" placeholder="Référence pièce"></div>
         <div class="form-group"><div class="form-label">Pièce 3</div><input type="text" class="form-input" placeholder="Référence pièce"></div>
       </div>
       <div class="form-group full" style="margin-top:12px"><div class="form-label">Observations</div><textarea class="form-textarea" placeholder="Décrire l'intervention..."></textarea></div>
-      <div class="section-title"><i class="fas fa-signature"></i> Signature patient</div>
+      <div class="-title"><i class="fas fa-signature"></i> Signature patient</div>
       <div class="sig-canvas-wrap"><canvas id="sigCanvas" width="600" height="120"></canvas></div>
       <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-outline btn-sm" onclick="clearSig()"><i class="fas fa-eraser"></i> Effacer</button></div>
     </div>
@@ -1944,7 +1987,7 @@ function showMatChecks(type){
   const cont=document.getElementById('checklistContainer');
   const checks={FAUTEUIL:['Freins','Anti-bascule','Roues avant','Roues arrière','Pneus','Assise','Dossier','Repose-pieds','Châssis','Visserie','Batterie','Moteurs','Joystick'],LIT:['Télécommande','Hauteur variable','Relève-buste','Vérins','Freins','Roues','Structure','Châssis','Moteurs'],LEVE:['Sangles','Batterie','Moteur','Télécommande','Structure']};
   if(!checks[type]){cont.innerHTML='';return;}
-  cont.innerHTML=`<div class="section-title"><i class="fas fa-list-check"></i> Checklist ${type}</div><div class="checkbox-grid">${checks[type].map(c=>`<div class="check-item" onclick="this.classList.toggle('checked')"><input type="checkbox"><span class="check-label">${c}</span></div>`).join('')}</div>`;
+  cont.innerHTML=`<div class="-title"><i class="fas fa-list-check"></i> Checklist ${type}</div><div class="checkbox-grid">${checks[type].map(c=>`<div class="check-item" onclick="this.classList.toggle('checked')"><input type="checkbox"><span class="check-label">${c}</span></div>`).join('')}</div>`;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2389,8 +2432,8 @@ function buildRapportUI(){
   Object.entries(byClient).forEach(([client,lines])=>{
     const cHT=lines.reduce((s,l)=>s+l.TOTAL_HT,0);const cTVA=lines.reduce((s,l)=>s+l.MONTANT_TVA,0);const cTTC=lines.reduce((s,l)=>s+l.TOTAL_TTC,0);
     const fmt=v=>v.toFixed(2).replace('.',',')+' €';
-    html+=`<div class="rapport-section">
-      <div class="rapport-section-header">
+    html+=`<div class="rapport-">
+      <div class="rapport--header">
         <div class="cli-name">${client}</div>
         <div class="cli-totals">HT: ${fmt(cHT)} | TVA: ${fmt(cTVA)} | <strong>TTC: ${fmt(cTTC)}</strong></div>
       </div>
