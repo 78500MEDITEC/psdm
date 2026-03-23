@@ -1,0 +1,3747 @@
+<!DOCTYPE html>
+<!-- PSDM PRO++ v4.0 -->
+<html lang="fr" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PSDM Medical Manager PRO++ v4.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg:#f0f4f8;--bg2:#ffffff;--bg3:#f8fafc;--bg4:#eef2f7;
+  --card:#ffffff;--border:#dde3ec;--border2:#c8d2e0;
+  --accent:#1a6bcc;--accent2:#1458a8;
+  --green:#0d9e6e;--orange:#e07b20;--red:#d93025;
+  --yellow:#d4960a;--purple:#7c3aed;
+  --text:#1a2332;--text2:#4a5e78;--text3:#8a9bb0;
+  --shadow:0 4px 20px rgba(0,0,0,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;}
+
+/* -- SIDEBAR -- */
+.sidebar{width:220px;min-width:220px;background:var(--accent2);display:flex;flex-direction:column;height:100vh;overflow-y:auto;z-index:100;}
+.sidebar-logo{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.sidebar-logo .brand{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:1px;}
+.sidebar-logo .version{font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.nav-section{padding:8px 0;}
+.nav-label{font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1.5px;padding:8px 16px 4px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;color:rgba(255,255,255,0.75);font-size:12px;font-weight:500;transition:all .2s;border-left:3px solid transparent;}
+.nav-item:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,0.15);color:#fff;border-left-color:#fff;}
+.nav-item i{width:16px;text-align:center;font-size:13px;}
+
+/* -- MAIN -- */
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{height:56px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;}
+.topbar-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--accent);flex:1;}
+.content-area{flex:1;overflow-y:auto;padding:20px;}
+.page{display:none;}.page.active{display:block;}
+
+/* -- CARDS & GRIDS -- */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.card-title{font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-1px);}
+.stat-val{font-size:28px;font-weight:700;color:var(--accent);}
+.stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+
+/* -- TABLES -- */
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:var(--bg4);color:var(--text2);font-weight:600;padding:10px 12px;text-align:left;border-bottom:2px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:hover td{background:var(--bg3);}
+
+/* -- FORMS -- */
+.form-group{margin-bottom:14px;}
+.form-label{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.5px;}
+.form-control{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg3);color:var(--text);font-size:13px;font-family:inherit;transition:border-color .2s;}
+.form-control:focus{outline:none;border-color:var(--accent);background:#fff;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+select.form-control{cursor:pointer;}
+
+/* -- CHECK ITEMS -- */
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:12px;}
+.check-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg4);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;}
+.check-item.ok{background:#e6f9f2;border-color:var(--green);color:var(--green);}
+.check-item.ko{background:#fdecea;border-color:var(--red);color:var(--red);}
+.check-item.na{background:#f0f4f8;border-color:var(--text3);color:var(--text3);}
+.check-label{font-size:12px;font-weight:500;}
+.check-btns{display:flex;gap:4px;margin-left:auto;}
+.check-btn{padding:2px 7px;border:1px solid;border-radius:4px;font-size:10px;cursor:pointer;font-weight:600;}
+.check-btn.ok{background:#e6f9f2;border-color:var(--green);color:var(--green);}
+.check-btn.ko{background:#fdecea;border-color:var(--red);color:var(--red);}
+.check-btn.na{background:#f0f4f8;border-color:var(--text3);color:var(--text3);}
+.check-btn.active{opacity:1;font-weight:700;}
+
+/* -- BADGES -- */
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.badge-green{background:#e6f9f2;color:var(--green);}
+.badge-orange{background:#fff3e6;color:var(--orange);}
+.badge-red{background:#fdecea;color:var(--red);}
+.badge-blue{background:#e8f0fe;color:var(--accent);}
+.badge-gray{background:var(--bg4);color:var(--text3);}
+.badge-purple{background:#f3eeff;color:var(--purple);}
+
+/* -- BUTTONS -- */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:inherit;}
+.btn-primary{background:var(--accent);color:#fff;}.btn-primary:hover{background:var(--accent2);}
+.btn-success{background:var(--green);color:#fff;}
+.btn-danger{background:var(--red);color:#fff;}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text2);}.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn-sm{padding:5px 10px;font-size:11px;}
+.btn-save{background:linear-gradient(135deg,#0d9e6e,#0a7a55);color:#fff;font-size:13px;padding:10px 20px;}
+.btn-save:hover{opacity:.9;}
+
+/* -- MODALS -- */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border-radius:16px;width:90%;max-width:700px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+.modal-lg{max-width:900px;}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.modal-title{font-size:16px;font-weight:700;color:var(--text);}
+.modal-close{cursor:pointer;color:var(--text3);font-size:18px;padding:4px;}
+.modal-body{padding:24px;overflow-y:auto;flex:1;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;flex-shrink:0;}
+
+/* -- ALERTS -- */
+.alert{padding:10px 14px;border-radius:8px;font-size:12px;margin-bottom:12px;display:flex;align-items:flex-start;gap:8px;}
+.alert-info{background:#e8f0fe;border:1px solid #b3c8f5;color:var(--accent);}
+.alert-warning{background:#fff8e6;border:1px solid #f5d78b;color:var(--orange);}
+.alert-success{background:#e6f9f2;border:1px solid #7dd9b8;color:var(--green);}
+.alert-danger{background:#fdecea;border:1px solid #f5b3ae;color:var(--red);}
+
+/* -- TOAST -- */
+.toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:13px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);min-width:280px;animation:slideIn .3s ease;}
+.toast.success{border-left:4px solid var(--green);}
+.toast.error{border-left:4px solid var(--red);}
+.toast.info{border-left:4px solid var(--accent);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+/* -- LOGIN -- */
+#login-screen{position:fixed;inset:0;background:var(--accent2);display:flex;align-items:center;justify-content:center;z-index:9998;}
+#login-screen.hidden{display:none;}
+.login-box{background:#fff;border-radius:16px;padding:40px;width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.login-logo{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--accent);margin-bottom:4px;}
+.login-sub{font-size:12px;color:var(--text3);margin-bottom:28px;}
+
+/* -- TOPBAR SYNC -- */
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);}
+.sync-dot.syncing{background:var(--orange);animation:pulse 1s infinite;}
+.sync-dot.error{background:var(--red);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3};}
+
+/* -- SECTION TITLE -- */
+.section-title{font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+
+/* -- FILTER BAR -- */
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.filter-select{padding:6px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg3);font-size:12px;color:var(--text);cursor:pointer;}
+.search-input{padding:6px 12px;border:1px solid var(--border);border-radius:7px;background:var(--bg3);font-size:12px;color:var(--text);min-width:180px;}
+
+/* -- TABS -- */
+.tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:0;}
+.tab{padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* -- TOOLBAR SAVE -- */
+.toolbar-save{position:fixed;bottom:20px;right:20px;z-index:500;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">?? PSDM</div>
+    <div class="login-sub">Medical Manager PRO++ v4.0 — Meditec</div>
+    <div class="form-group"><label class="form-label">Identifiant</label><input class="form-control" id="admin-user" type="text" placeholder="admin"></div>
+    <div class="form-group"><label class="form-label">Mot de passe</label><input class="form-control" id="admin-pass" type="password" placeholder="••••••"></div>
+    <div id="login-err" style="display:none;color:var(--red);font-size:12px;margin-bottom:10px">Identifiants incorrects</div>
+    <button class="btn btn-primary" style="width:100%" onclick="doLogin()"><i class="fas fa-lock"></i> Connexion</button>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- APP SHELL -->
+<div id="app-shell" style="display:none;width:100%;height:100vh;overflow:hidden;display:none;flex-direction:row;">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">?? PSDM</div>
+    <div class="version">v4.0 — Meditec</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Principal</div>
+    <div class="nav-item active" onclick="navigate('dashboard')"><i class="fas fa-tachometer-alt"></i> Tableau de bord</div>
+    <div class="nav-item" onclick="navigate('parc')"><i class="fas fa-warehouse"></i> Parc équipements</div>
+    <div class="nav-item" onclick="navigate('patients')"><i class="fas fa-user-injured"></i> Patients</div>
+    <div class="nav-item" onclick="navigate('interventions')"><i class="fas fa-tools"></i> Interventions</div>
+    <div class="nav-item" onclick="navigate('planning')"><i class="fas fa-calendar-alt"></i> Planning</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Qualité</div>
+    <div class="nav-item" onclick="navigate('maintenances')"><i class="fas fa-wrench"></i> Maintenances</div>
+    <div class="nav-item" onclick="navigate('desinfection')"><i class="fas fa-spray-can"></i> Désinfection</div>
+    <div class="nav-item" onclick="navigate('qualite')"><i class="fas fa-clipboard-check"></i> Contrôle qualité</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Commercial</div>
+    <div class="nav-item" onclick="navigate('clients')"><i class="fas fa-building"></i> Clients</div>
+    <div class="nav-item" onclick="navigate('mercuriales')"><i class="fas fa-tags"></i> Mercuriales</div>
+    <div class="nav-item" onclick="navigate('rapport_location')"><i class="fas fa-file-invoice-dollar"></i> Rapport location</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Equipe</div>
+    <div class="nav-item" onclick="navigate('techniciens')"><i class="fas fa-hard-hat"></i> Techniciens</div>
+    <div class="nav-item" onclick="navigate('rapports')"><i class="fas fa-chart-bar"></i> Rapports</div>
+  </div>
+  <div class="nav-section" style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;">
+    <div class="nav-item" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</div>
+  </div>
+</div>
+
+<!-- MAIN AREA -->
+<div class="main-area">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Tableau de bord</div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text3)">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncLabel">Non synchronisé</span>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="syncFromSheets()"><i class="fas fa-sync"></i> Sync</button>
+    <button class="btn btn-save btn-sm" onclick="saveAllLocal()"><i class="fas fa-save"></i> Sauvegarder</button>
+    <button class="btn btn-outline btn-sm" onclick="openModal('modal-config')"><i class="fas fa-cog"></i></button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-area" id="contentArea">
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : DASHBOARD                                       -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid" id="dashStats"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-bell" style="color:var(--orange)"></i> Alertes maintenances</div></div>
+          <div id="dashAlertes" style="font-size:12px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-calendar-day" style="color:var(--accent)"></i> Interventions du jour</div></div>
+          <div id="dashInterv" style="font-size:12px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : PARC EQUIPEMENTS                               -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-parc">
+      <div class="card">
+        <div class="filter-bar">
+          <input class="search-input" id="searchParc" placeholder="?? Rechercher..." oninput="renderParc()">
+          <select class="filter-select" id="filterType" onchange="renderParc()">
+            <option value="">Tous types</option>
+            <option>LIT</option><option>FAUTEUIL MANUEL</option><option>FAUTEUIL ELECTRIQUE</option>
+            <option>LEVE PATIENT</option><option>VERTICALISATEUR</option><option>DEAMBULATEUR</option>
+          </select>
+          <select class="filter-select" id="filterStatut" onchange="renderParc()">
+            <option value="">Tous statuts</option>
+            <option>DISPONIBLE</option><option>LOUE</option><option>MAINTENANCE</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-equip')"><i class="fas fa-plus"></i> Ajouter</button>
+          <button class="btn btn-outline btn-sm" onclick="syncFromSheets()"><i class="fas fa-sync"></i> Sync</button>
+          <button class="btn btn-outline btn-sm" onclick="exportParc()"><i class="fas fa-download"></i> Export</button>
+        </div>
+        <table>
+          <thead><tr><th>ID</th><th>Type</th><th>Marque</th><th>Modèle</th><th>Série</th><th>Mise en parc</th><th>Proch. révision</th><th>Patient</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="parcTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : PATIENTS                                        -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-patients">
+      <div class="card">
+        <div class="filter-bar">
+          <input class="search-input" id="searchPatients" placeholder="?? Rechercher..." oninput="renderPatients()">
+          <select class="filter-select" id="filterEtab" onchange="renderPatients()">
+            <option value="">Tous établissements</option>
+            <option>DOMICILE</option><option>EHPAD</option><option>HOPITAL</option><option>CLINIQUE</option><option>SSR</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-patient')"><i class="fas fa-plus"></i> Nouveau patient</button>
+        </div>
+        <table>
+          <thead><tr><th>N° Client</th><th>Nom</th><th>Prénom</th><th>CP / Ville</th><th>Tél</th><th>Email</th><th>Établissement</th><th>Équipements</th><th>Actions</th></tr></thead>
+          <tbody id="patientsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : INTERVENTIONS                                   -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-interventions">
+      <div class="card">
+        <div class="filter-bar">
+          <input class="search-input" id="searchInterv" placeholder="?? Rechercher..." oninput="renderInterventions()">
+          <select class="filter-select" id="filterIntervType" onchange="renderInterventions()">
+            <option value="">Tous types</option>
+            <option>FAUTEUIL_MANUEL</option><option>FAUTEUIL_ELECTRIQUE</option><option>LIT</option>
+            <option>LEVE_PATIENT</option><option>VERTICALISATEUR</option><option>DEAMBULATEUR</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-intervention')"><i class="fas fa-plus"></i> Nouvelle intervention</button>
+          <button class="btn btn-outline btn-sm" onclick="printInterventions()"><i class="fas fa-print"></i> Imprimer</button>
+        </div>
+        <table>
+          <thead><tr><th>ID</th><th>Date</th><th>Technicien</th><th>Patient</th><th>Type matériel</th><th>Lieu</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="intervTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : PLANNING                                        -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-planning">
+      <div class="card">
+        <div class="filter-bar">
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-planning')"><i class="fas fa-plus"></i> Planifier</button>
+          <button class="btn btn-outline btn-sm" onclick="printPlanning()"><i class="fas fa-print"></i> Imprimer</button>
+        </div>
+        <table>
+          <thead><tr><th>Date</th><th>Heure</th><th>Technicien</th><th>Patient</th><th>Type</th><th>Équipement</th><th>Priorité</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="planningTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : MAINTENANCES                                    -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-maintenances">
+      <div class="card">
+        <div class="filter-bar">
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-maintenance')"><i class="fas fa-plus"></i> Nouvelle maintenance</button>
+          <button class="btn btn-outline btn-sm" onclick="printMaintenances()"><i class="fas fa-print"></i> Imprimer</button>
+        </div>
+        <table>
+          <thead><tr><th>Équipement</th><th>Type</th><th>Fréquence</th><th>Dernière</th><th>Prochaine</th><th>Technicien</th><th>Statut</th><th>Alerte</th><th>Actions</th></tr></thead>
+          <tbody id="maintenancesTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+   <!-- PAGE : DESINFECTION (suite) -->
+    <div class="page" id="page-desinfection">
+      <div class="tabs">
+        <div class="tab active" onclick="switchDesinfTab('mat',this)">?? Matériel</div>
+        <div class="tab" onclick="switchDesinfTab('salle',this)">?? Salle</div>
+        <div class="tab" onclick="switchDesinfTab('hist',this)">?? Historique</div>
+      </div>
+
+      <!-- TAB MATERIEL -->
+      <div id="desinf-tab-mat">
+        <div class="card">
+          <div class="filter-bar">
+            <button class="btn btn-primary btn-sm" onclick="openModal('modal-desinf-mat')">
+              <i class="fas fa-plus"></i> Nouvelle désinfection matériel
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="printDesinfMat()">
+              <i class="fas fa-print"></i> Imprimer
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Date</th><th>Technicien</th><th>Matériel</th>
+                <th>Marque</th><th>Produit</th><th>Validation</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="desinfMatTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB SALLE -->
+      <div id="desinf-tab-salle" style="display:none">
+        <div class="card">
+          <div class="filter-bar">
+            <button class="btn btn-primary btn-sm" onclick="openModal('modal-desinf-salle')">
+              <i class="fas fa-plus"></i> Nouvelle désinfection salle
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="printDesinfSalle()">
+              <i class="fas fa-print"></i> Imprimer
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Date</th><th>Technicien</th><th>Salle</th>
+                <th>Produit</th><th>Surface</th><th>Validation</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="desinfSalleTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB HISTORIQUE -->
+      <div id="desinf-tab-hist" style="display:none">
+        <div class="card">
+          <div id="desinfHistContent" style="font-size:12px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : CONTROLE QUALITE                               -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-qualite">
+      <div class="card">
+        <div class="filter-bar">
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-qualite')">
+            <i class="fas fa-plus"></i> Nouveau contrôle
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="printQualite()">
+            <i class="fas fa-print"></i> Imprimer
+          </button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Date</th><th>Équipement</th><th>Contrôle</th>
+              <th>Résultat</th><th>Technicien</th><th>Conformité</th>
+              <th>Prochain</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="qualiteTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : CLIENTS                                         -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-clients">
+      <div class="card">
+        <div class="filter-bar">
+          <input class="search-input" id="searchClients" placeholder="?? Rechercher..." oninput="renderClients()">
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-client')">
+            <i class="fas fa-plus"></i> Nouveau client
+          </button>
+        </div>
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Nom</th><th>Type</th><th>CP/Ville</th>
+            <th>Tél</th><th>Email</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="clientsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : MERCURIALES                                     -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-mercuriales">
+      <div class="card">
+        <div class="filter-bar">
+          <select class="filter-select" id="filterMercClient" onchange="renderMercuriales()">
+            <option value="">Tous les clients</option>
+          </select>
+          <input class="search-input" id="searchMerc" placeholder="?? Rechercher..." oninput="renderMercuriales()">
+          <button class="btn btn-primary btn-sm" onclick="openMercModal()">
+            <i class="fas fa-plus"></i> Ajouter article
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="printMercuriales()">
+            <i class="fas fa-print"></i> Imprimer
+          </button>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Réf</th><th>Client</th><th>Désignation</th><th>Modèle</th>
+            <th>Conditionnement</th><th>Prix HT</th><th>TVA</th><th>Prix/Jour HT</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="mercTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : RAPPORT LOCATION                               -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-rapport_location">
+      <div class="card">
+        <div class="filter-bar">
+          <select class="filter-select" id="filterRapportClient" onchange="renderRapportLocation()">
+            <option value="">Tous les clients</option>
+          </select>
+          <input type="month" class="filter-select" id="filterRapportMois" onchange="renderRapportLocation()">
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-rapport-ligne')">
+            <i class="fas fa-plus"></i> Ajouter ligne
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="printRapportLocation()">
+            <i class="fas fa-print"></i> Générer rapport PDF
+          </button>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Rapport</th><th>Client</th><th>Équipement</th><th>Dépose</th>
+            <th>Récupération</th><th>Jours</th><th>Prix/J</th><th>Total HT</th>
+            <th>TVA</th><th>Total TTC</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="rapportLocTable"></tbody>
+        </table>
+        <div id="rapportLocTotal" style="text-align:right;padding:10px;font-weight:700;font-size:14px;"></div>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : TECHNICIENS                                     -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-techniciens">
+      <div class="card">
+        <div class="filter-bar">
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-technicien')">
+            <i class="fas fa-plus"></i> Nouveau technicien
+          </button>
+        </div>
+        <div id="techGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;"></div>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------ -->
+    <!-- PAGE : RAPPORTS                                        -->
+    <!-- ------------------------------------------------------ -->
+    <div class="page" id="page-rapports">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-chart-bar"></i> Rapport mensuel SAV</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mois</label>
+            <input type="month" class="form-control" id="rapportMois">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Technicien</label>
+            <select class="form-control" id="rapportTech">
+              <option value="">Tous</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="genererRapportSAV()">
+            <i class="fas fa-print"></i> Générer & Imprimer
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-file-invoice"></i> Rapport désinfection</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Période</label>
+            <input type="month" class="form-control" id="rapportDesinfMois">
+          </div>
+          <button class="btn btn-primary" onclick="genererRapportDesinf()">
+            <i class="fas fa-print"></i> Générer & Imprimer
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-clipboard-list"></i> Rapport parc</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Type équipement</label>
+            <select class="form-control" id="rapportParcType">
+              <option value="">Tous</option>
+              <option>LIT</option><option>FAUTEUIL MANUEL</option>
+              <option>FAUTEUIL ELECTRIQUE</option><option>LEVE PATIENT</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="genererRapportParc()">
+            <i class="fas fa-print"></i> Générer & Imprimer
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-user-check"></i> Rapport qualité</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Période</label>
+            <input type="month" class="form-control" id="rapportQualiteMois">
+          </div>
+          <button class="btn btn-primary" onclick="genererRapportQualite()">
+            <i class="fas fa-print"></i> Générer & Imprimer
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- fin content-area -->
+</div><!-- fin main-area -->
+</div><!-- fin app-shell -->
+
+<!-- ---------------------------------------------------------- -->
+<!-- MODALS                                                     -->
+<!-- ---------------------------------------------------------- -->
+
+<!-- CONFIG -->
+<div class="modal-overlay" id="modal-config">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">?? Configuration</div>
+      <span class="modal-close" onclick="closeModal('modal-config')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">URL Google Apps Script</label>
+        <input class="form-control" id="cfg-url" placeholder="https://script.google.com/macros/s/...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Clé API</label>
+        <input class="form-control" id="cfg-key" placeholder="78500Meditecpsdm">
+      </div>
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        Après modification, cliquez Sauvegarder puis Sync pour charger les données.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-config')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveConfig()">
+        <i class="fas fa-save"></i> Sauvegarder
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PATIENT -->
+<div class="modal-overlay" id="modal-patient">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title" id="modalPatientTitle">?? Nouveau patient</div>
+      <span class="modal-close" onclick="closeModal('modal-patient')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row-3">
+        <div class="form-group">
+          <label class="form-label">N° Client <small style="color:var(--text3)">(libre)</small></label>
+          <input class="form-control" id="pat-numclient" placeholder="Ex: 23901">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nom *</label>
+          <input class="form-control" id="pat-nom" placeholder="NOM">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Prénom</label>
+          <input class="form-control" id="pat-prenom" placeholder="Prénom">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date de naissance</label>
+          <input class="form-control" id="pat-ddn" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Téléphone</label>
+          <input class="form-control" id="pat-tel" placeholder="06 00 00 00 00">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-control" id="pat-email" type="email" placeholder="patient@email.fr">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Adresse</label>
+        <input class="form-control" id="pat-adresse" placeholder="N° et nom de rue">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Code postal</label>
+          <input class="form-control" id="pat-cp" placeholder="78500" maxlength="5">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ville</label>
+          <input class="form-control" id="pat-ville" placeholder="SARTROUVILLE">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Établissement</label>
+          <select class="form-control" id="pat-etab">
+            <option>DOMICILE</option><option>EHPAD</option>
+            <option>HOPITAL</option><option>CLINIQUE</option><option>SSR</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Médecin</label>
+          <input class="form-control" id="pat-medecin" placeholder="Dr ...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Équipements attribués</label>
+        <input class="form-control" id="pat-equipements"
+          placeholder="Ex: L001, F023, LP045 (séparés par des virgules)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Observations</label>
+        <textarea class="form-control" id="pat-notes" rows="2"></textarea>
+      </div>
+      <input type="hidden" id="pat-id">
+      <input type="hidden" id="pat-update" value="0">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-patient')">Annuler</button>
+      <button class="btn btn-primary" onclick="savePatient()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- EQUIPEMENT -->
+<div class="modal-overlay" id="modal-add-equip">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">?? Équipement</div>
+      <span class="modal-close" onclick="closeModal('modal-add-equip')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ID Équipement</label>
+          <input class="form-control" id="eq-id" placeholder="Ex: F001">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type *</label>
+          <select class="form-control" id="eq-type">
+            <option>LIT</option><option>FAUTEUIL MANUEL</option>
+            <option>FAUTEUIL ELECTRIQUE</option><option>LEVE PATIENT</option>
+            <option>VERTICALISATEUR</option><option>DEAMBULATEUR</option>
+            <option>MATELAS AIR</option><option>NEBULISATEUR</option>
+            <option>ASPIRATEUR</option><option>TENS</option>
+            <option>TIRE LAIT</option><option>AUTRE</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Marque</label>
+          <input class="form-control" id="eq-marque" placeholder="INVACARE...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Modèle</label>
+          <input class="form-control" id="eq-modele">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">N° de série</label>
+          <input class="form-control" id="eq-serie">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mise en parc</label>
+          <input class="form-control" id="eq-miseenparc" type="date">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Patient</label>
+          <input class="form-control" id="eq-patient" list="listPatients">
+          <datalist id="listPatients"></datalist>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Statut</label>
+          <select class="form-control" id="eq-statut">
+            <option>DISPONIBLE</option><option>LOUE</option>
+            <option>MAINTENANCE</option><option>HORS SERVICE</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-add-equip')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveEquipement()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- INTERVENTION -->
+<div class="modal-overlay" id="modal-intervention">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title">?? Nouvelle intervention</div>
+      <span class="modal-close" onclick="closeModal('modal-intervention')">?</span>
+    </div>
+    <div class="modal-body">
+      <!-- STEP 1 : sélection type -->
+      <div id="interv-step1">
+        <div class="section-title">1. Sélectionnez le type de matériel</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div class="stat-card" style="text-align:center" onclick="selectIntervType('FAUTEUIL_MANUEL')">
+            <div style="font-size:28px">?</div>
+            <div style="font-size:11px;font-weight:700;margin-top:4px">Fauteuil Manuel</div>
+          </div>
+          <div class="stat-card" style="text-align:center" onclick="selectIntervType('FAUTEUIL_ELECTRIQUE')">
+            <div style="font-size:28px">?</div>
+            <div style="font-size:11px;font-weight:700;margin-top:4px">Fauteuil Électrique</div>
+          </div>
+          <div class="stat-card" style="text-align:center" onclick="selectIntervType('LIT')">
+            <div style="font-size:28px">???</div>
+            <div style="font-size:11px;font-weight:700;margin-top:4px">Lit médicalisé</div>
+          </div>
+          <div class="stat-card" style="text-align:center" onclick="selectIntervType('LEVE_PATIENT')">
+            <div style="font-size:28px">???</div>
+            <div style="font-size:11px;font-weight:700;margin-top:4px">Lève-patient</div>
+          </div>
+          <div class="stat-card" style="text-align:center" onclick="selectIntervType('VERTICALISATEUR')">
+            <div style="font-size:28px">??</div>
+            <div style="font-size:11px;font-weight:700;margin-top:4px">Verticalisateur</div>
+          </div>
+          <div class="stat-card" style="text-align:center" onclick="selectIntervType('DEAMBULATEUR')">
+            <div style="font-size:28px">??</div>
+            <div style="font-size:11px;font-weight:700;margin-top:4px">Déambulateur</div>
+          </div>
+        </div>
+      </div>
+      <!-- STEP 2 : formulaire dynamique -->
+      <div id="interv-step2" style="display:none">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <button class="btn btn-outline btn-sm" onclick="backToStep1()">
+            <i class="fas fa-arrow-left"></i> Retour
+          </button>
+          <span id="interv-type-label" class="badge badge-blue" style="font-size:13px"></span>
+        </div>
+        <div id="interv-form-container"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLANNING -->
+<div class="modal-overlay" id="modal-planning">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">?? Planifier intervention</div>
+      <span class="modal-close" onclick="closeModal('modal-planning')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date *</label>
+          <input class="form-control" id="pl-date" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Heure</label>
+          <input class="form-control" id="pl-heure" type="time">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Technicien *</label>
+          <select class="form-control" id="pl-tech"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Patient</label>
+          <input class="form-control" id="pl-patient" list="listPatients">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Type intervention</label>
+          <select class="form-control" id="pl-type">
+            <option>LIVRAISON</option><option>RECUPERATION</option>
+            <option>MAINTENANCE</option><option>SAV</option>
+            <option>DESINFECTION</option><option>VISITE</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priorité</label>
+          <select class="form-control" id="pl-priorite">
+            <option>NORMALE</option><option>URGENTE</option><option>HAUTE</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Équipement</label>
+          <input class="form-control" id="pl-equip">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Adresse</label>
+          <input class="form-control" id="pl-adresse">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-control" id="pl-notes" rows="2"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-planning')">Annuler</button>
+      <button class="btn btn-primary" onclick="savePlanning()">
+        <i class="fas fa-save"></i> Planifier
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MAINTENANCE -->
+<div class="modal-overlay" id="modal-maintenance">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">?? Maintenance</div>
+      <span class="modal-close" onclick="closeModal('modal-maintenance')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Équipement *</label>
+          <input class="form-control" id="maint-equip" list="listEquipements">
+          <datalist id="listEquipements"></datalist>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type maintenance</label>
+          <select class="form-control" id="maint-type">
+            <option>PREVENTIVE</option><option>CORRECTIVE</option>
+            <option>REVISION ANNUELLE</option><option>CONTROLE ELECTRIQUE</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Dernière date</label>
+          <input class="form-control" id="maint-last" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Prochaine date</label>
+          <input class="form-control" id="maint-next" type="date">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Fréquence</label>
+          <select class="form-control" id="maint-freq">
+            <option>MENSUELLE</option><option>TRIMESTRIELLE</option>
+            <option>SEMESTRIELLE</option><option>ANNUELLE</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Technicien</label>
+          <select class="form-control" id="maint-tech"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Statut</label>
+        <select class="form-control" id="maint-statut">
+          <option>PLANIFIEE</option><option>EN_COURS</option>
+          <option>TERMINEE</option><option>ANNULEE</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-control" id="maint-notes" rows="2"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-maintenance')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveMaintenance()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DESINFECTION MATERIEL -->
+<div class="modal-overlay" id="modal-desinf-mat">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title">?? Désinfection matériel</div>
+      <span class="modal-close" onclick="closeModal('modal-desinf-mat')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date *</label>
+          <input class="form-control" id="dm-date" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Technicien *</label>
+          <select class="form-control" id="dm-tech"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Matériel (ID) *</label>
+          <input class="form-control" id="dm-materiel" list="listEquipements2"
+            placeholder="Ex: L001" oninput="autoFillEquip('dm')">
+          <datalist id="listEquipements2"></datalist>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Marque</label>
+          <input class="form-control" id="dm-marque" readonly>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Modèle</label>
+          <input class="form-control" id="dm-modele" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Produit désinfectant *</label>
+          <select class="form-control" id="dm-produit">
+            <option>ANIOS</option><option>SURFANIOS</option>
+            <option>ASEPTANIOS</option><option>VAPEUR</option>
+            <option>ANIOSURF PREMIUM</option><option>CLEANISEPT WIPES</option>
+            <option>BACTIMOUSS</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Temps contact (min)</label>
+          <input class="form-control" id="dm-temps" type="number" min="1" value="5">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Validation</label>
+          <select class="form-control" id="dm-valid">
+            <option>CONFORME</option><option>NON CONFORME</option>
+            <option>A REVERIFIER</option>
+          </select>
+        </div>
+      </div>
+      <div class="section-title" style="margin-top:8px">Vérification des éléments</div>
+      <div class="check-grid" id="dm-checks">
+        <div class="check-item" id="dmc-barrieres">
+          <span class="check-label">Barrières</span>
+          <div class="check-btns">
+            <button class="check-btn ok" onclick="setCheck('dmc-barrieres','ok')">?</button>
+            <button class="check-btn ko" onclick="setCheck('dmc-barrieres','ko')">?</button>
+            <button class="check-btn na" onclick="setCheck('dmc-barrieres','na')">N/A</button>
+          </div>
+        </div>
+        <div class="check-item" id="dmc-roulettes">
+          <span class="check-label">Roulettes</span>
+          <div class="check-btns">
+            <button class="check-btn ok" onclick="setCheck('dmc-roulettes','ok')">?</button>
+            <button class="check-btn ko" onclick="setCheck('dmc-roulettes','ko')">?</button>
+            <button class="check-btn na" onclick="setCheck('dmc-roulettes','na')">N/A</button>
+          </div>
+        </div>
+        <div class="check-item" id="dmc-structure">
+          <span class="check-label">Structure</span>
+          <div class="check-btns">
+            <button class="check-btn ok" onclick="setCheck('dmc-structure','ok')">?</button>
+            <button class="check-btn ko" onclick="setCheck('dmc-structure','ko')">?</button>
+            <button class="check-btn na" onclick="setCheck('dmc-structure','na')">N/A</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Observation</label>
+        <textarea class="form-control" id="dm-obs" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Signature technicien</label>
+        <div id="dm-sig-container" style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+          <canvas id="dm-sig" width="600" height="100"
+            style="width:100%;background:#fff;cursor:crosshair"></canvas>
+        </div>
+        <button class="btn btn-outline btn-sm" style="margin-top:4px"
+          onclick="clearSig('dm-sig')">Effacer</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-desinf-mat')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveDesinfMat()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DESINFECTION SALLE -->
+<div class="modal-overlay" id="modal-desinf-salle">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">?? Désinfection salle</div>
+      <span class="modal-close" onclick="closeModal('modal-desinf-salle')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date *</label>
+          <input class="form-control" id="ds-date" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Technicien *</label>
+          <select class="form-control" id="ds-tech"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Salle / Zone *</label>
+          <input class="form-control" id="ds-salle"
+            placeholder="Ex: Atelier, Salle de stock...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Surface (m²)</label>
+          <input class="form-control" id="ds-surface" type="number" min="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Produit désinfectant *</label>
+          <select class="form-control" id="ds-produit">
+            <option>ANIOS</option><option>SURFANIOS</option>
+            <option>ASEPTANIOS</option><option>VAPEUR</option>
+            <option>ANIOSURF PREMIUM</option><option>CLEANISEPT WIPES</option>
+            <option>BACTIMOUSS</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Temps contact (min)</label>
+          <input class="form-control" id="ds-temps" type="number" min="1" value="5">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Validation</label>
+          <select class="form-control" id="ds-valid">
+            <option>CONFORME</option><option>NON CONFORME</option>
+            <option>A REVERIFIER</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Observation</label>
+        <textarea class="form-control" id="ds-obs" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Signature technicien</label>
+        <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+          <canvas id="ds-sig" width="600" height="100"
+            style="width:100%;background:#fff;cursor:crosshair"></canvas>
+        </div>
+        <button class="btn btn-outline btn-sm" style="margin-top:4px"
+          onclick="clearSig('ds-sig')">Effacer</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-desinf-salle')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveDesinfSalle()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROLE QUALITE -->
+<div class="modal-overlay" id="modal-qualite">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">? Contrôle qualité</div>
+      <span class="modal-close" onclick="closeModal('modal-qualite')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date *</label>
+          <input class="form-control" id="qc-date" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Technicien *</label>
+          <select class="form-control" id="qc-tech"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Équipement *</label>
+          <input class="form-control" id="qc-equip" list="listEquipements3">
+          <datalist id="listEquipements3"></datalist>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type de contrôle</label>
+          <select class="form-control" id="qc-controle">
+            <option>VISUEL</option><option>FONCTIONNEL</option>
+            <option>ELECTRIQUE</option><option>MECANIQUE</option>
+            <option>COMPLET</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Résultat</label>
+          <select class="form-control" id="qc-resultat">
+            <option>CONFORME</option><option>NON CONFORME</option>
+            <option>CONFORME AVEC RESERVES</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Conformité</label>
+          <select class="form-control" id="qc-conformite">
+            <option>OUI</option><option>NON</option><option>PARTIELLE</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Action corrective</label>
+        <input class="form-control" id="qc-action" placeholder="Décrire si non conforme">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Statut</label>
+        <select class="form-control" id="qc-statut">
+          <option>VALIDE</option><option>EN ATTENTE</option><option>REJETE</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Prochain contrôle</label>
+        <input class="form-control" id="qc-next" type="date">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-qualite')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveQualite()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT -->
+<div class="modal-overlay" id="modal-client">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">?? Client</div>
+      <span class="modal-close" onclick="closeModal('modal-client')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nom *</label>
+          <input class="form-control" id="cli-nom" placeholder="Nom du client">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-control" id="cli-type">
+            <option>MUTUELLE</option><option>EHPAD</option>
+            <option>CLINIQUE</option><option>HOPITAL</option><option>AUTRE</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Adresse</label>
+        <input class="form-control" id="cli-adresse">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">CP</label>
+          <input class="form-control" id="cli-cp" maxlength="5">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ville</label>
+          <input class="form-control" id="cli-ville">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Téléphone</label>
+          <input class="form-control" id="cli-tel">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-control" id="cli-email" type="email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contact principal</label>
+        <input class="form-control" id="cli-contact">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-control" id="cli-notes" rows="2"></textarea>
+      </div>
+      <input type="hidden" id="cli-id">
+      <input type="hidden" id="cli-update" value="0">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-client')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveClient()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MERCURIALE -->
+<div class="modal-overlay" id="modal-mercuriale">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">??? Article mercuriale</div>
+      <span class="modal-close" onclick="closeModal('modal-mercuriale')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Client *</label>
+          <select class="form-control" id="merc-client" onchange="updateMercClientName()">
+            <option value="">Sélectionner...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Référence</label>
+          <input class="form-control" id="merc-ref" placeholder="Auto si vide">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Désignation *</label>
+        <input class="form-control" id="merc-design" placeholder="Nom de l'article">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Modèle</label>
+          <input class="form-control" id="merc-modele">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Conditionnement</label>
+          <select class="form-control" id="merc-cond">
+            <option>A l'unité</option><option>Lot de 2</option>
+            <option>Lot de 5</option><option>Lot de 10</option><option>Boîte</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row-3">
+        <div class="form-group">
+          <label class="form-label">Prix HT (€)</label>
+          <input class="form-control" id="merc-prix" type="number" step="0.01" min="0"
+            oninput="calcPriceMerc()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">TVA (%)</label>
+          <select class="form-control" id="merc-tva" onchange="calcPriceMerc()">
+            <option value="5.5">5.5%</option>
+            <option value="10">10%</option>
+            <option value="20">20%</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Prix/Jour HT</label>
+          <input class="form-control" id="merc-daily" type="number" step="0.01" min="0">
+        </div>
+      </div>
+      <div id="merc-prix-ttc"
+        style="background:var(--bg4);border-radius:8px;padding:8px 12px;font-size:12px;
+               color:var(--text2)">Prix TTC : —</div>
+      <input type="hidden" id="merc-update" value="0">
+      <input type="hidden" id="merc-ref-orig">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-mercuriale')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveMercuriale()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- RAPPORT LOCATION LIGNE -->
+<div class="modal-overlay" id="modal-rapport-ligne">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">?? Ligne rapport location</div>
+      <span class="modal-close" onclick="closeModal('modal-rapport-ligne')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Client *</label>
+          <select class="form-control" id="rl-client" onchange="updateRLClientName()">
+            <option value="">Sélectionner...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Équipement (Série) *</label>
+          <input class="form-control" id="rl-serie" list="listEquipements4">
+          <datalist id="listEquipements4"></datalist>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Désignation</label>
+        <input class="form-control" id="rl-design" readonly>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date placement *</label>
+          <input class="form-control" id="rl-depose" type="date" oninput="calcRL()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date récupération</label>
+          <input class="form-control" id="rl-recup" type="date" oninput="calcRL()">
+        </div>
+      </div>
+      <div class="form-row-3">
+        <div class="form-group">
+          <label class="form-label">Nb jours</label>
+          <input class="form-control" id="rl-jours" type="number" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Prix/jour HT</label>
+          <input class="form-control" id="rl-prixj" type="number" step="0.01"
+            oninput="calcRL()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">TVA (%)</label>
+          <select class="form-control" id="rl-tva" onchange="calcRL()">
+            <option value="5.5">5.5%</option>
+            <option value="10">10%</option>
+            <option value="20">20%</option>
+          </select>
+        </div>
+      </div>
+      <div id="rl-calc"
+        style="background:var(--bg4);border-radius:8px;padding:10px 14px;font-size:12px">
+        Total HT : 0 € | TVA : 0 € | TTC : 0 €
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-rapport-ligne')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveRapportLigne()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TECHNICIEN -->
+<div class="modal-overlay" id="modal-technicien">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">?? Technicien</div>
+      <span class="modal-close" onclick="closeModal('modal-technicien')">?</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nom complet *</label>
+          <input class="form-control" id="tech-nom" placeholder="D.LOURENCO">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Initiales</label>
+          <input class="form-control" id="tech-init" placeholder="DL" maxlength="3">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Zone</label>
+          <input class="form-control" id="tech-zone" placeholder="Yvelines Nord">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Téléphone</label>
+          <input class="form-control" id="tech-tel">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-control" id="tech-email" type="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Statut</label>
+        <select class="form-control" id="tech-statut">
+          <option>DISPONIBLE</option><option>EN INTERVENTION</option>
+          <option>ABSENT</option><option>CONGE</option>
+        </select>
+      </div>
+      <input type="hidden" id="tech-id">
+      <input type="hidden" id="tech-update" value="0">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-technicien')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveTechnicien()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+# Partie 3 — JavaScript complet
+
+```html
+<script>
+// ============================================================
+//  PSDM v4.0 — JavaScript Principal (Partie 3 complète)
+// ============================================================
+
+// -- STATE ----------------------------------------------------
+const STATE = {
+  equipements: [],
+  interventions: [],
+  patients: [],
+  techniciens: [],
+  maintenances: [],
+  planning: [],
+  desinfection_mat: [],
+  desinfection_salle: [],
+  qualite: [],
+  clients: [],
+  mercuriales: [],
+  rapport_location: [],
+  currentUser: null,
+  currentPage: 'dashboard',
+  scriptUrl: '',
+  apiKey: '78500Meditecpsdm',
+  lastSync: null
+};
+
+// -- INIT ------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  loadConfig();
+  loadLocal();
+  checkAutoLogin();
+  initSignaturePads();
+  setTodayDates();
+});
+
+function loadConfig() {
+  STATE.scriptUrl = localStorage.getItem('psdm_url') || '';
+  STATE.apiKey    = localStorage.getItem('psdm_key') || '78500Meditecpsdm';
+  const u = document.getElementById('cfg-url');
+  const k = document.getElementById('cfg-key');
+  if (u) u.value = STATE.scriptUrl;
+  if (k) k.value = STATE.apiKey;
+}
+
+function saveConfig() {
+  STATE.scriptUrl = document.getElementById('cfg-url').value.trim();
+  STATE.apiKey    = document.getElementById('cfg-key').value.trim();
+  localStorage.setItem('psdm_url', STATE.scriptUrl);
+  localStorage.setItem('psdm_key', STATE.apiKey);
+  closeModal('modal-config');
+  toast('Configuration sauvegardée', 'success');
+}
+
+function setTodayDates() {
+  const today = new Date().toISOString().split('T')[0];
+  ['dm-date','ds-date','qc-date'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = today;
+  });
+  const rm = document.getElementById('rapportMois');
+  if (rm) rm.value = today.substring(0,7);
+}
+
+// -- AUTH ------------------------------------------------------
+const CREDENTIALS = [
+  { user:'admin',    pass:'meditec2024', role:'admin' },
+  { user:'mgen78600',pass:'mgen78600',   role:'user'  }
+];
+
+function doLogin() {
+  const u = document.getElementById('admin-user').value.trim();
+  const p = document.getElementById('admin-pass').value.trim();
+  const found = CREDENTIALS.find(c => c.user===u && c.pass===p);
+  if (found) {
+    STATE.currentUser = found;
+    localStorage.setItem('psdm_session', JSON.stringify(found));
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-shell').style.display = 'flex';
+    syncFromSheets();
+    renderAll();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+
+function checkAutoLogin() {
+  const s = localStorage.getItem('psdm_session');
+  if (!s) return;
+  try {
+    STATE.currentUser = JSON.parse(s);
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-shell').style.display = 'flex';
+    renderAll();
+  } catch(_) {}
+}
+
+function doLogout() {
+  localStorage.removeItem('psdm_session');
+  location.reload();
+}
+
+// -- LOCAL STORAGE ---------------------------------------------
+const LS_KEYS = [
+  'equipements','interventions','patients','techniciens',
+  'maintenances','planning','desinfection_mat','desinfection_salle',
+  'qualite','clients','mercuriales','rapport_location'
+];
+
+function saveAllLocal() {
+  LS_KEYS.forEach(k => {
+    try { localStorage.setItem('psdm_'+k, JSON.stringify(STATE[k]||[])); } catch(_){}
+  });
+  STATE.lastSync = new Date().toISOString();
+  localStorage.setItem('psdm_lastsync', STATE.lastSync);
+  toast('Données sauvegardées localement', 'success');
+}
+
+function loadLocal() {
+  LS_KEYS.forEach(k => {
+    try {
+      const d = localStorage.getItem('psdm_'+k);
+      if (d) STATE[k] = JSON.parse(d);
+    } catch(_){}
+  });
+  const ls = localStorage.getItem('psdm_lastsync');
+  if (ls) STATE.lastSync = ls;
+}
+
+// -- SYNC GOOGLE SHEETS ----------------------------------------
+async function syncFromSheets() {
+  if (!STATE.scriptUrl) {
+    toast('URL Apps Script non configurée', 'warning');
+    return;
+  }
+  showLoader(true);
+  try {
+    const url = `${STATE.scriptUrl}?key=${STATE.apiKey}&action=getAll`;
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if (!data.ok) throw new Error(data.error || 'Erreur sync');
+
+    // Mapper chaque clé reçue
+    const map = {
+      equipements:       'equipements',
+      interventions:     'interventions',
+      patients:          'patients',
+      techniciens:       'techniciens',
+      maintenances:      'maintenances',
+      planning:          'planning',
+      desinfection_mat:  'desinfection_mat',
+      desinfection_salle:'desinfection_salle',
+      qualite:           'qualite',
+      clients:           'clients',
+      mercuriales:       'mercuriales',
+      rapport_location:  'rapport_location'
+    };
+    Object.entries(map).forEach(([sk, lk]) => {
+      if (data[sk]) STATE[lk] = data[sk];
+    });
+
+    saveAllLocal();
+    renderAll();
+    updateLastSyncLabel();
+    toast('Synchronisation réussie ?', 'success');
+  } catch(err) {
+    toast('Erreur sync : ' + err.message, 'error');
+  } finally {
+    showLoader(false);
+  }
+}
+
+async function pushToSheets(action, payload) {
+  if (!STATE.scriptUrl) return;
+  try {
+    await fetch(`${STATE.scriptUrl}?key=${STATE.apiKey}&action=${action}`, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  } catch(err) {
+    console.warn('Push Sheets failed:', err.message);
+  }
+}
+
+function updateLastSyncLabel() {
+  const el = document.getElementById('lastSyncLabel');
+  if (!el) return;
+  if (STATE.lastSync) {
+    const d = new Date(STATE.lastSync);
+    el.textContent = `Sync: ${d.toLocaleDateString('fr')} ${d.toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})}`;
+  }
+}
+
+// -- NAVIGATION ------------------------------------------------
+function showPage(page) {
+  STATE.currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  const pg = document.getElementById('page-'+page);
+  if (pg) pg.classList.add('active');
+
+  document.querySelectorAll(`.nav-item[onclick*="${page}"]`).forEach(n =>
+    n.classList.add('active'));
+
+  // Render selon page
+  const renders = {
+    dashboard:       renderDashboard,
+    patients:        renderPatients,
+    equipements:     renderEquipements,
+    interventions:   renderInterventions,
+    planning:        renderPlanning,
+    maintenances:    renderMaintenances,
+    desinfection:    renderDesinfection,
+    qualite:         renderQualite,
+    clients:         renderClients,
+    mercuriales:     renderMercuriales,
+    rapport_location:renderRapportLocation,
+    techniciens:     renderTechniciens,
+    rapports:        renderRapports
+  };
+  if (renders[page]) renders[page]();
+
+  // Mobile : fermer sidebar
+  document.querySelector('.sidebar').classList.remove('open');
+}
+
+// -- RENDER ALL ------------------------------------------------
+function renderAll() {
+  populateTechSelects();
+  populateClientSelects();
+  populateEquipDatalist();
+  renderDashboard();
+  renderPatients();
+  renderEquipements();
+  renderInterventions();
+  renderMaintenances();
+  renderPlanning();
+  renderDesinfection();
+  renderQualite();
+  renderClients();
+  renderMercuriales();
+  renderRapportLocation();
+  renderTechniciens();
+}
+
+// -- DASHBOARD -------------------------------------------------
+function renderDashboard() {
+  const eq   = STATE.equipements;
+  const pat  = STATE.patients;
+  const int  = STATE.interventions;
+  const main = STATE.maintenances;
+
+  sv('stat-total-equip',   eq.length);
+  sv('stat-equip-loue',    eq.filter(e=>e.STATUT==='LOUE').length);
+  sv('stat-equip-dispo',   eq.filter(e=>e.STATUT==='DISPONIBLE').length);
+  sv('stat-patients',      pat.length);
+  sv('stat-interv-mois',   intMois(int));
+  sv('stat-maintenance',   main.filter(m=>m.STATUT==='EN ATTENTE'||m.STATUT==='EN RETARD').length);
+
+  renderAlertes();
+  renderActiviteRecente();
+  renderEquipTypeChart();
+}
+
+function intMois(arr) {
+  const m = new Date().getMonth();
+  const y = new Date().getFullYear();
+  return arr.filter(i => {
+    if (!i.DATE) return false;
+    const d = new Date(i.DATE);
+    return d.getMonth()===m && d.getFullYear()===y;
+  }).length;
+}
+
+function renderAlertes() {
+  const cont = document.getElementById('alertesContainer');
+  if (!cont) return;
+  const today = new Date();
+  const alerts = [];
+
+  STATE.maintenances.forEach(m => {
+    if (!m.PROCHAINE) return;
+    const d = new Date(m.PROCHAINE);
+    const diff = Math.ceil((d-today)/(1000*60*60*24));
+    if (diff <= 30) {
+      const cls = diff < 0 ? 'alert-danger' : diff <= 7 ? 'alert-warning' : 'alert-info';
+      const txt = diff < 0 ? `En retard de ${Math.abs(diff)}j` : `Dans ${diff}j`;
+      alerts.push(`<div class="alert ${cls}">
+        <i class="fas fa-tools"></i> Maintenance <strong>${m.EQUIPEMENT||''}</strong>
+        — ${txt} (${fmtDate(m.PROCHAINE)})
+      </div>`);
+    }
+  });
+
+  STATE.equipements.forEach(e => {
+    if (e.STATUT === 'HORS SERVICE')
+      alerts.push(`<div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i>
+        Équipement <strong>${e.ID||''}</strong> ${e.MARQUE||''} ${e.MODELE||''} — HORS SERVICE
+      </div>`);
+  });
+
+  cont.innerHTML = alerts.length
+    ? alerts.join('')
+    : '<div class="alert alert-info"><i class="fas fa-check-circle"></i> Aucune alerte active</div>';
+}
+
+function renderActiviteRecente() {
+  const cont = document.getElementById('activiteRecente');
+  if (!cont) return;
+  const all = [
+    ...STATE.interventions.map(i=>({...i, _type:'Intervention', _date:i.DATE})),
+    ...STATE.desinfection_mat.map(d=>({...d, _type:'Désinf. matériel', _date:d.DATE})),
+    ...STATE.desinfection_salle.map(d=>({...d, _type:'Désinf. salle', _date:d.DATE}))
+  ].sort((a,b)=>new Date(b._date||0)-new Date(a._date||0)).slice(0,8);
+
+  cont.innerHTML = all.length ? all.map(a=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 0;
+      border-bottom:1px solid var(--border)">
+      <span class="badge badge-info">${a._type}</span>
+      <span style="flex:1;font-size:12px">${a.TECHNICIEN||''} — ${a.PATIENT||a.MATERIEL||a.SALLE||''}</span>
+      <span style="font-size:11px;color:var(--text3)">${fmtDate(a._date)}</span>
+    </div>`).join('')
+  : '<p style="color:var(--text3);font-size:12px">Aucune activité récente</p>';
+}
+
+function renderEquipTypeChart() {
+  const cont = document.getElementById('equipTypeChart');
+  if (!cont) return;
+  const counts = {};
+  STATE.equipements.forEach(e => {
+    const t = e.TYPE||'AUTRE';
+    counts[t] = (counts[t]||0)+1;
+  });
+  const total = STATE.equipements.length || 1;
+  const colors = ['#6366f1','#22c55e','#f59e0b','#ef4444','#06b6d4','#8b5cf6','#ec4899'];
+  cont.innerHTML = Object.entries(counts).map(([t,n],i)=>`
+    <div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+        <span>${t}</span><span><strong>${n}</strong></span>
+      </div>
+      <div style="background:var(--bg4);border-radius:4px;height:8px">
+        <div style="background:${colors[i%colors.length]};height:8px;border-radius:4px;
+          width:${Math.round(n/total*100)}%;transition:width 0.5s"></div>
+      </div>
+    </div>`).join('');
+}
+
+// -- PATIENTS --------------------------------------------------
+function renderPatients() {
+  const tbody = document.getElementById('patientsTable');
+  if (!tbody) return;
+  const search = (document.getElementById('searchPatients')||{}).value||'';
+  const filter = (document.getElementById('filterPatEtab')||{}).value||'';
+  let data = STATE.patients;
+  if (search) {
+    const s = search.toLowerCase();
+    data = data.filter(p =>
+      (p.NOM||'').toLowerCase().includes(s) ||
+      (p.PRENOM||'').toLowerCase().includes(s) ||
+      (p.NUMCLIENT||'').toLowerCase().includes(s) ||
+      (p.VILLE||'').toLowerCase().includes(s)
+    );
+  }
+  if (filter) data = data.filter(p => p.ETABLISSEMENT===filter);
+
+  tbody.innerHTML = data.map(p => `
+    <tr>
+      <td>${p.NUMCLIENT||'—'}</td>
+      <td><strong>${p.NOM||''}</strong> ${p.PRENOM||''}</td>
+      <td>${p.ETABLISSEMENT||'—'}</td>
+      <td>${p.CP||''} ${p.VILLE||''}</td>
+      <td>${p.TEL||'—'}</td>
+      <td>${p.EMAIL||'—'}</td>
+      <td><span class="badge badge-info">${(p.EQUIPEMENTS||'').split(',').filter(Boolean).length} éq.</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editPatient('${p.ID||p.NOM}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="printFichePatient('${p.ID||p.NOM}')">
+          <i class="fas fa-print"></i>
+        </button>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+          onclick="deleteItem('patients','${p.ID||p.NOM}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--text3)">Aucun patient</td></tr>';
+}
+
+function openPatientModal() {
+  clearForm(['pat-id','pat-numclient','pat-nom','pat-prenom','pat-ddn','pat-tel',
+             'pat-email','pat-adresse','pat-cp','pat-ville','pat-equipements','pat-notes']);
+  sv_el('pat-update','0');
+  sv_el('modalPatientTitle','?? Nouveau patient');
+  setVal('pat-etab','DOMICILE');
+  openModal('modal-patient');
+}
+
+function editPatient(id) {
+  const p = STATE.patients.find(x => (x.ID||x.NOM)===id);
+  if (!p) return;
+  sv_el('modalPatientTitle','?? Modifier patient');
+  setVal('pat-id',       p.ID||'');
+  setVal('pat-numclient',p.NUMCLIENT||'');
+  setVal('pat-nom',      p.NOM||'');
+  setVal('pat-prenom',   p.PRENOM||'');
+  setVal('pat-ddn',      p.DDN||'');
+  setVal('pat-tel',      p.TEL||'');
+  setVal('pat-email',    p.EMAIL||'');
+  setVal('pat-adresse',  p.ADRESSE||'');
+  setVal('pat-cp',       p.CP||'');
+  setVal('pat-ville',    p.VILLE||'');
+  setVal('pat-etab',     p.ETABLISSEMENT||'DOMICILE');
+  setVal('pat-medecin',  p.MEDECIN||'');
+  setVal('pat-equipements',p.EQUIPEMENTS||'');
+  setVal('pat-notes',    p.NOTES||'');
+  sv_el('pat-update','1');
+  openModal('modal-patient');
+}
+
+function savePatient() {
+  const nom = gv('pat-nom');
+  if (!nom) { toast('Nom requis','error'); return; }
+  const isUpdate = gv('pat-update')==='1';
+  const obj = {
+    ID:           gv('pat-id') || 'PAT-' + Date.now(),
+    NUMCLIENT:    gv('pat-numclient'),
+    NOM:          nom.toUpperCase(),
+    PRENOM:       gv('pat-prenom'),
+    DDN:          gv('pat-ddn'),
+    TEL:          gv('pat-tel'),
+    EMAIL:        gv('pat-email'),
+    ADRESSE:      gv('pat-adresse'),
+    CP:           gv('pat-cp'),
+    VILLE:        gv('pat-ville').toUpperCase(),
+    ETABLISSEMENT:gv('pat-etab'),
+    MEDECIN:      gv('pat-medecin'),
+    EQUIPEMENTS:  gv('pat-equipements'),
+    NOTES:        gv('pat-notes')
+  };
+  if (isUpdate) {
+    const idx = STATE.patients.findIndex(x=>(x.ID||x.NOM)===obj.ID);
+    if (idx>=0) STATE.patients[idx]=obj; else STATE.patients.push(obj);
+  } else {
+    STATE.patients.push(obj);
+  }
+  saveAllLocal();
+  pushToSheets('savePatient', obj);
+  renderPatients();
+  closeModal('modal-patient');
+  toast('Patient enregistré','success');
+}
+
+// -- EQUIPEMENTS -----------------------------------------------
+function renderEquipements() {
+  const tbody = document.getElementById('equipTable');
+  if (!tbody) return;
+  const search = (document.getElementById('searchEquip')||{}).value||'';
+  const fType  = (document.getElementById('filterEquipType')||{}).value||'';
+  const fStat  = (document.getElementById('filterEquipStat')||{}).value||'';
+  let data = STATE.equipements;
+  if (search) {
+    const s = search.toLowerCase();
+    data = data.filter(e =>
+      (e.ID||'').toLowerCase().includes(s)||
+      (e.MARQUE||'').toLowerCase().includes(s)||
+      (e.SERIE||'').toLowerCase().includes(s)
+    );
+  }
+  if (fType) data = data.filter(e=>e.TYPE===fType);
+  if (fStat) data = data.filter(e=>e.STATUT===fStat);
+
+  tbody.innerHTML = data.map(e => `
+    <tr>
+      <td><strong>${e.ID||'—'}</strong></td>
+      <td>${e.TYPE||'—'}</td>
+      <td>${e.MARQUE||'—'}</td>
+      <td>${e.MODELE||'—'}</td>
+      <td><code style="font-size:10px">${e.SERIE||'—'}</code></td>
+      <td>${e.PATIENT||'—'}</td>
+      <td>${fmtDate(e.MISEENPARC)}</td>
+      <td><span class="badge ${badgeStatut(e.STATUT)}">${e.STATUT||'—'}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editEquipement('${e.ID}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+          onclick="deleteItem('equipements','${e.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--text3)">Aucun équipement</td></tr>';
+}
+
+function saveEquipement() {
+  const id = gv('eq-id');
+  if (!id) { toast('ID requis','error'); return; }
+  const obj = {
+    ID:        id.toUpperCase(),
+    TYPE:      gv('eq-type'),
+    MARQUE:    gv('eq-marque'),
+    MODELE:    gv('eq-modele'),
+    SERIE:     gv('eq-serie'),
+    MISEENPARC:gv('eq-miseenparc'),
+    PATIENT:   gv('eq-patient'),
+    STATUT:    gv('eq-statut')
+  };
+  const idx = STATE.equipements.findIndex(e=>e.ID===obj.ID);
+  if (idx>=0) STATE.equipements[idx]=obj; else STATE.equipements.push(obj);
+  saveAllLocal();
+  pushToSheets('saveEquipement', obj);
+  populateEquipDatalist();
+  renderEquipements();
+  closeModal('modal-add-equip');
+  toast('Équipement enregistré','success');
+}
+
+function editEquipement(id) {
+  const e = STATE.equipements.find(x=>x.ID===id);
+  if (!e) return;
+  setVal('eq-id',        e.ID);
+  setVal('eq-type',      e.TYPE);
+  setVal('eq-marque',    e.MARQUE||'');
+  setVal('eq-modele',    e.MODELE||'');
+  setVal('eq-serie',     e.SERIE||'');
+  setVal('eq-miseenparc',e.MISEENPARC||'');
+  setVal('eq-patient',   e.PATIENT||'');
+  setVal('eq-statut',    e.STATUT||'DISPONIBLE');
+  openModal('modal-add-equip');
+}
+
+// -- INTERVENTIONS ---------------------------------------------
+let _intervType = '';
+
+function selectIntervType(type) {
+  _intervType = type;
+  document.getElementById('interv-step1').style.display = 'none';
+  document.getElementById('interv-step2').style.display = 'block';
+  renderIntervForm(type);
+}
+
+function renderIntervForm(type) {
+  const cont = document.getElementById('interv-form-container');
+  if (!cont) return;
+
+  // Champs communs à tous les types
+  const commonTop = `
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input class="form-control" id="iv-date" type="date"
+          value="${new Date().toISOString().split('T')[0]}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Technicien *</label>
+        <select class="form-control" id="iv-tech"></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Patient</label>
+        <input class="form-control" id="iv-patient" list="listPatientsIv">
+        <datalist id="listPatientsIv"></datalist>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Lieu</label>
+        <input class="form-control" id="iv-lieu" placeholder="Adresse intervention">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Matériel (ID)</label>
+        <input class="form-control" id="iv-materiel" list="listEquipIv">
+        <datalist id="listEquipIv"></datalist>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Distributeur</label>
+        <input class="form-control" id="iv-distrib">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Marque</label>
+        <input class="form-control" id="iv-marque">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Modèle</label>
+        <input class="form-control" id="iv-modele">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Mise en service</label>
+        <input class="form-control" id="iv-misservice" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">N° de série</label>
+        <input class="form-control" id="iv-serie">
+      </div>
+    </div>`;
+
+  const specificFields = {
+    FAUTEUIL_MANUEL: `
+      <div class="section-title">? Spécifique Fauteuil Manuel</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Type de fauteuil</label>
+          <select class="form-control" id="iv-type_fauteuil">
+            <option>STANDARD</option><option>TRANSIT</option>
+            <option>LEGER</option><option>BARIATRIQUE</option><option>SPORT</option>
+          </select>
+        </div>
+      </div>
+      ${checkRow('iv-freins','Freins')}
+      ${checkRow('iv-anti_bascule','Anti-bascule')}
+      ${checkRow('iv-roues_avant','Roues avant')}
+      ${checkRow('iv-roues_arriere','Roues arrière')}
+      ${checkRow('iv-pneus','Pneus')}
+      ${checkRow('iv-assise','Assise')}
+      ${checkRow('iv-dossier','Dossier')}
+      ${checkRow('iv-repose_pieds','Repose-pieds')}`,
+
+    FAUTEUIL_ELECTRIQUE: `
+      <div class="section-title">? Spécifique Fauteuil Électrique</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Type de fauteuil</label>
+          <select class="form-control" id="iv-type_fauteuil">
+            <option>ELECTRIQUE STANDARD</option><option>ELECTRIQUE INCLINABLE</option>
+            <option>ELECTRIQUE RELEVEUR</option><option>BARIATRIQUE ELEC</option>
+          </select>
+        </div>
+      </div>
+      ${checkRow('iv-anti_bascule','Anti-bascule')}
+      ${checkRow('iv-roues_avant','Roues avant')}
+      ${checkRow('iv-roues_arriere','Roues arrière')}
+      ${checkRow('iv-pneus','Pneus')}
+      ${checkRow('iv-assise','Assise')}
+      ${checkRow('iv-dossier','Dossier')}
+      ${checkRow('iv-repose_pieds','Repose-pieds')}
+      ${checkRow('iv-joystick','Joystick')}
+      ${checkRow('iv-batterie','Batterie')}
+      ${checkRow('iv-moteurs','Moteurs')}
+      ${checkRow('iv-verins','Vérins')}`,
+
+    LIT: `
+      <div class="section-title">??? Spécifique Lit médicalisé</div>
+      ${checkRow('iv-telecommande','Télécommande')}
+      ${checkRow('iv-hauteur_variable','Hauteur variable')}
+      ${checkRow('iv-releve_buste','Relève-buste')}
+      ${checkRow('iv-verins','Vérins')}
+      ${checkRow('iv-freins','Freins')}`,
+
+    LEVE_PATIENT: `
+      <div class="section-title">??? Spécifique Lève-patient</div>
+      ${checkRow('iv-mat_pied','Mat / Pied')}
+      ${checkRow('iv-roulettes','Roulettes')}
+      ${checkRow('iv-freins','Freins')}
+      ${checkRow('iv-fleau','Fléau')}
+      ${checkRow('iv-verin','Vérin')}
+      ${checkRow('iv-telecommande','Télécommande')}
+      ${checkRow('iv-batteries','Batteries')}
+      ${checkRow('iv-fonctionnement','Fonctionnement général')}
+      ${checkRow('iv-sangle','Sangles')}`,
+
+    VERTICALISATEUR: `
+      <div class="section-title">?? Spécifique Verticalisateur</div>
+      ${checkRow('iv-mat_pied','Mat / Pied')}
+      ${checkRow('iv-roulettes','Roulettes')}
+      ${checkRow('iv-freins','Freins')}
+      ${checkRow('iv-fleau','Fléau')}
+      ${checkRow('iv-verin','Vérin')}
+      ${checkRow('iv-telecommande','Télécommande')}
+      ${checkRow('iv-batteries','Batteries')}
+      ${checkRow('iv-fonctionnement','Fonctionnement général')}
+      ${checkRow('iv-sangle','Sangles')}`,
+
+    DEAMBULATEUR: `
+      <div class="section-title">?? Spécifique Déambulateur</div>
+      ${checkRow('iv-freins','Freins')}
+      ${checkRow('iv-roues','Roues')}
+      ${checkRow('iv-structure','Structure')}
+      ${checkRow('iv-poignees','Poignées')}`
+  };
+
+  cont.innerHTML = commonTop + (specificFields[type]||'') + `
+    <div class="form-group" style="margin-top:10px">
+      <label class="form-label">Commentaires</label>
+      <textarea class="form-control" id="iv-commentaires" rows="3"></textarea>
+    </div>`;
+
+  // Populate selects
+  populateTechSelect('iv-tech');
+  populatePatientDatalist('listPatientsIv');
+  populateEquipDatalistId('listEquipIv');
+}
+
+function checkRow(id, label) {
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;
+      padding:6px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:13px">${label}</span>
+      <div style="display:flex;gap:8px">
+        <label style="font-size:12px;cursor:pointer">
+          <input type="radio" name="${id}" value="BON"> ? Bon
+        </label>
+        <label style="font-size:12px;cursor:pointer">
+          <input type="radio" name="${id}" value="MOYEN"> ?? Moyen
+        </label>
+        <label style="font-size:12px;cursor:pointer">
+          <input type="radio" name="${id}" value="DEFECTUEUX"> ? Défectueux
+        </label>
+        <label style="font-size:12px;cursor:pointer">
+          <input type="radio" name="${id}" value="NA" checked> N/A
+        </label>
+      </div>
+    </div>`;
+}
+
+function getRadioVal(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : 'NA';
+}
+
+function backToStep1() {
+  document.getElementById('interv-step1').style.display = 'block';
+  document.getElementById('interv-step2').style.display = 'none';
+}
+
+function saveIntervention() {
+  if (!gv('iv-date')) { toast('Date requise','error'); return; }
+  if (!gv('iv-tech')) { toast('Technicien requis','error'); return; }
+
+  const base = {
+    ID:          'IV-'+Date.now(),
+    TYPE_MAT:    _intervType,
+    DATE:        gv('iv-date'),
+    TECHNICIEN:  gv('iv-tech'),
+    PATIENT:     gv('iv-patient'),
+    LIEU:        gv('iv-lieu'),
+    MATERIEL:    gv('iv-materiel'),
+    DISTRIBUTEUR:gv('iv-distrib'),
+    MARQUE:      gv('iv-marque'),
+    MODELE:      gv('iv-modele'),
+    MISE_SERVICE:gv('iv-misservice'),
+    SERIE:       gv('iv-serie'),
+    COMMENTAIRES:gv('iv-commentaires'),
+    STATUT:      'TERMINEE'
+  };
+
+  // Champs spécifiques par type
+  const typeFields = {
+    FAUTEUIL_MANUEL: ['type_fauteuil','freins','anti_bascule','roues_avant',
+      'roues_arriere','pneus','assise','dossier','repose_pieds'],
+    FAUTEUIL_ELECTRIQUE: ['type_fauteuil','anti_bascule','roues_avant','roues_arriere',
+      'pneus','assise','dossier','repose_pieds','joystick','batterie','moteurs','verins'],
+    LIT: ['telecommande','hauteur_variable','releve_buste','verins','freins'],
+    LEVE_PATIENT: ['mat_pied','roulettes','freins','fleau','verin',
+      'telecommande','batteries','fonctionnement','sangle'],
+    VERTICALISATEUR: ['mat_pied','roulettes','freins','fleau','verin',
+      'telecommande','batteries','fonctionnement','sangle'],
+    DEAMBULATEUR: ['freins','roues','structure','poignees']
+  };
+
+  const fields = typeFields[_intervType] || [];
+  fields.forEach(f => {
+    const el = document.getElementById('iv-'+f);
+    if (el && el.tagName==='SELECT') {
+      base[f.toUpperCase()] = el.value;
+    } else {
+      base[f.toUpperCase()] = getRadioVal('iv-'+f);
+    }
+  });
+
+  STATE.interventions.push(base);
+  saveAllLocal();
+  pushToSheets('saveIntervention', base);
+  renderInterventions();
+  closeModal('modal-intervention');
+  toast('Intervention enregistrée','success');
+  _intervType = '';
+}
+
+function renderInterventions() {
+  const tbody = document.getElementById('intervTable');
+  if (!tbody) return;
+  const data = [...STATE.interventions].sort((a,b)=>
+    new Date(b.DATE||0)-new Date(a.DATE||0));
+
+  tbody.innerHTML = data.map(i => `
+    <tr>
+      <td><code style="font-size:10px">${i.ID||'—'}</code></td>
+      <td>${fmtDate(i.DATE)}</td>
+      <td>${i.TECHNICIEN||'—'}</td>
+      <td>${i.PATIENT||'—'}</td>
+      <td><span class="badge badge-info">${i.TYPE_MAT||'—'}</span></td>
+      <td>${i.LIEU||'—'}</td>
+      <td><span class="badge ${badgeStatut(i.STATUT)}">${i.STATUT||'—'}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="printIntervention('${i.ID}')">
+          <i class="fas fa-print"></i>
+        </button>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+          onclick="deleteItem('interventions','${i.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--text3)">Aucune intervention</td></tr>';
+}
+
+// -- MAINTENANCES ----------------------------------------------
+function renderMaintenances() {
+  const tbody = document.getElementById('maintenancesTable');
+  if (!tbody) return;
+  const today = new Date();
+
+  tbody.innerHTML = STATE.maintenances.map(m => {
+    const next = m.PROCHAINE ? new Date(m.PROCHAINE) : null;
+    const diff = next ? Math.ceil((next-today)/(1000*60*60*24)) : null;
+    const alertCls = diff===null ? '' : diff<0 ? 'alert-danger' : diff<=7 ? 'alert-warning' : '';
+    return `<tr class="${alertCls}">
+      <td><strong>${m.EQUIPEMENT||'—'}</strong></td>
+      <td>${m.TYPE||'—'}</td>
+      <td>${m.FREQUENCE||'—'}</td>
+      <td>${fmtDate(m.DERNIERE)}</td>
+      <td>${fmtDate(m.PROCHAINE)}</td>
+      <td>${m.TECHNICIEN||'—'}</td>
+      <td><span class="badge ${badgeStatut(m.STATUT)}">${m.STATUT||'—'}</span></td>
+      <td>${diff!==null ? (diff<0?`<span style="color:#dc2626">?? ${Math.abs(diff)}j retard</span>`:
+        diff<=7?`<span style="color:#f59e0b">?? ${diff}j`:'?') : '—'}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="validerMaintenance('${m.ID||m.EQUIPEMENT}')">
+          <i class="fas fa-check"></i>
+        </button>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+          onclick="deleteItem('maintenances','${m.ID||m.EQUIPEMENT}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--text3)">Aucune maintenance</td></tr>';
+}
+
+function validerMaintenance(id) {
+  const m = STATE.maintenances.find(x=>(x.ID||x.EQUIPEMENT)===id);
+  if (!m) return;
+  const today = new Date().toISOString().split('T')[0];
+  m.DERNIERE = today;
+  m.STATUT = 'FAIT';
+  // Calculer prochaine selon fréquence
+  const freq = { 'MENSUELLE':30,'TRIMESTRIELLE':90,'SEMESTRIELLE':180,'ANNUELLE':365 };
+  const days = freq[m.FREQUENCE] || 90;
+  const next = new Date();
+  next.setDate(next.getDate()+days);
+  m.PROCHAINE = next.toISOString().split('T')[0];
+  saveAllLocal();
+  pushToSheets('saveMaintenance', m);
+  renderMaintenances();
+  toast('Maintenance validée','success');
+}
+
+// -- PLANNING --------------------------------------------------
+function renderPlanning() {
+  const tbody = document.getElementById('planningTable');
+  if (!tbody) return;
+  const data = [...STATE.planning].sort((a,b)=>
+    new Date(a.DATE||0)-new Date(b.DATE||0));
+
+  tbody.innerHTML = data.map(p => `
+    <tr>
+      <td>${fmtDate(p.DATE)}</td>
+      <td>${p.HEURE||'—'}</td>
+      <td>${p.TECHNICIEN||'—'}</td>
+      <td>${p.PATIENT||'—'}</td>
+      <td>${p.TYPE||'—'}</td>
+      <td>${p.EQUIPEMENT||'—'}</td>
+      <td><span class="badge ${p.PRIORITE==='URGENTE'?'badge-danger':
+        p.PRIORITE==='HAUTE'?'badge-warning':'badge-info'}">${p.PRIORITE||'—'}</span></td>
+      <td><span class="badge ${badgeStatut(p.STATUT)}">${p.STATUT||'—'}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="deletePlanning('${p.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--text3)">Aucun planning</td></tr>';
+}
+
+function savePlanning() {
+  const obj = {
+    ID:         'PL-'+Date.now(),
+    DATE:       gv('pl-date'),
+    HEURE:      gv('pl-heure'),
+    TECHNICIEN: gv('pl-tech'),
+    PATIENT:    gv('pl-patient'),
+    TYPE:       gv('pl-type'),
+    EQUIPEMENT: gv('pl-equip'),
+    PRIORITE:   gv('pl-priorite'),
+    STATUT:     'PLANIFIE'
+  };
+  if (!obj.DATE||!obj.TECHNICIEN) { toast('Date et technicien requis','error'); return; }
+  STATE.planning.push(obj);
+  saveAllLocal();
+  pushToSheets('savePlanning', obj);
+  renderPlanning();
+  closeModal('modal-planning');
+  toast('Planning enregistré','success');
+}
+
+// -- DESINFECTION ----------------------------------------------
+function switchDesinfTab(tab, el) {
+  ['mat','salle','hist'].forEach(t => {
+    const d = document.getElementById('desinf-tab-'+t);
+    if (d) d.style.display = t===tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('#page-desinfection .tab')
+    .forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  if (tab==='hist') renderDesinfHist();
+}
+
+function renderDesinfection() {
+  renderDesinfMatTable();
+  renderDesinfSalleTable();
+}
+
+function renderDesinfMatTable() {
+  const tbody = document.getElementById('desinfMatTable');
+  if (!tbody) return;
+  tbody.innerHTML = [...STATE.desinfection_mat]
+    .sort((a,b)=>new Date(b.DATE||0)-new Date(a.DATE||0))
+    .map(d => `
+    <tr>
+      <td><code style="font-size:10px">${d.ID||'—'}</code></td>
+      <td>${fmtDate(d.DATE)}</td>
+      <td>${d.TECHNICIEN||'—'}</td>
+      <td>${d.MATERIEL||'—'}</td>
+      <td>${d.MARQUE||'—'}</td>
+      <td>${d.PRODUIT||'—'}</td>
+      <td><span class="badge ${d.VALIDATION==='CONFORME'?'badge-success':'badge-danger'}">${d.VALIDATION||'—'}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="printDesinfMatFiche('${d.ID}')">
+          <i class="fas fa-print"></i>
+        </button>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+          onclick="deleteItem('desinfection_mat','${d.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--text3)">Aucune désinfection</td></tr>';
+}
+
+function renderDesinfSalleTable() {
+  const tbody = document.getElementById('desinfSalleTable');
+  if (!tbody) return;
+  tbody.innerHTML = [...STATE.desinfection_salle]
+    .sort((a,b)=>new Date(b.DATE||0)-new Date(a.DATE||0))
+    .map(d => `
+    <tr>
+      <td><code style="font-size:10px">${d.ID||'—'}</code></td>
+      <td>${fmtDate(d.DATE)}</td>
+      <td>${d.TECHNICIEN||'—'}</td>
+      <td>${d.SALLE||'—'}</td>
+      <td>${d.PRODUIT||'—'}</td>
+      <td>${d.SURFACE||'—'} m²</td>
+      <td><span class="badge ${d.VALIDATION==='CONFORME'?'badge-success':'badge-danger'}">${d.VALIDATION||'—'}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="printDesinfSalleFiche('${d.ID}')">
+          <i class="fas fa-print"></i>
+        </button>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+          onclick="deleteItem('desinfection_salle','${d.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--text3)">Aucune désinfection salle</td></tr>';
+}
+
+function renderDesinfHist() {
+  const cont = document.getElementById('desinfHistContent');
+  if (!cont) return;
+  const all = [
+    ...STATE.desinfection_mat.map(d=>({...d,_cat:'Matériel'})),
+    ...STATE.desinfection_salle.map(d=>({...d,_cat:'Salle'}))
+  ].sort((a,b)=>new Date(b.DATE||0)-new Date(a.DATE||0));
+
+  cont.innerHTML = `<table>
+    <thead><tr><th>Date</th><th>Catégorie</th><th>Technicien</th>
+    <th>Cible</th><th>Produit</th><th>Validation</th></tr></thead>
+    <tbody>${all.map(d=>`
+      <tr>
+        <td>${fmtDate(d.DATE)}</td>
+        <td><span class="badge badge-info">${d._cat}</span></td>
+        <td>${d.TECHNICIEN||'—'}</td>
+        <td>${d.MATERIEL||d.SALLE||'—'}</td>
+        <td>${d.PRODUIT||'—'}</td>
+        <td><span class="badge ${d.VALIDATION==='CONFORME'?'badge-success':'badge-danger'}">${d.VALIDATION||'—'}</span></td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function saveDesinfMat() {
+  const tech = gv('dm-tech');
+  const date = gv('dm-date');
+  if (!date||!tech) { toast('Date et technicien requis','error'); return; }
+  const obj = {
+    ID:           'DM-'+Date.now(),
+    DATE:         date,
+    TECHNICIEN:   tech,
+    MATERIEL:     gv('dm-materiel'),
+    MARQUE:       gv('dm-marque'),
+    MODELE:       gv('dm-modele'),
+    PRODUIT:      gv('dm-produit'),
+    TEMPS_CONTACT:gv('dm-temps'),
+    BARRIERES:    gv('dm-barrieres'),
+    ROULETTES:    gv('dm-roulettes'),
+    STRUCTURE:    gv('dm-structure'),
+    OBSERVATION:  gv('dm-obs'),
+    VALIDATION:   gv('dm-valid'),
+    SIGNATURE:    getSig('dm-sig')
+  };
+  STATE.desinfection_mat.push(obj);
+  saveAllLocal();
+  pushToSheets('saveDesinfMat', obj);
+  renderDesinfMatTable();
+  closeModal('modal-desinf-mat');
+  toast('Désinfection matériel enregistrée','success');
+}
+
+function saveDesinfSalle() {
+  const tech = gv('ds-tech');
+  const date = gv('ds-date');
+  if (!date||!tech) { toast('Date et technicien requis','error'); return; }
+  const obj = {
+    ID:           'DS-'+Date.now(),
+    DATE:         date,
+    TECHNICIEN:   tech,
+    SALLE:        gv('ds-salle'),
+    PRODUIT:      gv('ds-produit'),
+    SURFACE:      gv('ds-surface'),
+    TEMPS_CONTACT:gv('ds-temps'),
+    OBSERVATION:  gv('ds-obs'),
+    VALIDATION:   gv('ds-valid'),
+    SIGNATURE:    getSig('ds-sig')
+  };
+  STATE.desinfection_salle.push(obj);
+  saveAllLocal();
+  pushToSheets('saveDesinfSalle', obj);
+  renderDesinfSalleTable();
+  closeModal('modal-desinf-salle');
+  toast('Désinfection salle enregistrée','success');
+}
+
+// -- QUALITE ---------------------------------------------------
+function renderQualite() {
+  const tbody = document.getElementById('qualiteTable');
+  if (!tbody) return;
+  tbody.innerHTML = [...STATE.qualite]
+    .sort((a,b)=>new Date(b.DATE||0)-new Date(a.DATE||0))
+    .map(q => `
+    <tr>
+      <td><code style="font-size:10px">${q.ID||'—'}</code></td>
+      <td>${fmtDate(q.DATE)}</td>
+      <td>${q.EQUIPEMENT||'—'}</td>
+      <td>${q.CONTROLE||'—'}</td>
+      <td>${q.RESULTAT||'—'}</td>
+      <td>${q.TECHNICIEN||'—'}</td>
+      <td><span class="badge ${q.CONFORMITE==='OUI'?'badge-success':'badge-danger'}">${q.CONFORMITE||'—'}</span></td>
+      <td>${fmtDate(q.PROCHAIN)}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="printQualiteFiche('${q.ID}')">
+          <i class="fas fa-print"></i>
+        </button>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+          onclick="deleteItem('qualite','${q.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--text3)">Aucun contrôle</td></tr>';
+}
+
+function saveQualite() {
+  const date = gv('qc-date');
+  const tech = gv('qc-tech');
+  if (!date||!tech) { toast('Date et technicien requis','error'); return; }
+  const obj = {
+    ID:         'QC-'+Date.now(),
+    DATE:       date,
+    TECHNICIEN: tech,
+    EQUIPEMENT: gv('qc-equip'),
+    CONTROLE:   gv('qc-controle'),
+    RESULTAT:   gv('qc-resultat'),
+    CONFORMITE: gv('qc-conformite'),
+    ACTION:     gv('qc-action'),
+    STATUT:     gv('qc-statut'),
+    PROCHAIN:   gv('qc-next')
+  };
+  STATE.qualite.push(obj);
+  saveAllLocal();
+  pushToSheets('saveQualite', obj);
+  renderQualite();
+  closeModal('modal-qualite');
+  toast('Contrôle qualité enregistré','success');
+}
+
+// -- CLIENTS ---------------------------------------------------
+function renderClients() {
+  const tbody = document.getElementById('clientsTable');
+  if (!tbody) return;
+  const search = (document.getElementById('searchClients')||{}).value||'';
+  let data = STATE.clients;
+  if (search) {
+    const s = search.toLowerCase();
+    data = data.filter(c=>
+      (c.NOM||'').toLowerCase().includes(s)||
+      (c.VILLE||'').toLowerCase().includes(s)
+    );
+  }
+  tbody.innerHTML = data.map(c => `
+    <tr>
+      <td>${c.ID||'—'}</td>
+      <td><strong>${c.NOM||'—'}</strong></td>
+      <td>${c.TYPE||'—'}</td>
+      <td>${c.CP||''} ${c.VILLE||''}</td>
+      <td>${c.TEL||'—'}</td>
+      <td>${c.EMAIL||'—'}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editClient('${c.ID}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+          onclick="deleteItem('clients','${c.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--text3)">Aucun client</td></tr>';
+}
+
+function saveClient() {
+  const nom = gv('cli-nom');
+  if (!nom) { toast('Nom requis','error'); return; }
+  const isUpdate = gv('cli-update')==='1';
+  const obj = {
+    ID:      gv('cli-id') || 'CLI-'+Date.now(),
+    NOM:     nom.toUpperCase(),
+    TYPE:    gv('cli-type'),
+    ADRESSE: gv('cli-adresse'),
+    CP:      gv('cli-cp'),
+    VILLE:   gv('cli-ville').toUpperCase(),
+    TEL:     gv('cli-tel'),
+    EMAIL:   gv('cli-email'),
+    CONTACT: gv('cli-contact'),
+    NOTES:   gv('cli-notes')
+  };
+  if (isUpdate) {
+    const idx = STATE.clients.findIndex(x=>x.ID===obj.ID);
+    if (idx>=0) STATE.clients[idx]=obj; else STATE.clients.push(obj);
+  } else {
+    STATE.clients.push(obj);
+  }
+  saveAllLocal();
+  pushToSheets('saveClient', obj);
+  populateClientSelects();
+  renderClients();
+  closeModal('modal-client');
+  toast('Client enregistré','success');
+}
+
+function editClient(id) {
+  const c = STATE.clients.find(x=>x.ID===id);
+  if (!c) return;
+  ['id','nom','type','adresse','cp','ville','tel','email','contact','notes'].forEach(f => {
+    const el = document.getElementById('cli-'+f);
+    if (el) el.value = c[f.toUpperCase()]||'';
+  });
+  sv_el('cli-update','1');
+  openModal('modal-client');
+}
+
+// -- MERCURIALES -----------------------------------------------
+function renderMercuriales() {
+  const tbody = document.getElementById('mercTable');
+  if (!tbody) return;
+  const fCli  = (document.getElementById('filterMercClient')||{}).value||'';
+  const search= (document.getElementById('searchMerc')||{}).value||'';
+  let data = STATE.mercuriales;
+  if (fCli)   data = data.filter(m=>m.CLIENT_ID===fCli||m.CLIENT===fCli);
+  if (search) {
+    const s = search.toLowerCase();
+    data = data.filter(m=>(m.DESIGNATION||'').toLowerCase().includes(s)||
+      (m.REF||'').toLowerCase().includes(s));
+  }
+  tbody.innerHTML = data.map(m => `
+    <tr>
+      <td><code>${m.REF||'—'}</code></td>
+      <td>${m.CLIENT||'—'}</td>
+      <td>${m.DESIGNATION||'—'}</td>
+      <td>${m.MODELE||'—'}</td>
+      <td>${m.CONDITIONNEMENT||'—'}</td>
+      <td>${parseFloat(m.PRIX_HT||0).toFixed(2)} €</td>
+      <td>${m.TVA||'—'}%</td>
+      <td>${parseFloat(m.PRIX_JOUR_HT||0).toFixed(2)} €</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editMercuriale('${m.REF}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+          onclick="deleteItem('mercuriales','${m.REF}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--text3)">Aucun article</td></tr>';
+}
+
+function openMercModal() {
+  clearForm(['merc-ref','merc-design','merc-modele','merc-prix','merc-daily']);
+  sv_el('merc-update','0');
+  openModal('modal-mercuriale');
+}
+
+function calcPriceMerc() {
+  const ht  = parseFloat(gv('merc-prix')||0);
+  const tva = parseFloat(gv('merc-tva')||20);
+  const ttc = ht * (1 + tva/100);
+  sv_el('merc-prix-ttc', `Prix TTC : <strong>${ttc.toFixed(2)} €</strong>`);
+}
+
+function saveMercuriale() {
+  const design = gv('merc-design');
+  if (!design) { toast('Désignation requise','error'); return; }
+  const isUpdate = gv('merc-update')==='1';
+  const ht  = parseFloat(gv('merc-prix')||0);
+  const tva = parseFloat(gv('merc-tva')||20);
+  const obj = {
+    REF:             gv('merc-ref') || 'ART-'+Date.now(),
+    CLIENT:          gv('merc-client'),
+    CLIENT_ID:       gv('merc-client'),
+    DESIGNATION:     design,
+    MODELE:          gv('merc-modele'),
+    CONDITIONNEMENT: gv('merc-cond'),
+    PRIX_HT:         ht.toFixed(2),
+    TVA:             tva,
+    PRIX_TTC:        (ht*(1+tva/100)).toFixed(2),
+    PRIX_JOUR_HT:    parseFloat(gv('merc-daily')||0).toFixed(2)
+  };
+  if (isUpdate) {
+    const idx = STATE.mercuriales.findIndex(x=>x.REF===obj.REF);
+    if (idx>=0) STATE.mercuriales[idx]=obj; else STATE.mercuriales.push(obj);
+  } else {
+    STATE.mercuriales.push(obj);
+  }
+  saveAllLocal();
+  pushToSheets('saveMercuriale', obj);
+  renderMercuriales();
+  closeModal('modal-mercuriale');
+  toast('Article enregistré','success');
+}
+
+function editMercuriale(ref) {
+  const m = STATE.mercuriales.find(x=>x.REF===ref);
+  if (!m) return;
+  setVal('merc-ref',    m.REF||'');
+  setVal('merc-client', m.CLIENT||'');
+  setVal('merc-design', m.DESIGNATION||'');
+  setVal('merc-modele', m.MODELE||'');
+  setVal('merc-cond',   m.CONDITIONNEMENT||'');
+  setVal('merc-prix',   m.PRIX_HT||'');
+  setVal('merc-tva',    m.TVA||'20');
+  setVal('merc-daily',  m.PRIX_JOUR_HT||'');
+  sv_el('merc-update','1');
+  openModal('modal-mercuriale');
+}
+
+// -- RAPPORT LOCATION ------------------------------------------
+function renderRapportLocation() {
+  const tbody = document.getElementById('rapLocTable');
+  if (!tbody) return;
+  tbody.innerHTML = [...STATE.rapport_location]
+    .sort((a,b)=>new Date(b.DATE_DEBUT||0)-new Date(a.DATE_DEBUT||0))
+    .map(r => {
+      const debut = r.DATE_DEBUT ? new Date(r.DATE_DEBUT) : null;
+      const fin   = r.DATE_FIN   ? new Date(r.DATE_FIN)   : null;
+      const jours = debut && fin
+        ? Math.ceil((fin-debut)/(1000*60*60*24))
+        : '—';
+      const art = STATE.mercuriales.find(m=>m.REF===r.REF||m.DESIGNATION===r.DESIGNATION);
+      const montant = art && jours!=='—'
+        ? (parseFloat(art.PRIX_JOUR_HT||0)*jours).toFixed(2)+' €'
+        : '—';
+      return `<tr>
+        <td><code style="font-size:10px">${r.ID||'—'}</code></td>
+        <td>${r.PATIENT||'—'}</td>
+        <td>${r.EQUIPEMENT||'—'}</td>
+        <td>${r.DESIGNATION||'—'}</td>
+        <td>${fmtDate(r.DATE_DEBUT)}</td>
+        <td>${fmtDate(r.DATE_FIN)||'En cours'}</td>
+        <td>${jours} j</td>
+        <td>${montant}</td>
+        <td><span class="badge ${r.STATUT==='EN COURS'?'badge-warning':
+          r.STATUT==='TERMINE'?'badge-success':'badge-info'}">${r.STATUT||'—'}</span></td>
+        <td>
+          <button class="btn btn-outline btn-sm" onclick="cloturerLocation('${r.ID}')">
+            <i class="fas fa-stop-circle"></i>
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="printRapportLoc('${r.ID}')">
+            <i class="fas fa-print"></i>
+          </button>
+          <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+            onclick="deleteItem('rapport_location','${r.ID}')">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="10" style="text-align:center;color:var(--text3)">Aucune location</td></tr>';
+}
+
+function saveRapportLocation() {
+  const patient = gv('rl-patient');
+  const equip   = gv('rl-equip');
+  const debut   = gv('rl-debut');
+  if (!patient||!debut) { toast('Patient et date début requis','error'); return; }
+  const obj = {
+    ID:          'LOC-'+Date.now(),
+    PATIENT:     patient,
+    EQUIPEMENT:  equip,
+    DESIGNATION: gv('rl-design'),
+    REF:         gv('rl-ref'),
+    DATE_DEBUT:  debut,
+    DATE_FIN:    gv('rl-fin')||'',
+    PRESCRIPTEUR:gv('rl-prescripteur'),
+    STATUT:      gv('rl-fin') ? 'TERMINE' : 'EN COURS'
+  };
+  STATE.rapport_location.push(obj);
+  saveAllLocal();
+  pushToSheets('saveRapportLocation', obj);
+  renderRapportLocation();
+  closeModal('modal-rapport-location');
+  toast('Location enregistrée','success');
+}
+
+function cloturerLocation(id) {
+  const r = STATE.rapport_location.find(x=>x.ID===id);
+  if (!r) return;
+  const today = new Date().toISOString().split('T')[0];
+  r.DATE_FIN = today;
+  r.STATUT = 'TERMINE';
+  // Libérer l'équipement
+  if (r.EQUIPEMENT) {
+    const eq = STATE.equipements.find(e=>e.ID===r.EQUIPEMENT);
+    if (eq) eq.STATUT = 'DISPONIBLE';
+  }
+  saveAllLocal();
+  pushToSheets('saveRapportLocation', r);
+  renderRapportLocation();
+  renderEquipements();
+  toast('Location clôturée','success');
+}
+
+// -- TECHNICIENS -----------------------------------------------
+function renderTechniciens() {
+  const tbody = document.getElementById('techTable');
+  if (!tbody) return;
+  tbody.innerHTML = STATE.techniciens.map(t => `
+    <tr>
+      <td>${t.ID||'—'}</td>
+      <td><strong>${t.NOM||''} ${t.PRENOM||''}</strong></td>
+      <td>${t.ROLE||'—'}</td>
+      <td>${t.TEL||'—'}</td>
+      <td>${t.EMAIL||'—'}</td>
+      <td><span class="badge ${t.ACTIF==='OUI'?'badge-success':'badge-danger'}">
+        ${t.ACTIF==='OUI'?'Actif':'Inactif'}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editTech('${t.ID}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626"
+          onclick="deleteItem('techniciens','${t.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--text3)">Aucun technicien</td></tr>';
+}
+
+function saveTechnicien() {
+  const nom = gv('tech-nom');
+  if (!nom) { toast('Nom requis','error'); return; }
+  const isUpdate = gv('tech-update')==='1';
+  const obj = {
+    ID:     gv('tech-id') || 'TECH-'+Date.now(),
+    NOM:    nom.toUpperCase(),
+    PRENOM: gv('tech-prenom'),
+    ROLE:   gv('tech-role'),
+    TEL:    gv('tech-tel'),
+    EMAIL:  gv('tech-email'),
+    ACTIF:  gv('tech-actif')
+  };
+  if (isUpdate) {
+    const idx = STATE.techniciens.findIndex(x=>x.ID===obj.ID);
+    if (idx>=0) STATE.techniciens[idx]=obj; else STATE.techniciens.push(obj);
+  } else {
+    STATE.techniciens.push(obj);
+  }
+  saveAllLocal();
+  pushToSheets('saveTechnicien', obj);
+  populateTechSelects();
+  renderTechniciens();
+  closeModal('modal-technicien');
+  toast('Technicien enregistré','success');
+}
+
+function editTech(id) {
+  const t = STATE.techniciens.find(x=>x.ID===id);
+  if (!t) return;
+  setVal('tech-id',     t.ID||'');
+  setVal('tech-nom',    t.NOM||'');
+  setVal('tech-prenom', t.PRENOM||'');
+  setVal('tech-role',   t.ROLE||'TECHNICIEN');
+  setVal('tech-tel',    t.TEL||'');
+  setVal('tech-email',  t.EMAIL||'');
+  setVal('tech-actif',  t.ACTIF||'OUI');
+  sv_el('tech-update','1');
+  openModal('modal-technicien');
+}
+
+// -- RAPPORTS --------------------------------------------------
+function renderRapports() {
+  renderRapportActivite();
+  renderRapportEquipements();
+  renderRapportDesinfection();
+}
+
+function renderRapportActivite() {
+  const mois   = gv('rapportMois') || new Date().toISOString().substring(0,7);
+  const [y, m] = mois.split('-').map(Number);
+  const intMois = STATE.interventions.filter(i => {
+    if (!i.DATE) return false;
+    const d = new Date(i.DATE);
+    return d.getFullYear()===y && d.getMonth()+1===m;
+  });
+  const dmMois = STATE.desinfection_mat.filter(d=>{
+    if (!d.DATE) return false;
+    const dt = new Date(d.DATE);
+    return dt.getFullYear()===y && dt.getMonth()+1===m;
+  });
+
+  const cont = document.getElementById('rapActiviteContent');
+  if (!cont) return;
+
+  // Comptage par type
+  const byType = {};
+  intMois.forEach(i => {
+    const t = i.TYPE_MAT||'AUTRE';
+    byType[t] = (byType[t]||0)+1;
+  });
+
+  cont.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px">
+      <div class="stat-card">
+        <div class="stat-value">${intMois.length}</div>
+        <div class="stat-label">Interventions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${dmMois.length}</div>
+        <div class="stat-label">Désinfections</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${[...new Set(intMois.map(i=>i.TECHNICIEN))].length}</div>
+        <div class="stat-label">Techniciens actifs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${[...new Set(intMois.map(i=>i.PATIENT).filter(Boolean))].length}</div>
+        <div class="stat-label">Patients concernés</div>
+      </div>
+    </div>
+    <h4 style="margin-bottom:8px;font-size:13px">Répartition par type</h4>
+    ${Object.entries(byType).map(([t,n])=>`
+      <div style="display:flex;justify-content:space-between;padding:4px 0;
+        border-bottom:1px solid var(--border);font-size:12px">
+        <span>${t}</span><strong>${n}</strong>
+      </div>`).join('')}
+    <div style="margin-top:16px">
+      <h4 style="font-size:13px;margin-bottom:8px">Détail interventions</h4>
+      <table style="font-size:11px">
+        <thead><tr><th>Date</th><th>Technicien</th><th>Patient</th><th>Type</th><th>Lieu</th></tr></thead>
+        <tbody>${intMois.map(i=>`
+          <tr>
+            <td>${fmtDate(i.DATE)}</td>
+            <td>${i.TECHNICIEN||'—'}</td>
+            <td>${i.PATIENT||'—'}</td>
+            <td>${i.TYPE_MAT||'—'}</td>
+            <td>${i.LIEU||'—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function renderRapportEquipements() {
+  const cont = document.getElementById('rapEquipContent');
+  if (!cont) return;
+  const total = STATE.equipements.length;
+  const loues = STATE.equipements.filter(e=>e.STATUT==='LOUE').length;
+  const dispos = STATE.equipements.filter(e=>e.STATUT==='DISPONIBLE').length;
+  const hs    = STATE.equipements.filter(e=>e.STATUT==='HORS SERVICE').length;
+
+  cont.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+      <div class="stat-card">
+        <div class="stat-value">${total}</div>
+        <div class="stat-label">Total parc</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid #22c55e">
+        <div class="stat-value" style="color:#22c55e">${loues}</div>
+        <div class="stat-label">En location</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid #6366f1">
+        <div class="stat-value" style="color:#6366f1">${dispos}</div>
+        <div class="stat-label">Disponibles</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid #ef4444">
+        <div class="stat-value" style="color:#ef4444">${hs}</div>
+        <div class="stat-label">Hors service</div>
+      </div>
+    </div>
+    <table style="font-size:11px">
+      <thead><tr><th>ID</th><th>Type</th><th>Marque</th><th>Modèle</th><th>N° Série</th><th>Patient</th><th>Statut</th></tr></thead>
+      <tbody>${STATE.equipements.map(e=>`
+        <tr>
+          <td><strong>${e.ID||'—'}</strong></td>
+          <td>${e.TYPE||'—'}</td>
+          <td>${e.MARQUE||'—'}</td>
+          <td>${e.MODELE||'—'}</td>
+          <td><code style="font-size:10px">${e.SERIE||'—'}</code></td>
+          <td>${e.PATIENT||'—'}</td>
+          <td><span class="badge ${badgeStatut(e.STATUT)}">${e.STATUT||'—'}</span></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+function renderRapportDesinfection() {
+  const cont = document.getElementById('rapDesinfContent');
+  if (!cont) return;
+  const mois   = gv('rapportMois') || new Date().toISOString().substring(0,7);
+  const [y, m] = mois.split('-').map(Number);
+
+  const filtre = arr => arr.filter(d => {
+    if (!d.DATE) return false;
+    const dt = new Date(d.DATE);
+    return dt.getFullYear()===y && dt.getMonth()+1===m;
+  });
+
+  const matM   = filtre(STATE.desinfection_mat);
+  const salleM = filtre(STATE.desinfection_salle);
+  const confM  = matM.filter(d=>d.VALIDATION==='CONFORME').length;
+  const ncM    = matM.filter(d=>d.VALIDATION==='NON CONFORME').length;
+
+  cont.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+      <div class="stat-card">
+        <div class="stat-value">${matM.length}</div>
+        <div class="stat-label">Désinf. matériel</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${salleM.length}</div>
+        <div class="stat-label">Désinf. salles</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid #22c55e">
+        <div class="stat-value" style="color:#22c55e">${confM}</div>
+        <div class="stat-label">Conformes</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid #ef4444">
+        <div class="stat-value" style="color:#ef4444">${ncM}</div>
+        <div class="stat-label">Non conformes</div>
+      </div>
+    </div>
+    <h4 style="font-size:13px;margin-bottom:8px">Désinfections matériel</h4>
+    <table style="font-size:11px">
+      <thead><tr><th>Date</th><th>Technicien</th><th>Matériel</th><th>Produit</th><th>Validation</th></tr></thead>
+      <tbody>${matM.map(d=>`
+        <tr>
+          <td>${fmtDate(d.DATE)}</td>
+          <td>${d.TECHNICIEN||'—'}</td>
+          <td>${d.MATERIEL||'—'}</td>
+          <td>${d.PRODUIT||'—'}</td>
+          <td><span class="badge ${d.VALIDATION==='CONFORME'?'badge-success':'badge-danger'}">${d.VALIDATION||'—'}</span></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <h4 style="font-size:13px;margin:16px 0 8px">Désinfections salles</h4>
+    <table style="font-size:11px">
+      <thead><tr><th>Date</th><th>Technicien</th><th>Salle</th><th>Produit</th><th>Surface</th><th>Validation</th></tr></thead>
+      <tbody>${salleM.map(d=>`
+        <tr>
+          <td>${fmtDate(d.DATE)}</td>
+          <td>${d.TECHNICIEN||'—'}</td>
+          <td>${d.SALLE||'—'}</td>
+          <td>${d.PRODUIT||'—'}</td>
+          <td>${d.SURFACE||'—'} m²</td>
+          <td><span class="badge ${d.VALIDATION==='CONFORME'?'badge-success':'badge-danger'}">${d.VALIDATION||'—'}</span></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+// -- IMPRESSION ------------------------------------------------
+function printIntervention(id) {
+  const i = STATE.interventions.find(x=>x.ID===id);
+  if (!i) return;
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Fiche intervention ${i.ID}</title>
+    <style>
+      body{font-family:Arial,sans-serif;font-size:12px;padding:20px;color:#000}
+      h2{border-bottom:2px solid #333;padding-bottom:8px}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+      .field{border:1px solid #ccc;padding:6px;border-radius:4px}
+      .field label{font-size:10px;color:#666;display:block}
+      .field span{font-weight:bold}
+      .section{background:#f5f5f5;padding:6px;margin:8px 0;font-weight:bold}
+      table{width:100%;border-collapse:collapse;margin-top:8px}
+      th,td{border:1px solid #ccc;padding:5px;text-align:left;font-size:11px}
+      th{background:#f0f0f0}
+      .badge-ok{background:#dcfce7;color:#166534;padding:2px 6px;border-radius:4px}
+      .badge-ko{background:#fee2e2;color:#dc2626;padding:2px 6px;border-radius:4px}
+      .badge-na{background:#f3f4f6;color:#6b7280;padding:2px 6px;border-radius:4px}
+      @media print{@page{margin:15mm}}
+    </style>
+  </head><body>
+    <h2>?? FICHE D'INTERVENTION — ${i.ID}</h2>
+    <div class="section">Informations générales</div>
+    <div class="grid">
+      <div class="field"><label>Date</label><span>${fmtDate(i.DATE)}</span></div>
+      <div class="field"><label>Technicien</label><span>${i.TECHNICIEN||'—'}</span></div>
+      <div class="field"><label>Type matériel</label><span>${i.TYPE_MAT||'—'}</span></div>
+      <div class="field"><label>Patient</label><span>${i.PATIENT||'—'}</span></div>
+      <div class="field"><label>Lieu</label><span>${i.LIEU||'—'}</span></div>
+      <div class="field"><label>Matériel ID</label><span>${i.MATERIEL||'—'}</span></div>
+      <div class="field"><label>Marque</label><span>${i.MARQUE||'—'}</span></div>
+      <div class="field"><label>Modèle</label><span>${i.MODELE||'—'}</span></div>
+      <div class="field"><label>N° Série</label><span>${i.SERIE||'—'}</span></div>
+      <div class="field"><label>Mise en service</label><span>${fmtDate(i.MISE_SERVICE)}</span></div>
+      <div class="field"><label>Distributeur</label><span>${i.DISTRIBUTEUR||'—'}</span></div>
+      <div class="field"><label>Statut</label><span>${i.STATUT||'—'}</span></div>
+    </div>
+    <div class="section">Contrôles effectués</div>
+    <table>
+      <thead><tr><th>Élément</th><th>État</th></tr></thead>
+      <tbody>
+        ${Object.entries(i)
+          .filter(([k])=>!['ID','TYPE_MAT','DATE','TECHNICIEN','PATIENT','LIEU',
+            'MATERIEL','MARQUE','MODELE','SERIE','MISE_SERVICE','DISTRIBUTEUR',
+            'STATUT','COMMENTAIRES'].includes(k))
+          .map(([k,v])=>`<tr><td>${k}</td>
+            <td><span class="${v==='BON'?'badge-ok':v==='DEFECTUEUX'?'badge-ko':'badge-na'}">${v}</span></td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+    ${i.COMMENTAIRES ? `<div class="section">Commentaires</div><p>${i.COMMENTAIRES}</p>` : ''}
+    <div style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div style="border-top:1px solid #333;padding-top:8px">
+        <p style="font-size:10px">Signature technicien</p>
+      </div>
+      <div style="border-top:1px solid #333;padding-top:8px">
+        <p style="font-size:10px">Signature patient / responsable</p>
+      </div>
+    </div>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function printFichePatient(id) {
+  const p = STATE.patients.find(x=>(x.ID||x.NOM)===id);
+  if (!p) return;
+  const equips = STATE.equipements.filter(e=>e.PATIENT===p.NOM+' '+p.PRENOM||e.PATIENT===p.NOM);
+  const intrvs = STATE.interventions.filter(i=>i.PATIENT===p.NOM+' '+p.PRENOM||i.PATIENT===p.NOM);
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Fiche patient ${p.NOM}</title>
+    <style>
+      body{font-family:Arial,sans-serif;font-size:12px;padding:20px}
+      h2{border-bottom:2px solid #333;padding-bottom:8px}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+      .field{border:1px solid #ccc;padding:6px;border-radius:4px}
+      .field label{font-size:10px;color:#666;display:block}
+      .field span{font-weight:bold}
+      .section{background:#f5f5f5;padding:6px;margin:8px 0;font-weight:bold}
+      table{width:100%;border-collapse:collapse;margin-top:8px;font-size:11px}
+      th,td{border:1px solid #ccc;padding:5px}
+      th{background:#f0f0f0}
+    </style>
+  </head><body>
+    <h2>?? FICHE PATIENT — ${p.NOM} ${p.PRENOM}</h2>
+    <div class="section">Informations personnelles</div>
+    <div class="grid">
+      <div class="field"><label>N° Client</label><span>${p.NUMCLIENT||'—'}</span></div>
+      <div class="field"><label>Établissement</label><span>${p.ETABLISSEMENT||'—'}</span></div>
+      <div class="field"><label>Téléphone</label><span>${p.TEL||'—'}</span></div>
+      <div class="field"><label>Email</label><span>${p.EMAIL||'—'}</span></div>
+      <div class="field"><label>Adresse</label><span>${p.ADRESSE||'—'}</span></div>
+      <div class="field"><label>CP / Ville</label><span>${p.CP||''} ${p.VILLE||''}</span></div>
+      <div class="field"><label>Date de naissance</label><span>${fmtDate(p.DDN)}</span></div>
+      <div class="field"><label>Médecin</label><span>${p.MEDECIN||'—'}</span></div>
+    </div>
+    <div class="section">Équipements attribués</div>
+    <table>
+      <thead><tr><th>ID</th><th>Type</th><th>Marque</th><th>Modèle</th><th>Série</th><th>Statut</th></tr></thead>
+      <tbody>${equips.map(e=>`
+        <tr><td>${e.ID}</td><td>${e.TYPE||'—'}</td><td>${e.MARQUE||'—'}</td>
+        <td>${e.MODELE||'—'}</td><td>${e.SERIE||'—'}</td><td>${e.STATUT||'—'}</td></tr>
+      `).join('')||'<tr><td colspan="6">Aucun équipement</td></tr>'}
+      </tbody>
+    </table>
+    <div class="section">Historique interventions</div>
+    <table>
+      <thead><tr><th>Date</th><th>Type</th><th>Technicien</th><th>Matériel</th><th>Statut</th></tr></thead>
+      <tbody>${intrvs.map(i=>`
+        <tr><td>${fmtDate(i.DATE)}</td><td>${i.TYPE_MAT||'—'}</td>
+        <td>${i.TECHNICIEN||'—'}</td><td>${i.MATERIEL||'—'}</td><td>${i.STATUT||'—'}</td></tr>
+      `).join('')||'<tr><td colspan="5">Aucune intervention</td></tr>'}
+      </tbody>
+    </table>
+    ${p.NOTES ? `<div class="section">Notes</div><p>${p.NOTES}</p>` : ''}
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function printDesinfMatFiche(id) {
+  const d = STATE.desinfection_mat.find(x=>x.ID===id);
+  if (!d) return;
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Fiche désinfection ${d.ID}</title>
+    <style>
+      body{font-family:Arial,sans-serif;font-size:12px;padding:20px}
+      h2{border-bottom:2px solid #333;padding-bottom:8px}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+      .field{border:1px solid #ccc;padding:6px;border-radius:4px}
+      .field label{font-size:10px;color:#666;display:block}
+      .field span{font-weight:bold}
+      .section{background:#f5f5f5;padding:6px;margin:8px 0;font-weight:bold}
+    </style>
+  </head><body>
+    <h2>?? FICHE DÉSINFECTION MATÉRIEL — ${d.ID}</h2>
+    <div class="grid">
+      <div class="field"><label>Date</label><span>${fmtDate(d.DATE)}</span></div>
+      <div class="field"><label>Technicien</label><span>${d.TECHNICIEN||'—'}</span></div>
+      <div class="field"><label>Matériel</label><span>${d.MATERIEL||'—'}</span></div>
+      <div class="field"><label>Marque</label><span>${d.MARQUE||'—'}</span></div>
+      <div class="field"><label>Modèle</label><span>${d.MODELE||'—'}</span></div>
+      <div class="field"><label>Produit utilisé</label><span>${d.PRODUIT||'—'}</span></div>
+      <div class="field"><label>Temps de contact</label><span>${d.TEMPS_CONTACT||'—'}</span></div>
+      <div class="field"><label>Barrières</label><span>${d.BARRIERES||'—'}</span></div>
+      <div class="field"><label>Roulettes</label><span>${d.ROULETTES||'—'}</span></div>
+      <div class="field"><label>Structure</label><span>${d.STRUCTURE||'—'}</span></div>
+      <div class="field"><label>Observation</label><span>${d.OBSERVATION||'—'}</span></div>
+      <div class="field"><label>Validation</label>
+        <span style="color:${d.VALIDATION==='CONFORME'?'green':'red'}">${d.VALIDATION||'—'}</span>
+      </div>
+    </div>
+    <div style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div style="border-top:1px solid #333;padding-top:8px">
+        <p style="font-size:10px">Signature technicien</p>
+        ${d.SIGNATURE ? `<img src="${d.SIGNATURE}" style="height:60px">` : ''}
+      </div>
+      <div style="border-top:1px solid #333;padding-top:8px">
+        <p style="font-size:10px">Visa responsable</p>
+      </div>
+    </div>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function printDesinfSalleFiche(id) {
+  const d = STATE.desinfection_salle.find(x=>x.ID===id);
+  if (!d) return;
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Désinfection salle ${d.ID}</title>
+    <style>
+      body{font-family:Arial,sans-serif;font-size:12px;padding:20px}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+      .field{border:1px solid #ccc;padding:6px;border-radius:4px}
+      .field label{font-size:10px;color:#666;display:block}
+      .field span{font-weight:bold}
+    </style>
+  </head><body>
+    <h2>?? FICHE DÉSINFECTION SALLE — ${d.ID}</h2>
+    <div class="grid">
+      <div class="field"><label>Date</label><span>${fmtDate(d.DATE)}</span></div>
+      <div class="field"><label>Technicien</label><span>${d.TECHNICIEN||'—'}</span></div>
+      <div class="field"><label>Salle</label><span>${d.SALLE||'—'}</span></div>
+      <div class="field"><label>Produit</label><span>${d.PRODUIT||'—'}</span></div>
+      <div class="field"><label>Surface</label><span>${d.SURFACE||'—'} m²</span></div>
+      <div class="field"><label>Temps contact</label><span>${d.TEMPS_CONTACT||'—'}</span></div>
+      <div class="field"><label>Observation</label><span>${d.OBSERVATION||'—'}</span></div>
+      <div class="field"><label>Validation</label>
+        <span style="color:${d.VALIDATION==='CONFORME'?'green':'red'}">${d.VALIDATION||'—'}</span>
+      </div>
+    </div>
+    <div style="margin-top:40px;border-top:1px solid #333;padding-top:8px">
+      <p style="font-size:10px">Signature technicien</p>
+      ${d.SIGNATURE ? `<img src="${d.SIGNATURE}" style="height:60px">` : ''}
+    </div>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function printRapportLoc(id) {
+  const r = STATE.rapport_location.find(x=>x.ID===id);
+  if (!r) return;
+  const art = STATE.mercuriales.find(m=>m.REF===r.REF);
+  const debut = r.DATE_DEBUT ? new Date(r.DATE_DEBUT) : null;
+  const fin   = r.DATE_FIN   ? new Date(r.DATE_FIN)   : new Date();
+  const jours = debut ? Math.ceil((fin-debut)/(1000*60*60*24)) : 0;
+  const montant = art ? (parseFloat(art.PRIX_JOUR_HT||0)*jours).toFixed(2) : '—';
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Rapport location ${r.ID}</title>
+    <style>
+      body{font-family:Arial,sans-serif;font-size:12px;padding:20px}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+      .field{border:1px solid #ccc;padding:6px;border-radius:4px}
+      .field label{font-size:10px;color:#666;display:block}
+      .field span{font-weight:bold}
+      .total{font-size:16px;font-weight:bold;background:#f0fdf4;
+        border:2px solid #22c55e;padding:12px;margin-top:16px;border-radius:6px}
+    </style>
+  </head><body>
+    <h2>?? RAPPORT DE LOCATION — ${r.ID}</h2>
+    <div class="grid">
+      <div class="field"><label>Patient</label><span>${r.PATIENT||'—'}</span></div>
+      <div class="field"><label>Équipement</label><span>${r.EQUIPEMENT||'—'}</span></div>
+      <div class="field"><label>Désignation</label><span>${r.DESIGNATION||'—'}</span></div>
+      <div class="field"><label>Référence</label><span>${r.REF||'—'}</span></div>
+      <div class="field"><label>Date début</label><span>${fmtDate(r.DATE_DEBUT)}</span></div>
+      <div class="field"><label>Date fin</label><span>${fmtDate(r.DATE_FIN)||'En cours'}</span></div>
+      <div class="field"><label>Durée</label><span>${jours} jours</span></div>
+      <div class="field"><label>Prix/jour HT</label>
+        <span>${art?parseFloat(art.PRIX_JOUR_HT||0).toFixed(2)+' €':'—'}</span>
+      </div>
+    </div>
+    <div class="total">?? Montant total HT : ${montant} €</div>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function printPlanning() {
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Planning</title>
+    <style>
+      body{font-family:Arial,sans-serif;font-size:11px;padding:20px}
+      table{width:100%;border-collapse:collapse}
+      th,td{border:1px solid #ccc;padding:5px}
+      th{background:#f0f0f0}
+    </style>
+  </head><body>
+    <h2>?? PLANNING DES INTERVENTIONS</h2>
+    <table>
+      <thead><tr><th>Date</th><th>Heure</th><th>Technicien</th><th>Patient</th>
+        <th>Type</th><th>Équipement</th><th>Priorité</th><th>Statut</th></tr></thead>
+      <tbody>${[...STATE.planning].sort((a,b)=>new Date(a.DATE||0)-new Date(b.DATE||0))
+        .map(p=>`<tr>
+          <td>${fmtDate(p.DATE)}</td><td>${p.HEURE||'—'}</td>
+          <td>${p.TECHNICIEN||'—'}</td><td>${p.PATIENT||'—'}</td>
+          <td>${p.TYPE||'—'}</td><td>${p.EQUIPEMENT||'—'}</td>
+          <td>${p.PRIORITE||'—'}</td><td>${p.STATUT||'—'}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function printMaintenances() {
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Maintenances</title>
+    <style>
+      body{font-family:Arial,sans-serif;font-size:11px;padding:20px}
+      table{width:100%;border-collapse:collapse}
+      th,td{border:1px solid #ccc;padding:5px}th{background:#f0f0f0}
+    </style>
+  </head><body>
+    <h2>?? REGISTRE DES MAINTENANCES</h2>
+    <table>
+      <thead><tr><th>Équipement</th><th>Type</th><th>Fréquence</th>
+        <th>Dernière</th><th>Prochaine</th><th>Technicien</th><th>Statut</th></tr></thead>
+      <tbody>${STATE.maintenances.map(m=>`<tr>
+        <td>${m.EQUIPEMENT||'—'}</td><td>${m.TYPE||'—'}</td>
+        <td>${m.FREQUENCE||'—'}</td><td>${fmtDate(m.DERNIERE)}</td>
+        <td>${fmtDate(m.PROCHAINE)}</td><td>${m.TECHNICIEN||'—'}</td>
+        <td>${m.STATUT||'—'}</td>
+      </tr>`).join('')}
+      </tbody>
+    </table>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function printDesinfMat() {
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Désinfections matériel</title>
+    <style>body{font-family:Arial;font-size:11px;padding:20px}
+    table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:4px}
+    th{background:#f0f0f0}</style>
+  </head><body>
+    <h2>?? REGISTRE DÉSINFECTION MATÉRIEL</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Date</th><th>Technicien</th><th>Matériel</th>
+        <th>Produit</th><th>Validation</th></tr></thead>
+      <tbody>${STATE.desinfection_mat.map(d=>`<tr>
+        <td>${d.ID}</td><td>${fmtDate(d.DATE)}</td><td>${d.TECHNICIEN||'—'}</td>
+        <td>${d.MATERIEL||'—'}</td><td>${d.PRODUIT||'—'}</td><td>${d.VALIDATION||'—'}</td>
+      </tr>`).join('')}
+      </tbody>
+    </table>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function printDesinfSalle() {
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Désinfections salles</title>
+    <style>body{font-family:Arial;font-size:11px;padding:20px}
+    table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:4px}
+    th{background:#f0f0f0}</style>
+  </head><body>
+    <h2>?? REGISTRE DÉSINFECTION SALLES</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Date</th><th>Technicien</th><th>Salle</th>
+        <th>Produit</th><th>Surface</th><th>Validation</th></tr></thead>
+      <tbody>${STATE.desinfection_salle.map(d=>`<tr>
+        <td>${d.ID}</td><td>${fmtDate(d.DATE)}</td><td>${d.TECHNICIEN||'—'}</td>
+        <td>${d.SALLE||'—'}</td><td>${d.PRODUIT||'—'}</td>
+        <td>${d.SURFACE||'—'} m²</td><td>${d.VALIDATION||'—'}</td>
+      </tr>`).join('')}
+      </tbody>
+    </table>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function genRapportMensuel() {
+  renderRapports();
+  toast('Rapport mensuel généré','success');
+}
+
+// -- EXPORTS ---------------------------------------------------
+function exportCSV(dataKey, filename) {
+  const data = STATE[dataKey];
+  if (!data||!data.length) { toast('Aucune donnée à exporter','warning'); return; }
+  const keys = Object.keys(data[0]);
+  const rows = [keys.join(';'), ...data.map(r=>keys.map(k=>`"${r[k]||''}"`).join(';'))];
+  const blob = new Blob([rows.join('\n')], {type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename||dataKey+'.csv';
+  a.click(); URL.revokeObjectURL(url);
+  toast('Export CSV réussi','success');
+}
+
+function exportAllJSON() {
+  const data = {};
+  LS_KEYS.forEach(k => data[k] = STATE[k]);
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'psdm_backup_'+Date.now()+'.json';
+  a.click(); URL.revokeObjectURL(url);
+  toast('Backup JSON exporté','success');
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      LS_KEYS.forEach(k => { if (data[k]) STATE[k] = data[k]; });
+      saveAllLocal();
+      renderAll();
+      toast('Import réussi','success');
+    } catch(_) {
+      toast('Fichier JSON invalide','error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// -- SIGNATURE -------------------------------------------------
+const _sigPads = {};
+
+function initSignaturePads() {
+  document.querySelectorAll('canvas[data-sig]').forEach(canvas => {
+    const id  = canvas.getAttribute('data-sig');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    ctx.strokeStyle = '#1e3a5f';
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+
+    const getPos = evt => {
+      const r = canvas.getBoundingClientRect();
+      const s = evt.touches ? evt.touches[0] : evt;
+      return { x: s.clientX - r.left, y: s.clientY - r.top };
+    };
+
+    const start = e => { drawing=true; const p=getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); };
+    const draw  = e => { if (!drawing) return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault(); };
+    const stop  = ()  => { drawing=false; };
+
+    canvas.addEventListener('mousedown',  start);
+    canvas.addEventListener('mousemove',  draw);
+    canvas.addEventListener('mouseup',    stop);
+    canvas.addEventListener('touchstart', start, {passive:false});
+    canvas.addEventListener('touchmove',  draw,  {passive:false});
+    canvas.addEventListener('touchend',   stop);
+
+    _sigPads[id] = canvas;
+  });
+}
+
+function clearSig(id) {
+  const c = _sigPads[id] || document.querySelector(`canvas[data-sig="${id}"]`);
+  if (!c) return;
+  c.getContext('2d').clearRect(0,0,c.width,c.height);
+}
+
+function getSig(id) {
+  const c = _sigPads[id] || document.querySelector(`canvas[data-sig="${id}"]`);
+  return c ? c.toDataURL() : '';
+}
+
+// -- MODALS ----------------------------------------------------
+function openModal(id) {
+  const m = document.getElementById(id);
+  if (m) { m.style.display='flex'; setTimeout(()=>m.classList.add('show'),10); }
+}
+
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.classList.remove('show');
+  setTimeout(()=>{ m.style.display='none'; }, 200);
+}
+
+// Fermer modal en cliquant dehors
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) {
+    closeModal(e.target.id);
+  }
+});
+
+// -- SUPPRESSION -----------------------------------------------
+function deleteItem(collection, id) {
+  if (!confirm('Supprimer cet élément ?')) return;
+  const key = collection;
+  if (!STATE[key]) return;
+  STATE[key] = STATE[key].filter(x => {
+    const xid = x.ID || x.REF || x.NOM;
+    return xid !== id;
+  });
+  saveAllLocal();
+  pushToSheets('deleteItem', { collection, id });
+  renderAll();
+  toast('Élément supprimé','success');
+}
+
+function deletePlanning(id) {
+  deleteItem('planning', id);
+}
+
+// -- HELPERS ---------------------------------------------------
+function gv(id) {
+  const el = document.getElementById(id);
+  if (!el) return '';
+  return el.value || '';
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val || '';
+}
+
+function sv(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function sv_el(id, val) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
+      el.value = val;
+    } else {
+      el.textContent = val;
+    }
+  }
+}
+
+function clearForm(ids) {
+  ids.forEach(id => setVal(id, ''));
+}
+
+function fmtDate(str) {
+  if (!str) return '—';
+  try {
+    const d = new Date(str);
+    return d.toLocaleDateString('fr-FR');
+  } catch(_) { return str; }
+}
+
+function badgeStatut(s) {
+  if (!s) return '';
+  const map = {
+    'DISPONIBLE':  'badge-success',
+    'LOUE':        'badge-warning',
+    'HORS SERVICE':'badge-danger',
+    'TERMINE':     'badge-success',
+    'EN COURS':    'badge-warning',
+    'PLANIFIE':    'badge-info',
+    'TERMINEE':    'badge-success',
+    'FAIT':        'badge-success',
+    'EN ATTENTE':  'badge-warning',
+    'EN RETARD':   'badge-danger',
+    'ACTIF':       'badge-success',
+    'INACTIF':     'badge-danger'
+  };
+  return map[s] || 'badge-info';
+}
+
+function showLoader(show) {
+  const l = document.getElementById('globalLoader');
+  if (l) l.style.display = show ? 'flex' : 'none';
+}
+
+function toast(msg, type='info') {
+  const container = document.getElementById('toastContainer') ||
+    (() => {
+      const d = document.createElement('div');
+      d.id = 'toastContainer';
+      d.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px';
+      document.body.appendChild(d);
+      return d;
+    })();
+
+  const t = document.createElement('div');
+  const colors = {
+    success:'#22c55e', error:'#ef4444',
+    warning:'#f59e0b', info:'#6366f1'
+  };
+  const icons = { success:'?', error:'?', warning:'??', info:'??' };
+  t.style.cssText = `background:${colors[type]||colors.info};color:#fff;
+    padding:10px 16px;border-radius:8px;font-size:13px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    animation:slideIn 0.3s ease;max-width:300px;`;
+  t.textContent = `${icons[type]||''} ${msg}`;
+  container.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity 0.3s'; }, 3000);
+  setTimeout(() => t.remove(), 3300);
+}
+
+// -- POPULATE SELECTS / DATALISTS ------------------------------
+function populateTechSelects() {
+  const techs = STATE.techniciens.filter(t=>t.ACTIF==='OUI'||!t.ACTIF);
+  document.querySelectorAll('select[id$="-tech"], select[id="iv-tech"]').forEach(sel => {
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">-- Technicien --</option>' +
+      techs.map(t=>`<option value="${t.NOM} ${t.PRENOM}">${t.NOM} ${t.PRENOM}</option>`).join('');
+    if (cur) sel.value = cur;
+  });
+}
+
+function populateTechSelect(id) {
+  const sel = document.getElementById(id);
+  if (!sel) return;
+  const techs = STATE.techniciens.filter(t=>t.ACTIF==='OUI'||!t.ACTIF);
+  sel.innerHTML = '<option value="">-- Technicien --</option>' +
+    techs.map(t=>`<option value="${t.NOM} ${t.PRENOM}">${t.NOM} ${t.PRENOM}</option>`).join('');
+}
+
+function populateClientSelects() {
+  document.querySelectorAll('select[id*="cli"], select[id="merc-client"]').forEach(sel => {
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">-- Client --</option>' +
+      STATE.clients.map(c=>`<option value="${c.ID}">${c.NOM}</option>`).join('');
+    if (cur) sel.value = cur;
+  });
+
+  // Filter mercuriales
+  const fm = document.getElementById('filterMercClient');
+  if (fm) {
+    const cur = fm.value;
+    fm.innerHTML = '<option value="">Tous les clients</option>' +
+      STATE.clients.map(c=>`<option value="${c.ID}">${c.NOM}</option>`).join('');
+    if (cur) fm.value = cur;
+  }
+}
+
+function populateEquipDatalist() {
+  const dl = document.getElementById('listEquip');
+  if (!dl) return;
+  dl.innerHTML = STATE.equipements
+    .map(e=>`<option value="${e.ID}">${e.ID} — ${e.MARQUE||''} ${e.MODELE||''}</option>`)
+    .join('');
+}
+
+function populateEquipDatalistId(id) {
+  const dl = document.getElementById(id);
+  if (!dl) return;
+  dl.innerHTML = STATE.equipements
+    .map(e=>`<option value="${e.ID}">${e.ID} — ${e.MARQUE||''} ${e.MODELE||''}</option>`)
+    .join('');
+}
+
+function populatePatientDatalist(id) {
+  const dl = document.getElementById(id);
+  if (!dl) return;
+  dl.innerHTML = STATE.patients
+    .map(p=>`<option value="${p.NOM} ${p.PRENOM}">${p.NOM} ${p.PRENOM} — ${p.CP||''} ${p.VILLE||''}</option>`)
+    .join('');
+}
+
+// -- FILTRES TABLES --------------------------------------------
+function filterPatients() { renderPatients(); }
+function filterEquipements() { renderEquipements(); }
+function filterMercuriales() { renderMercuriales(); }
+function filterClients() { renderClients(); }
+
+// -- MOBILE SIDEBAR --------------------------------------------
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('open');
+}
+
+// -- THEME -----------------------------------------------------
+function toggleTheme() {
+  const root = document.documentElement;
+  const isDark = root.getAttribute('data-theme') === 'dark';
+  root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('psdm_theme', isDark ? 'light' : 'dark');
+}
+
+(function applyTheme() {
+  const t = localStorage.getItem('psdm_theme');
+  if (t) document.documentElement.setAttribute('data-theme', t);
+})();
+
+</script>
