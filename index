@@ -2072,7 +2072,7 @@ function showMatChecks(type){
 //  GOOGLE SHEETS CONFIG
 // ═══════════════════════════════════════════════════════
 const SHEETS_CONFIG = {
-  url:          'https://script.google.com/macros/s/AKfycbyXFGK-ChsQGVk8zEwrsMkKCnHaagDZok_TQ3NgivrZlheqk_1ETJBQge1UAkwm2E8z/exec',
+  url:          'https://script.google.com/macros/s/AKfycbzzF2NXJwUF1Y4TmMzvfKK307YNdscfLu8d0gFd-POuv0mL2pnTkYjrXBM0ipOWo5Pg/exec',
   apiKey:       '78500Meditecpsdm',
   syncInterval: 30000,
   autoSync:     true
