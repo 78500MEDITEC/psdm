@@ -94,7 +94,7 @@ tbody tr:last-child td{border-bottom:none}
 .alert-info{background:#dbeafe;color:#1e40af;border-left:4px solid var(--primary)}
 .alert-warning{background:#fef3c7;color:#92400e;border-left:4px solid var(--warning)}
 .alert-success{background:#dcfce7;color:#14532d;border-left:4px solid var(--success)}
-.btn-save-all{position:fixed;bottom:20px;left:260px;z-index:500;background:var(--success);color:#fff;border:none;padding:10px 20px;border-radius:30px;cursor:pointer;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.btn--all{position:fixed;bottom:20px;left:260px;z-index:500;background:var(--success);color:#fff;border:none;padding:10px 20px;border-radius:30px;cursor:pointer;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:none}
@@ -106,7 +106,7 @@ tbody tr:last-child td{border-bottom:none}
 </head>
 <body>
 <div id="toast-container"></div>
-<button class="btn-save-all" onclick="saveAllLocal();toast('Données sauvegardées','success')">💾 Sauvegarder</button>
+<button class="btn--all" onclick="AllLocal();toast('Données sauvegardées','success')">💾 Sauvegarder</button>
 
 <!-- LOGIN -->
 <div id="login-screen">
@@ -187,7 +187,7 @@ tbody tr:last-child td{border-bottom:none}
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('modal-config')">Annuler</button>
-      <button class="btn btn-primary" onclick="saveConfig()">💾 Sauvegarder</button>
+      <button class="btn btn-primary" onclick="Config()">💾 Sauvegarder</button>
     </div>
   </div>
 </div>
@@ -230,7 +230,7 @@ tbody tr:last-child td{border-bottom:none}
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('modal-patient')">Annuler</button>
-      <button class="btn btn-primary" onclick="savePatient()">💾 Sauvegarder</button>
+      <button class="btn btn-primary" onclick="Patient()">💾 Sauvegarder</button>
     </div>
   </div>
 </div>
@@ -278,7 +278,7 @@ tbody tr:last-child td{border-bottom:none}
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('modal-equip')">Annuler</button>
-      <button class="btn btn-primary" onclick="saveEquip()">💾 Sauvegarder</button>
+      <button class="btn btn-primary" onclick="Equip()">💾 Sauvegarder</button>
     </div>
   </div>
 </div>
@@ -342,7 +342,7 @@ tbody tr:last-child td{border-bottom:none}
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('modal-intervention')">Annuler</button>
       <button class="btn btn-warning btn-sm" onclick="printInterventionModal()">🖨️ Imprimer</button>
-      <button class="btn btn-primary" onclick="saveIntervention()">💾 Sauvegarder</button>
+      <button class="btn btn-primary" onclick="Intervention()">💾 Sauvegarder</button>
     </div>
   </div>
 </div>
@@ -1090,6 +1090,9 @@ function renderEquipements(){
           <td style="padding:10px">${e.PATIENT||'—'}</td>
           <td style="padding:10px"><span class="badge badge-${e.STATUT==='En service'?'success':e.STATUT==='En stock'?'info':'warning'}">${e.STATUT||'—'}</span></td>
           <td style="padding:10px;display:flex;gap:6px">
+          <button class="btn btn-outline btn-sm" onclick="openPoseDepose('${e.ID}')" title="Pose/Dépôt">
+  <i class="fas fa-exchange-alt"></i>
+</button>
             <button class="btn btn-primary btn-sm" onclick="editEquip('${e.ID}')"><i class="fas fa-edit"></i></button>
             <button class="btn btn-danger btn-sm" onclick="deleteEquip('${e.ID}')"><i class="fas fa-trash"></i></button>
           </td>
@@ -1134,6 +1137,55 @@ function saveEquip(){
   pushToSheets('saveEquip',obj);
   renderEquipements(); closeModal('modal-equip');
   toast('Équipement sauvegardé','success');
+}
+// ── POSE / DEPOSE COLLECTIVITE ─────────────────────
+function openPoseDepose(equipId){
+  const e = STATE.equipements.find(x=>x.ID===equipId);
+  if(!e) return;
+  sv('pd-equip-id', equipId);
+  sv('pd-equip-info', e.TYPE+' — '+e.SERIE);
+  sv('pd-date-pose', today());
+  sv('pd-date-depose','');
+  sv('pd-patient','');
+  sv('pd-collectivite','');
+  sv('pd-notes','');
+  // Calcul durée si dépose
+  openModal('modal-pose-depose');
+}
+
+function calcDuree(){
+  const d1 = gv('pd-date-pose');
+  const d2 = gv('pd-date-depose');
+  if(d1 && d2){
+    const diff = Math.round((new Date(d2)-new Date(d1))/(1000*60*60*24));
+    sv_el('pd-duree', diff >= 0 ? diff+' jours' : '⚠️ Date invalide');
+  } else {
+    sv_el('pd-duree','—');
+  }
+}
+
+function savePoseDepose(){
+  const equipId = gv('pd-equip-id');
+  if(!equipId){ toast('Équipement manquant','error'); return; }
+  const obj = {
+    ID: uid(),
+    EQUIP_ID: equipId,
+    EQUIP_INFO: gv('pd-equip-info'),
+    COLLECTIVITE: gv('pd-collectivite'),
+    PATIENT: gv('pd-patient'),
+    DATE_POSE: gv('pd-date-pose'),
+    DATE_DEPOSE: gv('pd-date-depose'),
+    DUREE: gv('pd-date-pose') && gv('pd-date-depose')
+      ? Math.round((new Date(gv('pd-date-depose'))-new Date(gv('pd-date-pose')))/(1000*60*60*24))+' jours'
+      : 'En cours',
+    NOTES: gv('pd-notes'),
+    DATE: today()
+  };
+  if(!STATE.pose_depose) STATE.pose_depose=[];
+  STATE.pose_depose.push(obj);
+  saveAllLocal();
+  closeModal('modal-pose-depose');
+  toast('Pose/Dépôt enregistré','success');
 }
 
 function deleteEquip(id){
@@ -1266,6 +1318,54 @@ function printIntervention(id){
     </div>
   </div>
   <button onclick="window.print()" style="margin-top:20px;padding:10px 20px;background:#1e40af;color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ Imprimer</button>
+  <div id="modal-pose-depose" class="modal-overlay hidden">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h3>🏥 Pose / Dépôt Collectivité</h3>
+      <button class="modal-close" onclick="closeModal('modal-pose-depose')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="pd-equip-id">
+      <div class="form-group">
+        <label>Équipement</label>
+        <input id="pd-equip-info" readonly style="background:var(--bg3)">
+      </div>
+      <div class="form-group">
+        <label>Collectivité / Établissement</label>
+        <input id="pd-collectivite" placeholder="EHPAD, clinique, hôpital...">
+      </div>
+      <div class="form-group">
+        <label>Patient affecté</label>
+        <input id="pd-patient" list="list-patients-pd" placeholder="Nom du patient...">
+        <datalist id="list-patients-pd"></datalist>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date de pose</label>
+          <input id="pd-date-pose" type="date" onchange="calcDuree()">
+        </div>
+        <div class="form-group">
+          <label>Date de dépôt (retour)</label>
+          <input id="pd-date-depose" type="date" onchange="calcDuree()">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Durée d'utilisation</label>
+        <div id="pd-duree" style="padding:10px;background:var(--bg3);border-radius:var(--radius2);
+             font-weight:700;color:var(--primary);font-size:18px;text-align:center">—</div>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="pd-notes" rows="2" placeholder="Observations..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-pose-depose')">Annuler</button>
+      <button class="btn btn-primary" onclick="savePoseDepose()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
   </body></html>`);
   w.document.close();
 }
