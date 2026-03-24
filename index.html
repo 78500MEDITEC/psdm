@@ -1748,10 +1748,6 @@ function populateMaintSelects(){
 function saveMaint(){
   const equip=gv('maint-equip').trim();
   if(!equip){ toast('Équipement requis','error'); return; }
-  const id=gv('m
-function saveMaint(){
-  const equip=gv('maint-equip').trim();
-  if(!equip){ toast('Équipement requis','error'); return; }
   const id=gv('maint-id')||uid();
   const obj={
     ID:id, EQUIPEMENT:equip, TYPE:gv('maint-type'),
