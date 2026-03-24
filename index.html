@@ -241,8 +241,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label>URL Google Apps Script</label>
-        <input id="cfg-url" placeholder="https://script.google.com/macros/s/...">
+        <label>URL Google Apps </label>
+        <input id="cfg-url" placeholder="https://.google.com/macros/s/...">
       </div>
       <div class="form-group">
         <label>Clé API</label>
@@ -373,7 +373,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <input id="int-adresse" placeholder="Adresse complète...">
       </div>
       <div class="form-group">
-        <label>Description</label>
+        <label>Deion</label>
         <textarea id="int-desc" rows="3" placeholder="Détail de l'intervention..."></textarea>
       </div>
       <div class="form-group">
@@ -448,7 +448,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>Médecin prescripteur</label>
+          <label>Médecin preeur</label>
           <input id="pat-medecin" placeholder="Dr...">
         </div>
         <div class="form-group">
@@ -1006,9 +1006,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 </div>
-<script>
+<>
 // ════════════════════════════════════════════════
-//  PSDM v4.0 — JavaScript
+//  PSDM v4.0 — Java
 // ════════════════════════════════════════════════
 
 const STATE = {
@@ -1016,7 +1016,7 @@ const STATE = {
   maintenances:[],planning:[],desinfection_mat:[],desinfection_salle:[],
   qualite:[],clients:[],mercuriales:[],rapport_location:[],
   currentUser:null,currentPage:'dashboard',
-  scriptUrl:'',apiKey:'78500Meditecpsdm'
+  Url:'',apiKey:'78500Meditecpsdm'
 };
 
 const eid = id => document.getElementById(id);
@@ -1044,21 +1044,21 @@ function loadAllLocal(){
 }
 
 function loadConfig(){
-  STATE.scriptUrl = localStorage.getItem('psdm_url')||'';
+  STATE.Url = localStorage.getItem('psdm_url')||'';
   STATE.apiKey    = localStorage.getItem('psdm_key')||'78500Meditecpsdm';
 }
 
 function openConfig(){
-  sv('cfg-url', STATE.scriptUrl);
+  sv('cfg-url', STATE.Url);
   sv('cfg-key', STATE.apiKey);
   sv('cfg-company', localStorage.getItem('psdm_company')||'');
   openModal('modal-config');
 }
 
 function saveConfig(){
-  STATE.scriptUrl = gv('cfg-url').trim();
+  STATE.Url = gv('cfg-url').trim();
   STATE.apiKey    = gv('cfg-key').trim()||'78500Meditecpsdm';
-  localStorage.setItem('psdm_url', STATE.scriptUrl);
+  localStorage.setItem('psdm_url', STATE.Url);
   localStorage.setItem('psdm_key', STATE.apiKey);
   localStorage.setItem('psdm_company', gv('cfg-company'));
   closeModal('modal-config');
@@ -2354,6 +2354,7 @@ function navigate(page){
   };
   if(fns[page]) fns[page]();
 }
+ function showPage(page){ navigate(page); }
 </script>
 </body>
 </html>
