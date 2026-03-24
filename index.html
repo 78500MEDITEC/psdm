@@ -1750,3 +1750,610 @@ function saveMaint(){
   const equip=gv('maint-equip').trim();
   if(!equip){ toast('Équipement requis','error'); return; }
   const id=gv('m
+function saveMaint(){
+  const equip=gv('maint-equip').trim();
+  if(!equip){ toast('Équipement requis','error'); return; }
+  const id=gv('maint-id')||uid();
+  const obj={
+    ID:id, EQUIPEMENT:equip, TYPE:gv('maint-type'),
+    DATE:gv('maint-date'), NEXT:gv('maint-next'),
+    TECHNICIEN:gv('maint-tech'), NOTES:gv('maint-notes')
+  };
+  const i=STATE.maintenances.findIndex(x=>x.ID===id);
+  if(i>=0) STATE.maintenances[i]=obj; else STATE.maintenances.push(obj);
+  saveAllLocal(); pushToSheets('saveMaint',obj);
+  renderMaintenances(); closeModal('modal-maint');
+  toast('Maintenance sauvegardée','success');
+}
+
+function deleteMaint(id){
+  if(!confirm('Supprimer cette maintenance ?')) return;
+  STATE.maintenances=STATE.maintenances.filter(m=>m.ID!==id);
+  saveAllLocal(); renderMaintenances();
+  toast('Maintenance supprimée','warning');
+}
+
+// ── QUALITE ───────────────────────────────────────
+function renderQualite(){
+  const data=STATE.qualite;
+  eid('page-content').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2><i class="fas fa-clipboard-check" style="color:var(--success)"></i> Contrôle Qualité (${data.length})</h2>
+      <button class="btn btn-primary btn-sm" onclick="openNewQualite()">
+        <i class="fas fa-plus"></i> Nouveau
+      </button>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr style="background:var(--bg3)">
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Date</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Type</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Équipement</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Technicien</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Résultat</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Actions</th>
+      </tr></thead>
+      <tbody>
+        ${data.length ? data.map(q=>`
+          <tr style="border-bottom:1px solid var(--border)"
+            onmouseover="this.style.background='var(--bg3)'"
+            onmouseout="this.style.background=''">
+            <td style="padding:10px">${fmtDate(q.DATE)}</td>
+            <td style="padding:10px">${q.TYPE||'—'}</td>
+            <td style="padding:10px;font-family:monospace">${q.EQUIPEMENT||'—'}</td>
+            <td style="padding:10px">${q.TECHNICIEN||'—'}</td>
+            <td style="padding:10px">
+              <span class="badge ${q.RESULTAT==='Conforme'?'badge-success':'badge-danger'}">
+                ${q.RESULTAT||'—'}
+              </span>
+            </td>
+            <td style="padding:10px;display:flex;gap:6px">
+              <button class="btn btn-primary btn-sm" onclick="editQualite('${q.ID}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteQualite('${q.ID}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>`).join('')
+        : '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--text3)">Aucun contrôle</td></tr>'}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function openNewQualite(){
+  ['qc-id','qc-date','qc-equip','qc-tech','qc-valeurs','qc-next','qc-notes'].forEach(id=>sv(id,''));
+  sv('qc-date',today()); sv('qc-type','Oxymétrie'); sv('qc-resultat','Conforme');
+  openModal('modal-qualite');
+}
+
+function editQualite(id){
+  const q=STATE.qualite.find(x=>x.ID===id); if(!q) return;
+  sv('qc-id',q.ID); sv('qc-date',q.DATE); sv('qc-type',q.TYPE);
+  sv('qc-equip',q.EQUIPEMENT); sv('qc-tech',q.TECHNICIEN);
+  sv('qc-valeurs',q.VALEURS); sv('qc-resultat',q.RESULTAT);
+  sv('qc-next',q.NEXT); sv('qc-notes',q.NOTES);
+  openModal('modal-qualite');
+}
+
+function saveQualite(){
+  const date=gv('qc-date');
+  if(!date){ toast('Date requise','error'); return; }
+  const id=gv('qc-id')||uid();
+  const obj={
+    ID:id, DATE:date, TYPE:gv('qc-type'), EQUIPEMENT:gv('qc-equip'),
+    TECHNICIEN:gv('qc-tech'), VALEURS:gv('qc-valeurs'),
+    RESULTAT:gv('qc-resultat'), NEXT:gv('qc-next'), NOTES:gv('qc-notes')
+  };
+  const i=STATE.qualite.findIndex(x=>x.ID===id);
+  if(i>=0) STATE.qualite[i]=obj; else STATE.qualite.push(obj);
+  saveAllLocal(); pushToSheets('saveQualite',obj);
+  renderQualite(); closeModal('modal-qualite');
+  toast('Contrôle sauvegardé','success');
+}
+
+function deleteQualite(id){
+  if(!confirm('Supprimer ce contrôle ?')) return;
+  STATE.qualite=STATE.qualite.filter(q=>q.ID!==id);
+  saveAllLocal(); renderQualite();
+  toast('Contrôle supprimé','warning');
+}
+
+// ── DESINFECTION MATERIEL ─────────────────────────
+function renderDesinfMat(){
+  const data=STATE.desinfMat;
+  eid('page-content').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2><i class="fas fa-pump-soap" style="color:var(--secondary)"></i> Désinfection Matériel (${data.length})</h2>
+      <button class="btn btn-primary btn-sm" onclick="openNewDesinfMat()">
+        <i class="fas fa-plus"></i> Nouveau
+      </button>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr style="background:var(--bg3)">
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Date</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Équipement</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Opérateur</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Produit</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Éléments</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Actions</th>
+      </tr></thead>
+      <tbody>
+        ${data.length ? data.map(d=>`
+          <tr style="border-bottom:1px solid var(--border)"
+            onmouseover="this.style.background='var(--bg3)'"
+            onmouseout="this.style.background=''">
+            <td style="padding:10px">${fmtDate(d.DATE)}</td>
+            <td style="padding:10px;font-family:monospace">${d.EQUIPEMENT||'—'}</td>
+            <td style="padding:10px">${d.OPERATEUR||'—'}</td>
+            <td style="padding:10px">${d.PRODUIT||'—'}</td>
+            <td style="padding:10px;font-size:12px">${d.ELEMENTS||'—'}</td>
+            <td style="padding:10px;display:flex;gap:6px">
+              <button class="btn btn-primary btn-sm" onclick="editDesinfMat('${d.ID}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteDesinfMat('${d.ID}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>`).join('')
+        : '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--text3)">Aucune désinfection</td></tr>'}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function openNewDesinfMat(){
+  ['dm-id','dm-date','dm-equip','dm-op','dm-produit','dm-concentration','dm-temps'].forEach(id=>sv(id,''));
+  sv('dm-date',today());
+  ['dm-masque','dm-circuit','dm-humidif','dm-filtre','dm-cuve','dm-boitier'].forEach(id=>{
+    const el=eid(id); if(el) el.checked=false;
+  });
+  openModal('modal-desinf-mat');
+}
+
+function editDesinfMat(id){
+  const d=STATE.desinfMat.find(x=>x.ID===id); if(!d) return;
+  sv('dm-id',d.ID); sv('dm-date',d.DATE); sv('dm-equip',d.EQUIPEMENT);
+  sv('dm-op',d.OPERATEUR); sv('dm-produit',d.PRODUIT);
+  sv('dm-concentration',d.CONCENTRATION); sv('dm-temps',d.TEMPS);
+  const els=d.ELEMENTS?d.ELEMENTS.split(', '):[];
+  ['dm-masque','dm-circuit','dm-humidif','dm-filtre','dm-cuve','dm-boitier'].forEach(cid=>{
+    const el=eid(cid);
+    if(el) el.checked=els.some(e=>el.nextSibling&&el.nextSibling.textContent&&
+      el.nextSibling.textContent.trim()===e);
+  });
+  openModal('modal-desinf-mat');
+}
+
+function saveDesinfMat(){
+  const date=gv('dm-date');
+  if(!date){ toast('Date requise','error'); return; }
+  const id=gv('dm-id')||uid();
+  const elements=[];
+  ['dm-masque','dm-circuit','dm-humidif','dm-filtre','dm-cuve','dm-boitier'].forEach(cid=>{
+    const el=eid(cid);
+    if(el&&el.checked&&el.nextSibling) elements.push(el.nextSibling.textContent.trim());
+  });
+  const obj={
+    ID:id, DATE:date, EQUIPEMENT:gv('dm-equip'), OPERATEUR:gv('dm-op'),
+    PRODUIT:gv('dm-produit'), CONCENTRATION:gv('dm-concentration'),
+    TEMPS:gv('dm-temps'), ELEMENTS:elements.join(', ')
+  };
+  const i=STATE.desinfMat.findIndex(x=>x.ID===id);
+  if(i>=0) STATE.desinfMat[i]=obj; else STATE.desinfMat.push(obj);
+  saveAllLocal(); pushToSheets('saveDesinfMat',obj);
+  renderDesinfMat(); closeModal('modal-desinf-mat');
+  toast('Désinfection sauvegardée','success');
+}
+
+function deleteDesinfMat(id){
+  if(!confirm('Supprimer ?')) return;
+  STATE.desinfMat=STATE.desinfMat.filter(d=>d.ID!==id);
+  saveAllLocal(); renderDesinfMat();
+  toast('Supprimé','warning');
+}
+
+// ── DESINFECTION LOCAUX ───────────────────────────
+function renderDesinfLoc(){
+  const data=STATE.desinfLoc;
+  eid('page-content').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2><i class="fas fa-spray-can" style="color:var(--primary)"></i> Désinfection Locaux (${data.length})</h2>
+      <button class="btn btn-primary btn-sm" onclick="openNewDesinfLoc()">
+        <i class="fas fa-plus"></i> Nouveau
+      </button>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr style="background:var(--bg3)">
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Date</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Local</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Opérateur</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Produit</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Actions</th>
+      </tr></thead>
+      <tbody>
+        ${data.length ? data.map(d=>`
+          <tr style="border-bottom:1px solid var(--border)"
+            onmouseover="this.style.background='var(--bg3)'"
+            onmouseout="this.style.background=''">
+            <td style="padding:10px">${fmtDate(d.DATE)}</td>
+            <td style="padding:10px">${d.LOCAL||'—'}</td>
+            <td style="padding:10px">${d.OPERATEUR||'—'}</td>
+            <td style="padding:10px">${d.PRODUIT||'—'}</td>
+            <td style="padding:10px;display:flex;gap:6px">
+              <button class="btn btn-primary btn-sm" onclick="editDesinfLoc('${d.ID}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteDesinfLoc('${d.ID}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>`).join('')
+        : '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--text3)">Aucune désinfection</td></tr>'}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function openNewDesinfLoc(){
+  ['dl-id','dl-date','dl-local','dl-op','dl-produit','dl-notes'].forEach(id=>sv(id,''));
+  sv('dl-date',today());
+  openModal('modal-desinf-loc');
+}
+
+function editDesinfLoc(id){
+  const d=STATE.desinfLoc.find(x=>x.ID===id); if(!d) return;
+  sv('dl-id',d.ID); sv('dl-date',d.DATE); sv('dl-local',d.LOCAL);
+  sv('dl-op',d.OPERATEUR); sv('dl-produit',d.PRODUIT); sv('dl-notes',d.NOTES);
+  openModal('modal-desinf-loc');
+}
+
+function saveDesinfLoc(){
+  const date=gv('dl-date');
+  if(!date){ toast('Date requise','error'); return; }
+  const id=gv('dl-id')||uid();
+  const obj={
+    ID:id, DATE:date, LOCAL:gv('dl-local'),
+    OPERATEUR:gv('dl-op'), PRODUIT:gv('dl-produit'), NOTES:gv('dl-notes')
+  };
+  const i=STATE.desinfLoc.findIndex(x=>x.ID===id);
+  if(i>=0) STATE.desinfLoc[i]=obj; else STATE.desinfLoc.push(obj);
+  saveAllLocal(); pushToSheets('saveDesinfLoc',obj);
+  renderDesinfLoc(); closeModal('modal-desinf-loc');
+  toast('Désinfection sauvegardée','success');
+}
+
+function deleteDesinfLoc(id){
+  if(!confirm('Supprimer ?')) return;
+  STATE.desinfLoc=STATE.desinfLoc.filter(d=>d.ID!==id);
+  saveAllLocal(); renderDesinfLoc();
+  toast('Supprimé','warning');
+}
+
+// ── MERCURIALES ───────────────────────────────────
+function renderMercuriales(){
+  const data=STATE.mercuriales;
+  eid('page-content').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2><i class="fas fa-box" style="color:var(--warning)"></i> Mercuriales (${data.length})</h2>
+      <div style="display:flex;gap:8px">
+        <input placeholder="🔍 Rechercher..." oninput="filterMerc(this.value)"
+          style="padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius2);
+          background:var(--bg);color:var(--text1);font-size:13px;width:200px">
+        <button class="btn btn-primary btn-sm" onclick="openNewMerc()">
+          <i class="fas fa-plus"></i> Nouveau
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="exportCSV('mercuriales')">
+          <i class="fas fa-download"></i> CSV
+        </button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse" id="tbl-merc">
+      <thead><tr style="background:var(--bg3)">
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Réf</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Désignation</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Catégorie</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Prix HT</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">TVA</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Prix TTC</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Stock</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Actions</th>
+      </tr></thead>
+      <tbody id="tbody-merc">
+        ${renderMercRows(data)}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function renderMercRows(data){
+  return data.length ? data.map(m=>`
+    <tr style="border-bottom:1px solid var(--border)"
+      onmouseover="this.style.background='var(--bg3)'"
+      onmouseout="this.style.background=''">
+      <td style="padding:10px;font-family:monospace">${m.REF||'—'}</td>
+      <td style="padding:10px;font-weight:600">${m.DESIGNATION||'—'}</td>
+      <td style="padding:10px">${m.CATEGORIE||'—'}</td>
+      <td style="padding:10px">${m.PRIX_HT||'0'} €</td>
+      <td style="padding:10px">${m.TVA||'0'} %</td>
+      <td style="padding:10px;font-weight:700">${m.PRIX_TTC||'0'} €</td>
+      <td style="padding:10px">
+        <span class="badge ${parseInt(m.STOCK||0)<=parseInt(m.STOCK_MIN||5)?'badge-danger':'badge-success'}">
+          ${m.STOCK||'0'}
+        </span>
+      </td>
+      <td style="padding:10px;display:flex;gap:6px">
+        <button class="btn btn-primary btn-sm" onclick="editMerc('${m.ID}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="deleteMerc('${m.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('')
+  : '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--text3)">Aucun article</td></tr>';
+}
+
+function filterMerc(q){
+  const filtered=STATE.mercuriales.filter(m=>
+    (m.REF||'').toLowerCase().includes(q.toLowerCase())||
+    (m.DESIGNATION||'').toLowerCase().includes(q.toLowerCase())||
+    (m.CATEGORIE||'').toLowerCase().includes(q.toLowerCase())
+  );
+  const tb=eid('tbody-merc'); if(tb) tb.innerHTML=renderMercRows(filtered);
+}
+
+// ── TECHNICIENS ───────────────────────────────────
+function renderTechniciens(){
+  const data=STATE.techniciens;
+  eid('page-content').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2><i class="fas fa-user-cog" style="color:var(--secondary)"></i> Techniciens (${data.length})</h2>
+      <button class="btn btn-primary btn-sm" onclick="openNewTech()">
+        <i class="fas fa-plus"></i> Nouveau
+      </button>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr style="background:var(--bg3)">
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Nom</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Prénom</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Téléphone</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Spécialité</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Statut</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Actions</th>
+      </tr></thead>
+      <tbody>
+        ${data.length ? data.map(t=>`
+          <tr style="border-bottom:1px solid var(--border)"
+            onmouseover="this.style.background='var(--bg3)'"
+            onmouseout="this.style.background=''">
+            <td style="padding:10px;font-weight:700">${t.NOM||'—'}</td>
+            <td style="padding:10px">${t.PRENOM||'—'}</td>
+            <td style="padding:10px">${t.TEL||'—'}</td>
+            <td style="padding:10px">${t.SPECIALITE||'—'}</td>
+            <td style="padding:10px">
+              <span class="badge ${t.STATUT==='Actif'?'badge-success':'badge-danger'}">${t.STATUT||'—'}</span>
+            </td>
+            <td style="padding:10px;display:flex;gap:6px">
+              <button class="btn btn-primary btn-sm" onclick="editTech('${t.ID}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteTech('${t.ID}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>`).join('')
+        : '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--text3)">Aucun technicien</td></tr>'}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function openNewTech(){
+  ['tech-id','tech-nom','tech-prenom','tech-tel','tech-email',
+   'tech-specialite','tech-notes'].forEach(id=>sv(id,''));
+  sv('tech-statut','Actif');
+  openModal('modal-tech');
+}
+
+function editTech(id){
+  const t=STATE.techniciens.find(x=>x.ID===id); if(!t) return;
+  sv('tech-id',t.ID); sv('tech-nom',t.NOM); sv('tech-prenom',t.PRENOM);
+  sv('tech-tel',t.TEL); sv('tech-email',t.EMAIL);
+  sv('tech-specialite',t.SPECIALITE); sv('tech-statut',t.STATUT);
+  sv('tech-notes',t.NOTES);
+  openModal('modal-tech');
+}
+
+function saveTech(){
+  const nom=gv('tech-nom').trim();
+  if(!nom){ toast('Nom requis','error'); return; }
+  const id=gv('tech-id')||uid();
+  const obj={
+    ID:id, NOM:nom, PRENOM:gv('tech-prenom'), TEL:gv('tech-tel'),
+    EMAIL:gv('tech-email'), SPECIALITE:gv('tech-specialite'),
+    STATUT:gv('tech-statut'), NOTES:gv('tech-notes')
+  };
+  const i=STATE.techniciens.findIndex(x=>x.ID===id);
+  if(i>=0) STATE.techniciens[i]=obj; else STATE.techniciens.push(obj);
+  saveAllLocal(); pushToSheets('saveTech',obj);
+  renderTechniciens(); closeModal('modal-tech');
+  toast('Technicien sauvegardé','success');
+}
+
+function deleteTech(id){
+  if(!confirm('Supprimer ce technicien ?')) return;
+  STATE.techniciens=STATE.techniciens.filter(t=>t.ID!==id);
+  saveAllLocal(); renderTechniciens();
+  toast('Technicien supprimé','warning');
+}
+
+// ── UTILITAIRES ───────────────────────────────────
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2); }
+function today(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(d){ if(!d) return '—'; const p=d.split('-'); return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:d; }
+function gv(id){ const e=eid(id); return e?e.value:''; }
+function sv(id,val){ const e=eid(id); if(e) e.value=val; }
+function eid(id){ return document.getElementById(id); }
+
+function saveAllLocal(){
+  localStorage.setItem('psdm_state', JSON.stringify(STATE));
+}
+
+function loadAllLocal(){
+  try{
+    const s=localStorage.getItem('psdm_state');
+    if(s){
+      const d=JSON.parse(s);
+      Object.keys(d).forEach(k=>{ if(STATE[k]!==undefined) STATE[k]=d[k]; });
+    }
+  }catch(e){ console.warn('Load error',e); }
+}
+
+function pushToSheets(action, obj){
+  if(!CONFIG.SHEETS_URL) return;
+  fetch(CONFIG.SHEETS_URL,{
+    method:'POST',
+    body:JSON.stringify({action, data:obj}),
+    headers:{'Content-Type':'application/json'}
+  }).catch(()=>{});
+}
+
+function exportCSV(type){
+  const data=STATE[type]||[];
+  if(!data.length){ toast('Aucune donnée','warning'); return; }
+  const keys=Object.keys(data[0]);
+  const csv=[keys.join(','),
+    ...data.map(r=>keys.map(k=>`"${(r[k]||'').toString().replace(/"/g,'""')}"`).join(','))
+  ].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=type+'_'+today()+'.csv';
+  a.click();
+  toast('CSV exporté','success');
+}
+
+function openModal(id){
+  const m=eid(id); if(!m) return;
+  m.classList.add('open');
+  setTimeout(()=>{
+    m.querySelectorAll('canvas.sig-pad').forEach(c=>initSigPad(c.id));
+  },100);
+}
+
+function closeModal(id){
+  const m=eid(id); if(m) m.classList.remove('open');
+}
+
+function initSigPad(canvasId){
+  const canvas=eid(canvasId); if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  let drawing=false;
+  canvas.addEventListener('mousedown',e=>{ drawing=true; ctx.beginPath(); ctx.moveTo(e.offsetX,e.offsetY); });
+  canvas.addEventListener('mousemove',e=>{ if(!drawing) return; ctx.lineTo(e.offsetX,e.offsetY); ctx.stroke(); });
+  canvas.addEventListener('mouseup',()=>drawing=false);
+  canvas.addEventListener('mouseleave',()=>drawing=false);
+  canvas.addEventListener('touchstart',e=>{
+    e.preventDefault(); drawing=true;
+    const r=canvas.getBoundingClientRect();
+    ctx.beginPath(); ctx.moveTo(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top);
+  },{passive:false});
+  canvas.addEventListener('touchmove',e=>{
+    e.preventDefault(); if(!drawing) return;
+    const r=canvas.getBoundingClientRect();
+    ctx.lineTo(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top); ctx.stroke();
+  },{passive:false});
+  canvas.addEventListener('touchend',()=>drawing=false);
+  ctx.strokeStyle='#1e40af'; ctx.lineWidth=2; ctx.lineCap='round';
+}
+
+function clearSig(canvasId){
+  const canvas=eid(canvasId); if(!canvas) return;
+  canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
+}
+
+function getSig(canvasId){
+  const canvas=eid(canvasId); if(!canvas) return '';
+  return canvas.toDataURL();
+}
+
+function toast(msg,type='info'){
+  const c=eid('toast-container');
+  const t=document.createElement('div');
+  const colors={success:'#16a34a',error:'#dc2626',warning:'#d97706',info:'#2563eb'};
+  t.style.cssText=`background:${colors[type]||colors.info};color:#fff;padding:12px 20px;
+    border-radius:8px;font-size:13px;font-weight:600;
+    box-shadow:0 4px 12px rgba(0,0,0,.2);max-width:300px`;
+  t.textContent=msg;
+  c.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
+}
+
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme');
+  const next=cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  localStorage.setItem('psdm_theme',next);
+  const ti=eid('theme-icon'); if(ti) ti.textContent=next==='dark'?'☀️':'🌙';
+}
+
+// ── INIT ──────────────────────────────────────────
+const CONFIG={ SHEETS_URL:'' };
+
+const STATE={
+  equipements:[], interventions:[], patients:[], planning:[],
+  maintenances:[], qualite:[], desinfMat:[], desinfLoc:[],
+  mercuriales:[], techniciens:[]
+};
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const theme=localStorage.getItem('psdm_theme')||'light';
+  document.documentElement.setAttribute('data-theme',theme);
+  const ti=eid('theme-icon'); if(ti) ti.textContent=theme==='dark'?'☀️':'🌙';
+  loadAllLocal();
+  navigate('dashboard');
+});
+
+function navigate(page){
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    n.classList.toggle('active', n.dataset.page===page);
+  });
+  const titles={
+    dashboard:'🏠 Tableau de bord', equipements:'🔧 Équipements',
+    interventions:'🔨 Interventions', patients:'👥 Patients',
+    planning:'📅 Planning', maintenances:'⚙️ Maintenances',
+    qualite:'✅ Contrôle Qualité', desinfmat:'🧴 Désinfection Matériel',
+    desinfloc:'🏠 Désinfection Locaux', mercuriales:'📦 Mercuriales',
+    techniciens:'👷 Techniciens'
+  };
+  const tb=eid('topbar-title'); if(tb) tb.textContent=titles[page]||page;
+  const fns={
+    dashboard:renderDashboard, equipements:renderEquipements,
+    interventions:renderInterventions, patients:renderPatients,
+    planning:renderPlanning, maintenances:renderMaintenances,
+    qualite:renderQualite, desinfmat:renderDesinfMat,
+    desinfloc:renderDesinfLoc, mercuriales:renderMercuriales,
+    techniciens:renderTechniciens
+  };
+  if(fns[page]) fns[page]();
+}
+</script>
+</body>
+</html>
