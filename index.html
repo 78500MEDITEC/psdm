@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSDM Medical Manager v4.0</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --primary:#2563eb;--primary2:#1d4ed8;--secondary:#7c3aed;
+  --success:#16a34a;--warning:#d97706;--danger:#dc2626;
+  --bg:#f1f5f9;--bg2:#ffffff;--bg3:#f8fafc;
+  --text1:#0f172a;--text2:#475569;--text3:#94a3b8;
+  --border:#e2e8f0;--shadow:0 2px 8px rgba(0,0,0,.08);
+  --radius:12px;--radius2:8px;
+}
+[data-theme="dark"]{
+  --bg:#0f172a;--bg2:#1e293b;--bg3:#334155;
+  --text1:#f1f5f9;--text2:#94a3b8;--text3:#64748b;
+  --border:#334155;--shadow:0 2px 8px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text1);min-height:100vh}
+.app{display:flex;min-height:100vh}
+.sidebar{width:240px;background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;
+  transition:transform .3s}
+.sidebar-logo{padding:20px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px}
+.sidebar-logo span{font-size:16px;font-weight:800;color:var(--primary)}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px}
+.nav-section{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;
+  letter-spacing:.08em;padding:12px 12px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius2);
+  cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;margin-bottom:1px}
+.nav-item:hover{background:var(--bg3);color:var(--text1)}
+.nav-item.active{background:var(--primary);color:#fff}
+.nav-item i{width:16px;text-align:center;font-size:14px}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border)}
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:0 24px;height:56px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:16px;font-weight:700;color:var(--text1)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.content{padding:24px;flex:1}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow)}
+.stat-card{padding:20px;display:flex;flex-direction:column;gap:8px}
+.stat-val{font-size:28px;font-weight:800}
+.stat-label{font-size:12px;color:var(--text2)}
+.stat-icon{font-size:28px;margin-bottom:4px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;
+  border-radius:var(--radius2);border:none;cursor:pointer;font-size:13px;
+  font-weight:600;transition:all .15s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary2)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text1)}
+.btn-outline:hover{background:var(--bg3)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-success{background:var(--success);color:#fff}
+.btn-warning{background:var(--warning);color:#fff}
+.btn-sm{padding:5px 10px;font-size:12px}
+.badge{display:inline-block;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.badge-success{background:#dcfce7;color:#166534}
+.badge-warning{background:#fef9c3;color:#854d0e}
+.badge-danger{background:#fee2e2;color:#991b1b}
+.badge-info{background:#dbeafe;color:#1e40af}
+.badge-secondary{background:var(--bg3);color:var(--text2)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;
+  color:var(--text2);margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:9px 12px;border:1.5px solid var(--border);
+  border-radius:var(--radius2);background:var(--bg);color:var(--text1);
+  font-size:13px;transition:border .15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  outline:none;border-color:var(--primary)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:200;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border-radius:var(--radius);width:100%;
+  max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;background:var(--bg2);z-index:1}
+.modal-header h3{font-size:15px;font-weight:700}
+.modal-close{background:none;border:none;font-size:18px;cursor:pointer;
+  color:var(--text2);padding:4px 8px;border-radius:6px}
+.modal-close:hover{background:var(--bg3)}
+.modal-body{padding:20px}
+.modal-footer{padding:16px 20px;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:8px}
+.alert{padding:12px 16px;border-radius:var(--radius2);font-size:13px;margin-bottom:12px}
+.alert-info{background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe}
+.alert-warning{background:#fef9c3;color:#854d0e;border:1px solid #fde68a}
+.alert-danger{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+#toast-container{position:fixed;bottom:20px;right:20px;z-index:9999;
+  display:flex;flex-direction:column;gap:8px}
+#login-screen{display:flex;align-items:center;justify-content:center;
+  min-height:100vh;background:linear-gradient(135deg,#1e40af,#7c3aed)}
+.login-card{background:#fff;border-radius:16px;padding:40px;width:360px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo h1{font-size:24px;font-weight:900;color:#1e40af}
+.login-logo p{color:#64748b;font-size:13px}
+.sig-pad{border:1.5px dashed var(--border);border-radius:var(--radius2);
+  cursor:crosshair;background:#fff;width:100%;height:100px}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <h1>🏥 PSDM</h1>
+      <p>Medical Manager v4.0</p>
+    </div>
+    <div class="form-group">
+      <label>Identifiant</label>
+      <input id="login-user" type="text" placeholder="Login...">
+    </div>
+    <div class="form-group">
+      <label>Mot de passe</label>
+      <input id="login-pass" type="password" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">
+      <i class="fas fa-sign-in-alt"></i> Connexion
+    </button>
+    <p id="login-err" style="color:#dc2626;font-size:12px;text-align:center;margin-top:10px;display:none">
+      Identifiants incorrects
+    </p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="display:none">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <span>🏥 PSDM v4</span>
+      <button onclick="toggleTheme()" style="margin-left:auto;background:none;border:none;
+        cursor:pointer;font-size:18px" id="theme-icon">🌙</button>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Principal</div>
+      <div class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard">
+        <i class="fas fa-home"></i> Tableau de bord
+      </div>
+      <div class="nav-item" onclick="showPage('equipements')" id="nav-equipements">
+        <i class="fas fa-tools"></i> Équipements
+      </div>
+      <div class="nav-item" onclick="showPage('interventions')" id="nav-interventions">
+        <i class="fas fa-wrench"></i> Interventions
+      </div>
+      <div class="nav-item" onclick="showPage('patients')" id="nav-patients">
+        <i class="fas fa-users"></i> Patients
+      </div>
+      <div class="nav-item" onclick="showPage('planning')" id="nav-planning">
+        <i class="fas fa-calendar-alt"></i> Planning
+      </div>
+      <div class="nav-item" onclick="showPage('maintenances')" id="nav-maintenances">
+        <i class="fas fa-cog"></i> Maintenances
+      </div>
+      <div class="nav-section">Qualité</div>
+      <div class="nav-item" onclick="showPage('desinfection')" id="nav-desinfection">
+        <i class="fas fa-spray-can"></i> Désinfection
+      </div>
+      <div class="nav-item" onclick="showPage('qualite')" id="nav-qualite">
+        <i class="fas fa-clipboard-check"></i> Contrôle Qualité
+      </div>
+      <div class="nav-section">Gestion</div>
+      <div class="nav-item" onclick="showPage('clients')" id="nav-clients">
+        <i class="fas fa-building"></i> Clients
+      </div>
+      <div class="nav-item" onclick="showPage('mercuriales')" id="nav-mercuriales">
+        <i class="fas fa-tags"></i> Mercuriales
+      </div>
+      <div class="nav-item" onclick="showPage('location')" id="nav-location">
+        <i class="fas fa-file-contract"></i> Location
+      </div>
+      <div class="nav-section">Admin</div>
+      <div class="nav-item" onclick="showPage('techniciens')" id="nav-techniciens">
+        <i class="fas fa-user-cog"></i> Techniciens
+      </div>
+      <div class="nav-item" onclick="showPage('rapports')" id="nav-rapports">
+        <i class="fas fa-chart-bar"></i> Rapports
+      </div>
+      <div class="nav-item" onclick="showPage('sync')" id="nav-sync">
+        <i class="fas fa-sync"></i> Synchronisation
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px" id="user-info"></div>
+      <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Déconnexion
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button onclick="toggleSidebar()" style="background:none;border:none;cursor:pointer;
+          font-size:18px;color:var(--text2)" id="menu-btn">☰</button>
+        <span class="topbar-title" id="page-title">Tableau de bord</span>
+      </div>
+      <div class="topbar-right">
+        <span style="font-size:12px;color:var(--text3)" id="sync-status">⬤ Local</span>
+        <button class="btn btn-outline btn-sm" onclick="openConfig()">
+          <i class="fas fa-cog"></i> Config
+        </button>
+      </div>
+    </div>
+    <div class="content" id="page-content"></div>
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<!-- CONFIG -->
+<div class="modal-overlay" id="modal-config">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <h3>⚙️ Configuration</h3>
+      <button class="modal-close" onclick="closeModal('modal-config')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>URL Google Apps Script</label>
+        <input id="cfg-url" placeholder="https://script.google.com/macros/s/...">
+      </div>
+      <div class="form-group">
+        <label>Clé API</label>
+        <input id="cfg-key" placeholder="Clé d'authentification">
+      </div>
+      <div class="form-group">
+        <label>Nom de l'entreprise</label>
+        <input id="cfg-company" placeholder="Meditec 78500">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-config')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveConfig()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- EQUIPEMENT -->
+<div class="modal-overlay" id="modal-equip">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <h3>🔧 Équipement</h3>
+      <button class="modal-close" onclick="closeModal('modal-equip')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="equip-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Numéro de série *</label>
+          <input id="equip-serie" placeholder="SN-XXXX">
+        </div>
+        <div class="form-group">
+          <label>Type / Modèle *</label>
+          <input id="equip-type" placeholder="Concentrateur, CPAP...">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Marque</label>
+          <input id="equip-marque" placeholder="Philips, ResMed...">
+        </div>
+        <div class="form-group">
+          <label>Statut</label>
+          <select id="equip-statut">
+            <option>Disponible</option>
+            <option>En service</option>
+            <option>En maintenance</option>
+            <option>Hors service</option>
+            <option>Loué</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date d'achat</label>
+          <input id="equip-achat" type="date">
+        </div>
+        <div class="form-group">
+          <label>Prochaine maintenance</label>
+          <input id="equip-next-maint" type="date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Patient assigné</label>
+        <input id="equip-patient" list="listEquipPat" placeholder="Rechercher patient...">
+        <datalist id="listEquipPat"></datalist>
+      </div>
+      <div class="form-group">
+        <label>Localisation</label>
+        <input id="equip-loc" placeholder="Adresse, chambre...">
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="equip-notes" rows="3" placeholder="Observations..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-equip')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveEquipement()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- INTERVENTION -->
+<div class="modal-overlay" id="modal-intervention">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-header">
+      <h3>🔨 Intervention</h3>
+      <button class="modal-close" onclick="closeModal('modal-intervention')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="int-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input id="int-date" type="date">
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="int-type">
+            <option>Installation</option>
+            <option>Maintenance</option>
+            <option>Dépannage</option>
+            <option>Contrôle</option>
+            <option>Récupération</option>
+            <option>Livraison</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Patient</label>
+          <input id="int-patient" list="listIntPat" placeholder="Nom du patient...">
+          <datalist id="listIntPat"></datalist>
+        </div>
+        <div class="form-group">
+          <label>Technicien</label>
+          <select id="int-tech"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Équipement</label>
+        <input id="int-equip" list="listIntEquip" placeholder="Numéro de série...">
+        <datalist id="listIntEquip"></datalist>
+      </div>
+      <div class="form-group">
+        <label>Adresse d'intervention</label>
+        <input id="int-adresse" placeholder="Adresse complète...">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="int-desc" rows="3" placeholder="Détail de l'intervention..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Pièces utilisées</label>
+        <input id="int-pieces" placeholder="Références des pièces...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Statut</label>
+          <select id="int-statut">
+            <option>Planifiée</option>
+            <option>En cours</option>
+            <option>Terminée</option>
+            <option>Annulée</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Signature technicien</label>
+          <canvas id="sig-int" class="sig-pad" width="260" height="100"></canvas>
+          <button class="btn btn-outline btn-sm" style="margin-top:4px"
+            onclick="clearSig('sig-int')">✖ Effacer</button>
+        </div>
+        <div class="form-group">
+          <label>Signature patient</label>
+          <canvas id="sig-int-pat" class="sig-pad" width="260" height="100"></canvas>
+          <button class="btn btn-outline btn-sm" style="margin-top:4px"
+            onclick="clearSig('sig-int-pat')">✖ Effacer</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-intervention')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveIntervention()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- PATIENT -->
+<div class="modal-overlay" id="modal-patient">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <h3>👤 Patient</h3>
+      <button class="modal-close" onclick="closeModal('modal-patient')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="pat-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nom *</label>
+          <input id="pat-nom" placeholder="NOM">
+        </div>
+        <div class="form-group">
+          <label>Prénom</label>
+          <input id="pat-prenom" placeholder="Prénom">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date de naissance</label>
+          <input id="pat-ddn" type="date">
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input id="pat-tel" placeholder="06...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Adresse</label>
+        <input id="pat-adresse" placeholder="Adresse complète...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Médecin prescripteur</label>
+          <input id="pat-medecin" placeholder="Dr...">
+        </div>
+        <div class="form-group">
+          <label>Mutuelle</label>
+          <input id="pat-mutuelle" placeholder="MGEN, Harmonie...">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>N° Sécurité Sociale</label>
+          <input id="pat-nss" placeholder="1 85 06...">
+        </div>
+        <div class="form-group">
+          <label>Statut</label>
+          <select id="pat-statut">
+            <option>Actif</option>
+            <option>Inactif</option>
+            <option>Décédé</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Pathologie / Traitement</label>
+        <input id="pat-patho" placeholder="BPCO, Apnée du sommeil...">
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="pat-notes" rows="2" placeholder="Observations..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-patient')">Annuler</button>
+      <button class="btn btn-primary" onclick="savePatient()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLANNING -->
+<div class="modal-overlay" id="modal-planning">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <h3>📅 Rendez-vous</h3>
+      <button class="modal-close" onclick="closeModal('modal-planning')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="plan-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input id="plan-date" type="date">
+        </div>
+        <div class="form-group">
+          <label>Heure</label>
+          <input id="plan-heure" type="time">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Patient</label>
+        <input id="plan-patient" list="listPlanPat" placeholder="Nom du patient...">
+        <datalist id="listPlanPat"></datalist>
+      </div>
+      <div class="form-group">
+        <label>Technicien</label>
+        <select id="plan-tech"></select>
+      </div>
+      <div class="form-group">
+        <label>Type de RDV</label>
+        <select id="plan-type">
+          <option>Installation</option>
+          <option>Contrôle</option>
+          <option>Dépannage</option>
+          <option>Livraison</option>
+          <option>Récupération</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Statut</label>
+        <select id="plan-statut">
+          <option>Planifié</option>
+          <option>Confirmé</option>
+          <option>Effectué</option>
+          <option>Annulé</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="plan-notes" rows="2" placeholder="Observations..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-planning')">Annuler</button>
+      <button class="btn btn-primary" onclick="savePlanning()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAINTENANCE -->
+<div class="modal-overlay" id="modal-maint">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h3>⚙️ Maintenance</h3>
+      <button class="modal-close" onclick="closeModal('modal-maint')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="maint-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input id="maint-date" type="date">
+        </div>
+        <div class="form-group">
+          <label>Prochaine maintenance</label>
+          <input id="maint-next" type="date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Équipement</label>
+        <input id="maint-equip" list="listMaintEquip" placeholder="Numéro de série...">
+        <datalist id="listMaintEquip"></datalist>
+      </div>
+      <div class="form-group">
+        <label>Technicien</label>
+        <select id="maint-tech"></select>
+      </div>
+      <div class="form-group">
+        <label>Type de maintenance</label>
+        <select id="maint-type">
+          <option>Préventive</option>
+          <option>Corrective</option>
+          <option>Réglementaire</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Résultat</label>
+        <select id="maint-resultat">
+          <option>Conforme</option>
+          <option>Non conforme</option>
+          <option>À surveiller</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Observations</label>
+        <textarea id="maint-obs" rows="3" placeholder="Détail des opérations..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Signature</label>
+        <canvas id="sig-maint" class="sig-pad" width="460" height="90"></canvas>
+        <button class="btn btn-outline btn-sm" style="margin-top:4px"
+          onclick="clearSig('sig-maint')">✖ Effacer</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-maint')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveMaintenance()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- DESINFECTION MATERIEL -->
+<div class="modal-overlay" id="modal-desinfmat">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <h3>🧴 Désinfection Matériel</h3>
+      <button class="modal-close" onclick="closeModal('modal-desinfmat')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="dm-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input id="dm-date" type="date">
+        </div>
+        <div class="form-group">
+          <label>Résultat</label>
+          <select id="dm-resultat">
+            <option>Conforme</option>
+            <option>Non conforme</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Équipement</label>
+        <input id="dm-equip" list="listDmEquip" placeholder="Numéro de série...">
+        <datalist id="listDmEquip"></datalist>
+      </div>
+      <div class="form-group">
+        <label>Opérateur</label>
+        <select id="dm-op"></select>
+      </div>
+      <div class="form-group">
+        <label>Produit utilisé</label>
+        <input id="dm-produit" placeholder="Nom du produit...">
+      </div>
+      <div class="form-group">
+        <label>Observations</label>
+        <textarea id="dm-obs" rows="2" placeholder="Notes..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Signature</label>
+        <canvas id="sig-dm" class="sig-pad" width="440" height="90"></canvas>
+        <button class="btn btn-outline btn-sm" style="margin-top:4px"
+          onclick="clearSig('sig-dm')">✖ Effacer</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-desinfmat')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveDesinfMat()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- DESINFECTION SALLE -->
+<div class="modal-overlay" id="modal-desinfsalle">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <h3>🏠 Désinfection Salle</h3>
+      <button class="modal-close" onclick="closeModal('modal-desinfsalle')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="ds-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input id="ds-date" type="date">
+        </div>
+        <div class="form-group">
+          <label>Résultat</label>
+          <select id="ds-resultat">
+            <option>Conforme</option>
+            <option>Non conforme</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Salle / Zone</label>
+        <input id="ds-salle" placeholder="Nom de la salle...">
+      </div>
+      <div class="form-group">
+        <label>Opérateur</label>
+        <select id="ds-op"></select>
+      </div>
+      <div class="form-group">
+        <label>Produit utilisé</label>
+        <input id="ds-produit" placeholder="Nom du produit...">
+      </div>
+      <div class="form-group">
+        <label>Observations</label>
+        <textarea id="ds-obs" rows="2" placeholder="Notes..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Signature</label>
+        <canvas id="sig-ds" class="sig-pad" width="440" height="90"></canvas>
+        <button class="btn btn-outline btn-sm" style="margin-top:4px"
+          onclick="clearSig('sig-ds')">✖ Effacer</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-desinfsalle')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveDesinfSalle()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUALITE -->
+<div class="modal-overlay" id="modal-qualite">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <h3>✅ Contrôle Qualité</h3>
+      <button class="modal-close" onclick="closeModal('modal-qualite')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="qc-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input id="qc-date" type="date">
+        </div>
+        <div class="form-group">
+          <label>Résultat</label>
+          <select id="qc-resultat">
+            <option>Conforme</option>
+            <option>Non conforme</option>
+            <option>À surveiller</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Type de contrôle</label>
+        <select id="qc-type">
+          <option>Vérification équipement</option>
+          <option>Audit interne</option>
+          <option>Contrôle réglementaire</option>
+          <option>Satisfaction patient</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Technicien</label>
+        <select id="qc-tech"></select>
+      </div>
+      <div class="form-group">
+        <label>Observations</label>
+        <textarea id="qc-obs" rows="3" placeholder="Détail du contrôle..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Actions correctives</label>
+        <textarea id="qc-actions" rows="2" placeholder="Actions à mener..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-qualite')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveQualite()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT -->
+<div class="modal-overlay" id="modal-client">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <h3>🏢 Client</h3>
+      <button class="modal-close" onclick="closeModal('modal-client')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="cli-id">
+      <div class="form-group">
+        <label>Nom *</label>
+        <input id="cli-nom" placeholder="Nom de l'établissement...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Contact</label>
+          <input id="cli-contact" placeholder="Nom du contact...">
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="cli-type">
+            <option>EHPAD</option>
+            <option>Clinique</option>
+            <option>Hôpital</option>
+            <option>Cabinet</option>
+            <option>Particulier</option>
+            <option>Autre</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input id="cli-tel" placeholder="01...">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input id="cli-email" type="email" placeholder="contact@...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Adresse</label>
+        <input id="cli-adresse" placeholder="Adresse complète...">
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="cli-notes" rows="2" placeholder="Observations..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-client')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveClient()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- MERCURIALE -->
+<div class="modal-overlay" id="modal-merc">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <h3>🏷️ Article / Mercuriale</h3>
+      <button class="modal-close" onclick="closeModal('modal-merc')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="merc-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Référence</label>
+          <input id="merc-ref" placeholder="REF-XXXX">
+        </div>
+        <div class="form-group">
+          <label>Catégorie</label>
+          <select id="merc-categorie">
+            <option>Consommable</option>
+            <option>Pièce détachée</option>
+            <option>Accessoire</option>
+            <option>Équipement</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Désignation *</label>
+        <input id="merc-designation" placeholder="Nom de l'article...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Prix HT (€)</label>
+          <input id="merc-prix-ht" type="number" step="0.01" placeholder="0.00" oninput="calcTTC()">
+        </div>
+        <div class="form-group">
+          <label>TVA (%)</label>
+          <select id="merc-tva" onchange="calcTTC()">
+            <option value="20">20%</option>
+            <option value="10">10%</option>
+            <option value="5.5">5.5%</option>
+            <option value="0">0%</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Prix TTC (€)</label>
+        <input id="merc-prix-ttc" type="number" step="0.01" readonly style="background:var(--bg3)">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Stock actuel</label>
+          <input id="merc-stock" type="number" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Stock minimum</label>
+          <input id="merc-stock-min" type="number" placeholder="5">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="merc-notes" rows="2" placeholder="Observations..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-merc')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveMerc()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- TECHNICIEN -->
+<div class="modal-overlay" id="modal-tech">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <h3>👷 Technicien</h3>
+      <button class="modal-close" onclick="closeModal('modal-tech')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="tech-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nom *</label>
+          <input id="tech-nom" placeholder="NOM">
+        </div>
+        <div class="form-group">
+          <label>Prénom</label>
+          <input id="tech-prenom" placeholder="Prénom">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Login</label>
+          <input id="tech-login" placeholder="identifiant">
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input id="tech-pass" type="password" placeholder="••••••">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input id="tech-tel" placeholder="06...">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input id="tech-email" type="email" placeholder="...@...">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Spécialité</label>
+          <input id="tech-specialite" placeholder="Respiratoire, Perfusion...">
+        </div>
+        <div class="form-group">
+          <label>Rôle</label>
+          <select id="tech-role">
+            <option>Technicien</option>
+            <option>Admin</option>
+            <option>Manager</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-tech')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveTech()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOCATION -->
+<div class="modal-overlay" id="modal-location">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h3>📋 Rapport de Location</h3>
+      <button class="modal-close" onclick="closeModal('modal-location')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="loc-id">
+      <div class="form-group">
+        <label>Patient</label>
+        <input id="loc-patient" list="listLocPat" placeholder="Nom du patient...">
+        <datalist id="listLocPat"></datalist>
+      </div>
+      <div class="form-group">
+        <label>Équipement</label>
+        <input id="loc-equip" list="listLocEquip" placeholder="Numéro de série...">
+        <datalist id="listLocEquip"></datalist>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date début</label>
+          <input id="loc-debut" type="date">
+        </div>
+        <div class="form-group">
+          <label>Date fin</label>
+          <input id="loc-fin" type="date">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tarif mensuel HT (€)</label>
+          <input id="loc-tarif" type="number" step="0.01" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label>Statut</label>
+          <select id="loc-statut">
+            <option>En cours</option>
+            <option>Terminée</option>
+            <option>Suspendue</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Observations</label>
+        <textarea id="loc-obs" rows="2" placeholder="Notes..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-location')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveLocation()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+<script>
+// ════════════════════════════════════════════════
+//  PSDM v4.0 — JavaScript
+// ════════════════════════════════════════════════
+
+const STATE = {
+  equipements:[],interventions:[],patients:[],techniciens:[],
+  maintenances:[],planning:[],desinfection_mat:[],desinfection_salle:[],
+  qualite:[],clients:[],mercuriales:[],rapport_location:[],
+  currentUser:null,currentPage:'dashboard',
+  scriptUrl:'',apiKey:'78500Meditecpsdm'
+};
+
+const eid = id => document.getElementById(id);
+const gv  = id => { const e=eid(id); return e?e.value:''; };
+const sv  = (id,v) => { const e=eid(id); if(e) e.value=v; };
+const sv_el = (id,h) => { const e=eid(id); if(e) e.innerHTML=h; };
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const today = () => new Date().toISOString().slice(0,10);
+const fmtDate = d => d ? new Date(d+'T00:00:00').toLocaleDateString('fr-FR') : '—';
+
+function saveAllLocal(){
+  ['equipements','interventions','patients','techniciens','maintenances',
+   'planning','desinfection_mat','desinfection_salle','qualite','clients',
+   'mercuriales','rapport_location'].forEach(k=>
+    localStorage.setItem('psdm_'+k, JSON.stringify(STATE[k])));
+}
+
+function loadAllLocal(){
+  ['equipements','interventions','patients','techniciens','maintenances',
+   'planning','desinfection_mat','desinfection_salle','qualite','clients',
+   'mercuriales','rapport_location'].forEach(k=>{
+    try{ const d=localStorage.getItem('psdm_'+k);
+      if(d) STATE[k]=JSON.parse(d); }catch(e){}
+  });
+}
+
+function loadConfig(){
+  STATE.scriptUrl = localStorage.getItem('psdm_url')||'';
+  STATE.apiKey    = localStorage.getItem('psdm_key')||'78500Meditecpsdm';
+}
+
+function openConfig(){
+  sv('cfg-url', STATE.scriptUrl);
+  sv('cfg-key', STATE.apiKey);
+  sv('cfg-company', localStorage.getItem('psdm_company')||'');
+  openModal('modal-config');
+}
+
+function saveConfig(){
+  STATE.scriptUrl = gv('cfg-url').trim();
+  STATE.apiKey    = gv('cfg-key').trim()||'78500Meditecpsdm';
+  localStorage.setItem('psdm_url', STATE.scriptUrl);
+  localStorage.setItem('psdm_key', STATE.apiKey);
+  localStorage.setItem('psdm_company', gv('cfg-company'));
+  closeModal('modal-config');
+  toast('Configuration sauvegardée','success');
+}
+
+// ── LOGIN ─────────────────────────────────────────
+function doLogin(){
+  const login = gv('login-user').trim();
+  const pass  = gv('login-pass').trim();
+  loadAllLocal();
+  const user = STATE.techniciens.find(t=>t.LOGIN===login && t.PASS===pass);
+  if(user || (login==='admin' && pass==='admin')){
+    STATE.currentUser = user||{NOM:'Admin',PRENOM:'',ROLE:'Admin'};
+    eid('login-screen').style.display='none';
+    eid('app').style.display='flex';
+    sv_el('user-info',`👤 ${STATE.currentUser.PRENOM} ${STATE.currentUser.NOM}<br><small>${STATE.currentUser.ROLE||'Admin'}</small>`);
+    updateAllSelects();
+    showPage('dashboard');
+    toast(`Bienvenue !`,'success');
+  } else {
+    eid('login-err').style.display='block';
+    setTimeout(()=>eid('login-err').style.display='none',3000);
+  }
+}
+
+function logout(){
+  STATE.currentUser=null;
+  eid('app').style.display='none';
+  eid('login-screen').style.display='flex';
+  sv('login-pass','');
+}
+
+// ── NAVIGATION ────────────────────────────────────
+function showPage(page){
+  STATE.currentPage=page;
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  const nav=eid('nav-'+page); if(nav) nav.classList.add('active');
+  const titles={
+    dashboard:'Tableau de bord',equipements:'Équipements',
+    interventions:'Interventions',patients:'Patients',
+    planning:'Planning',maintenances:'Maintenances',
+    desinfection:'Désinfection',qualite:'Contrôle Qualité',
+    clients:'Clients',mercuriales:'Mercuriales',
+    location:'Rapports de Location',techniciens:'Techniciens',
+    rapports:'Rapports',sync:'Synchronisation'
+  };
+  sv_el('page-title', titles[page]||page);
+  const renders={
+    dashboard:renderDashboard,equipements:renderEquipements,
+    interventions:renderInterventions,patients:renderPatients,
+    planning:renderPlanning,maintenances:renderMaintenances,
+    desinfection:renderDesinfection,qualite:renderQualite,
+    clients:renderClients,mercuriales:renderMercuriales,
+    location:renderLocation,techniciens:renderTechniciens,
+    rapports:renderRapports,sync:renderSync
+  };
+  if(renders[page]) renders[page]();
+}
+
+function toggleSidebar(){ eid('sidebar').classList.toggle('open'); }
+
+function openModal(id){
+  const m=eid(id); if(!m) return;
+  m.classList.add('open');
+  setTimeout(()=>{ m.querySelectorAll('canvas.sig-pad').forEach(c=>initSigPad(c.id)); },100);
+}
+
+function closeModal(id){ const m=eid(id); if(m) m.classList.remove('open'); }
+
+// ── DASHBOARD ─────────────────────────────────────
+function renderDashboard(){
+  const t=today();
+  const rdvAuj=STATE.planning.filter(p=>p.DATE===t).length;
+  const equipsDisp=STATE.equipements.filter(e=>e.STATUT==='Disponible').length;
+  const intsEnCours=STATE.interventions.filter(i=>i.STATUT==='En cours').length;
+  const stockAlerte=STATE.mercuriales.filter(m=>parseInt(m.STOCK||0)<=parseInt(m.STOCK_MIN||5)).length;
+  const rdvNext=STATE.planning.filter(p=>p.DATE>=t).sort((a,b)=>a.DATE>b.DATE?1:-1).slice(0,5);
+  const maintsNext=STATE.maintenances.filter(m=>m.NEXT&&m.NEXT>=t).sort((a,b)=>a.NEXT>b.NEXT?1:-1).slice(0,5);
+
+  eid('page-content').innerHTML=`
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="card stat-card" style="border-left:4px solid var(--primary)">
+      <div class="stat-icon">🔧</div>
+      <div class="stat-val" style="color:var(--primary)">${STATE.equipements.length}</div>
+      <div class="stat-label">Équipements</div>
+    </div>
+    <div class="card stat-card" style="border-left:4px solid var(--success)">
+      <div class="stat-icon">👥</div>
+      <div class="stat-val" style="color:var(--success)">${STATE.patients.length}</div>
+      <div class="stat-label">Patients</div>
+    </div>
+    <div class="card stat-card" style="border-left:4px solid var(--warning)">
+      <div class="stat-icon">📅</div>
+      <div class="stat-val" style="color:var(--warning)">${rdvAuj}</div>
+      <div class="stat-label">RDV aujourd'hui</div>
+    </div>
+    <div class="card stat-card" style="border-left:4px solid var(--danger)">
+      <div class="stat-icon">⚠️</div>
+      <div class="stat-val" style="color:var(--danger)">${stockAlerte}</div>
+      <div class="stat-label">Alertes stock</div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card" style="padding:20px">
+      <h3 style="margin-bottom:12px;font-size:14px">📅 Prochains RDV</h3>
+      ${rdvNext.length ? rdvNext.map(p=>`
+        <div style="display:flex;justify-content:space-between;padding:8px 0;
+          border-bottom:1px solid var(--border);font-size:13px">
+          <span>${fmtDate(p.DATE)} ${p.HEURE||''}</span>
+          <span style="font-weight:600">${p.PATIENT||'—'}</span>
+          <span class="badge badge-info">${p.TYPE||'—'}</span>
+        </div>`).join('') : '<p style="color:var(--text3);font-size:13px">Aucun RDV</p>'}
+    </div>
+    <div class="card" style="padding:20px">
+      <h3 style="margin-bottom:12px;font-size:14px">⚙️ Maintenances à venir</h3>
+      ${maintsNext.length ? maintsNext.map(m=>`
+        <div style="display:flex;justify-content:space-between;padding:8px 0;
+          border-bottom:1px solid var(--border);font-size:13px">
+          <span>${fmtDate(m.NEXT)}</span>
+          <span style="font-weight:600">${m.EQUIPEMENT||'—'}</span>
+          <span class="badge badge-warning">${m.TYPE||'—'}</span>
+        </div>`).join('') : '<p style="color:var(--text3);font-size:13px">Aucune maintenance</p>'}
+    </div>
+  </div>
+  <div class="grid-3" style="margin-top:16px">
+    <div class="card stat-card" style="border-left:4px solid var(--secondary)">
+      <div class="stat-icon">🔨</div>
+      <div class="stat-val" style="color:var(--secondary)">${STATE.interventions.length}</div>
+      <div class="stat-label">Interventions totales
+      <div class="stat-label">Interventions totales</div>
+    </div>
+    <div class="card stat-card" style="border-left:4px solid var(--success)">
+      <div class="stat-icon">✅</div>
+      <div class="stat-val" style="color:var(--success)">${equipsDisp}</div>
+      <div class="stat-label">Équipements disponibles</div>
+    </div>
+    <div class="card stat-card" style="border-left:4px solid var(--danger)">
+      <div class="stat-icon">🔄</div>
+      <div class="stat-val" style="color:var(--danger)">${intsEnCours}</div>
+      <div class="stat-label">Interventions en cours</div>
+    </div>
+  </div>`;
+}
+
+// ── EQUIPEMENTS ───────────────────────────────────
+function renderEquipements(){
+  const search = '';
+  const data = STATE.equipements;
+  eid('page-content').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2><i class="fas fa-tools" style="color:var(--primary)"></i> Équipements (${data.length})</h2>
+      <div style="display:flex;gap:8px">
+        <input placeholder="🔍 Rechercher..." oninput="filterEquip(this.value)"
+          style="padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius2);
+          background:var(--bg);color:var(--text1);font-size:13px;width:200px">
+        <button class="btn btn-primary btn-sm" onclick="openNewEquip()">
+          <i class="fas fa-plus"></i> Nouveau
+        </button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse" id="tbl-equip">
+      <thead><tr style="background:var(--bg3)">
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Série</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Type</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Marque</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Statut</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Patient</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Proch. Maint.</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Actions</th>
+      </tr></thead>
+      <tbody id="tbody-equip">
+        ${renderEquipRows(data)}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function renderEquipRows(data){
+  const statusColors={
+    'Disponible':'badge-success','En service':'badge-info',
+    'En maintenance':'badge-warning','Hors service':'badge-danger','Loué':'badge-secondary'
+  };
+  return data.length ? data.map(e=>`
+    <tr style="border-bottom:1px solid var(--border)"
+      onmouseover="this.style.background='var(--bg3)'"
+      onmouseout="this.style.background=''">
+      <td style="padding:10px;font-family:monospace;font-weight:600">${e.SERIE||'—'}</td>
+      <td style="padding:10px">${e.TYPE||'—'}</td>
+      <td style="padding:10px">${e.MARQUE||'—'}</td>
+      <td style="padding:10px">
+        <span class="badge ${statusColors[e.STATUT]||'badge-secondary'}">${e.STATUT||'—'}</span>
+      </td>
+      <td style="padding:10px">${e.PATIENT||'—'}</td>
+      <td style="padding:10px">${fmtDate(e.NEXT_MAINT)}</td>
+      <td style="padding:10px;display:flex;gap:6px">
+        <button class="btn btn-primary btn-sm" onclick="editEquip('${e.ID}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="deleteEquip('${e.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('')
+  : '<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--text3)">Aucun équipement</td></tr>';
+}
+
+function filterEquip(q){
+  const filtered = STATE.equipements.filter(e=>
+    (e.SERIE||'').toLowerCase().includes(q.toLowerCase())||
+    (e.TYPE||'').toLowerCase().includes(q.toLowerCase())||
+    (e.MARQUE||'').toLowerCase().includes(q.toLowerCase())||
+    (e.PATIENT||'').toLowerCase().includes(q.toLowerCase())
+  );
+  const tb=eid('tbody-equip'); if(tb) tb.innerHTML=renderEquipRows(filtered);
+}
+
+function openNewEquip(){
+  ['equip-id','equip-serie','equip-type','equip-marque','equip-patient',
+   'equip-loc','equip-notes','equip-achat','equip-next-maint'].forEach(id=>sv(id,''));
+  sv('equip-statut','Disponible');
+  openModal('modal-equip');
+}
+
+function editEquip(id){
+  const e=STATE.equipements.find(x=>x.ID===id); if(!e) return;
+  sv('equip-id',e.ID); sv('equip-serie',e.SERIE); sv('equip-type',e.TYPE);
+  sv('equip-marque',e.MARQUE); sv('equip-statut',e.STATUT);
+  sv('equip-patient',e.PATIENT); sv('equip-loc',e.LOC);
+  sv('equip-notes',e.NOTES); sv('equip-achat',e.ACHAT);
+  sv('equip-next-maint',e.NEXT_MAINT);
+  openModal('modal-equip');
+}
+
+function saveEquipement(){
+  const serie=gv('equip-serie').trim();
+  if(!serie){ toast('Numéro de série requis','error'); return; }
+  const id=gv('equip-id')||uid();
+  const obj={
+    ID:id, SERIE:serie, TYPE:gv('equip-type'), MARQUE:gv('equip-marque'),
+    STATUT:gv('equip-statut'), PATIENT:gv('equip-patient'),
+    LOC:gv('equip-loc'), NOTES:gv('equip-notes'),
+    ACHAT:gv('equip-achat'), NEXT_MAINT:gv('equip-next-maint')
+  };
+  const i=STATE.equipements.findIndex(x=>x.ID===id);
+  if(i>=0) STATE.equipements[i]=obj; else STATE.equipements.push(obj);
+  saveAllLocal(); pushToSheets('saveEquipement',obj);
+  renderEquipements(); closeModal('modal-equip');
+  toast('Équipement sauvegardé','success');
+}
+
+function deleteEquip(id){
+  if(!confirm('Supprimer cet équipement ?')) return;
+  STATE.equipements=STATE.equipements.filter(e=>e.ID!==id);
+  saveAllLocal(); renderEquipements();
+  toast('Équipement supprimé','warning');
+}
+
+// ── INTERVENTIONS ─────────────────────────────────
+function renderInterventions(){
+  const data=STATE.interventions;
+  eid('page-content').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2><i class="fas fa-wrench" style="color:var(--warning)"></i> Interventions (${data.length})</h2>
+      <div style="display:flex;gap:8px">
+        <input placeholder="🔍 Rechercher..." oninput="filterInt(this.value)"
+          style="padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius2);
+          background:var(--bg);color:var(--text1);font-size:13px;width:200px">
+        <button class="btn btn-primary btn-sm" onclick="openNewInt()">
+          <i class="fas fa-plus"></i> Nouvelle
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="exportCSV('interventions')">
+          <i class="fas fa-download"></i> CSV
+        </button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse" id="tbl-int">
+      <thead><tr style="background:var(--bg3)">
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Date</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Type</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Patient</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Technicien</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Équipement</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Statut</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Actions</th>
+      </tr></thead>
+      <tbody id="tbody-int">
+        ${renderIntRows(data)}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function renderIntRows(data){
+  const sc={'Planifiée':'badge-info','En cours':'badge-warning',
+            'Terminée':'badge-success','Annulée':'badge-danger'};
+  return data.length ? data.map(i=>`
+    <tr style="border-bottom:1px solid var(--border)"
+      onmouseover="this.style.background='var(--bg3)'"
+      onmouseout="this.style.background=''">
+      <td style="padding:10px">${fmtDate(i.DATE)}</td>
+      <td style="padding:10px;font-weight:600">${i.TYPE||'—'}</td>
+      <td style="padding:10px">${i.PATIENT||'—'}</td>
+      <td style="padding:10px">${i.TECHNICIEN||'—'}</td>
+      <td style="padding:10px;font-family:monospace">${i.EQUIPEMENT||'—'}</td>
+      <td style="padding:10px">
+        <span class="badge ${sc[i.STATUT]||'badge-secondary'}">${i.STATUT||'—'}</span>
+      </td>
+      <td style="padding:10px;display:flex;gap:6px">
+        <button class="btn btn-primary btn-sm" onclick="editInt('${i.ID}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="deleteInt('${i.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('')
+  : '<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--text3)">Aucune intervention</td></tr>';
+}
+
+function filterInt(q){
+  const filtered=STATE.interventions.filter(i=>
+    (i.PATIENT||'').toLowerCase().includes(q.toLowerCase())||
+    (i.TYPE||'').toLowerCase().includes(q.toLowerCase())||
+    (i.TECHNICIEN||'').toLowerCase().includes(q.toLowerCase())||
+    (i.EQUIPEMENT||'').toLowerCase().includes(q.toLowerCase())
+  );
+  const tb=eid('tbody-int'); if(tb) tb.innerHTML=renderIntRows(filtered);
+}
+
+function openNewInt(){
+  ['int-id','int-date','int-patient','int-adresse','int-desc','int-pieces'].forEach(id=>sv(id,''));
+  sv('int-date',today());
+  sv('int-type','Installation'); sv('int-statut','Planifiée');
+  populateIntSelects();
+  openModal('modal-intervention');
+}
+
+function editInt(id){
+  const i=STATE.interventions.find(x=>x.ID===id); if(!i) return;
+  sv('int-id',i.ID); sv('int-date',i.DATE); sv('int-type',i.TYPE);
+  sv('int-patient',i.PATIENT); sv('int-adresse',i.ADRESSE);
+  sv('int-desc',i.DESC); sv('int-pieces',i.PIECES);
+  sv('int-statut',i.STATUT); sv('int-equip',i.EQUIPEMENT);
+  populateIntSelects(); sv('int-tech',i.TECHNICIEN);
+  openModal('modal-intervention');
+}
+
+function populateIntSelects(){
+  const ts=eid('int-tech'); if(ts){
+    ts.innerHTML=STATE.techniciens.map(t=>`
+      <option value="${t.NOM} ${t.PRENOM}">${t.NOM} ${t.PRENOM}</option>`).join('');
+  }
+  const lp=eid('listIntPat'); if(lp){
+    lp.innerHTML=STATE.patients.map(p=>`<option value="${p.NOM} ${p.PRENOM}">`).join('');
+  }
+  const le=eid('listIntEquip'); if(le){
+    le.innerHTML=STATE.equipements.map(e=>`<option value="${e.SERIE}">`).join('');
+  }
+}
+
+function saveIntervention(){
+  const date=gv('int-date');
+  if(!date){ toast('Date requise','error'); return; }
+  const id=gv('int-id')||uid();
+  const obj={
+    ID:id, DATE:date, TYPE:gv('int-type'), PATIENT:gv('int-patient'),
+    TECHNICIEN:gv('int-tech'), EQUIPEMENT:gv('int-equip'),
+    ADRESSE:gv('int-adresse'), DESC:gv('int-desc'),
+    PIECES:gv('int-pieces'), STATUT:gv('int-statut'),
+    SIG_TECH:getSig('sig-int'), SIG_PAT:getSig('sig-int-pat')
+  };
+  const i=STATE.interventions.findIndex(x=>x.ID===id);
+  if(i>=0) STATE.interventions[i]=obj; else STATE.interventions.push(obj);
+  saveAllLocal(); pushToSheets('saveIntervention',obj);
+  renderInterventions(); closeModal('modal-intervention');
+  toast('Intervention sauvegardée','success');
+}
+
+function deleteInt(id){
+  if(!confirm('Supprimer cette intervention ?')) return;
+  STATE.interventions=STATE.interventions.filter(i=>i.ID!==id);
+  saveAllLocal(); renderInterventions();
+  toast('Intervention supprimée','warning');
+}
+
+// ── PATIENTS ──────────────────────────────────────
+function renderPatients(){
+  const data=STATE.patients;
+  eid('page-content').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2><i class="fas fa-users" style="color:var(--success)"></i> Patients (${data.length})</h2>
+      <div style="display:flex;gap:8px">
+        <input placeholder="🔍 Rechercher..." oninput="filterPat(this.value)"
+          style="padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius2);
+          background:var(--bg);color:var(--text1);font-size:13px;width:200px">
+        <button class="btn btn-primary btn-sm" onclick="openNewPat()">
+          <i class="fas fa-plus"></i> Nouveau
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="exportCSV('patients')">
+          <i class="fas fa-download"></i> CSV
+        </button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse" id="tbl-pat">
+      <thead><tr style="background:var(--bg3)">
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Nom</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Prénom</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Téléphone</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Médecin</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Pathologie</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Statut</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Actions</th>
+      </tr></thead>
+      <tbody id="tbody-pat">
+        ${renderPatRows(data)}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function renderPatRows(data){
+  return data.length ? data.map(p=>`
+    <tr style="border-bottom:1px solid var(--border)"
+      onmouseover="this.style.background='var(--bg3)'"
+      onmouseout="this.style.background=''">
+      <td style="padding:10px;font-weight:700">${p.NOM||'—'}</td>
+      <td style="padding:10px">${p.PRENOM||'—'}</td>
+      <td style="padding:10px">${p.TEL||'—'}</td>
+      <td style="padding:10px">${p.MEDECIN||'—'}</td>
+      <td style="padding:10px">${p.PATHO||'—'}</td>
+      <td style="padding:10px">
+        <span class="badge ${p.STATUT==='Actif'?'badge-success':'badge-danger'}">${p.STATUT||'—'}</span>
+      </td>
+      <td style="padding:10px;display:flex;gap:6px">
+        <button class="btn btn-primary btn-sm" onclick="editPat('${p.ID}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="deletePat('${p.ID}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('')
+  : '<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--text3)">Aucun patient</td></tr>';
+}
+
+function filterPat(q){
+  const filtered=STATE.patients.filter(p=>
+    (p.NOM||'').toLowerCase().includes(q.toLowerCase())||
+    (p.PRENOM||'').toLowerCase().includes(q.toLowerCase())||
+    (p.TEL||'').includes(q)||
+    (p.PATHO||'').toLowerCase().includes(q.toLowerCase())
+  );
+  const tb=eid('tbody-pat'); if(tb) tb.innerHTML=renderPatRows(filtered);
+}
+
+function openNewPat(){
+  ['pat-id','pat-nom','pat-prenom','pat-ddn','pat-tel','pat-adresse',
+   'pat-medecin','pat-mutuelle','pat-nss','pat-patho','pat-notes'].forEach(id=>sv(id,''));
+  sv('pat-statut','Actif');
+  openModal('modal-patient');
+}
+
+function editPat(id){
+  const p=STATE.patients.find(x=>x.ID===id); if(!p) return;
+  sv('pat-id',p.ID); sv('pat-nom',p.NOM); sv('pat-prenom',p.PRENOM);
+  sv('pat-ddn',p.DDN); sv('pat-tel',p.TEL); sv('pat-adresse',p.ADRESSE);
+  sv('pat-medecin',p.MEDECIN); sv('pat-mutuelle',p.MUTUELLE);
+  sv('pat-nss',p.NSS); sv('pat-statut',p.STATUT);
+  sv('pat-patho',p.PATHO); sv('pat-notes',p.NOTES);
+  openModal('modal-patient');
+}
+
+function savePat(){
+  const nom=gv('pat-nom').trim();
+  if(!nom){ toast('Nom requis','error'); return; }
+  const id=gv('pat-id')||uid();
+  const obj={
+    ID:id, NOM:nom, PRENOM:gv('pat-prenom'), DDN:gv('pat-ddn'),
+    TEL:gv('pat-tel'), ADRESSE:gv('pat-adresse'), MEDECIN:gv('pat-medecin'),
+    MUTUELLE:gv('pat-mutuelle'), NSS:gv('pat-nss'), STATUT:gv('pat-statut'),
+    PATHO:gv('pat-patho'), NOTES:gv('pat-notes')
+  };
+  const i=STATE.patients.findIndex(x=>x.ID===id);
+  if(i>=0) STATE.patients[i]=obj; else STATE.patients.push(obj);
+  saveAllLocal(); pushToSheets('savePat',obj);
+  renderPatients(); closeModal('modal-patient');
+  toast('Patient sauvegardé','success');
+}
+
+function deletePat(id){
+  if(!confirm('Supprimer ce patient ?')) return;
+  STATE.patients=STATE.patients.filter(p=>p.ID!==id);
+  saveAllLocal(); renderPatients();
+  toast('Patient supprimé','warning');
+}
+
+// ── PLANNING ──────────────────────────────────────
+function renderPlanning(){
+  const data=STATE.planning.sort((a,b)=>a.DATE>b.DATE?1:-1);
+  eid('page-content').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2><i class="fas fa-calendar-alt" style="color:var(--secondary)"></i> Planning (${data.length})</h2>
+      <button class="btn btn-primary btn-sm" onclick="openNewRdv()">
+        <i class="fas fa-plus"></i> Nouveau RDV
+      </button>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr style="background:var(--bg3)">
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Date</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Heure</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Patient</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Type</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Technicien</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Statut</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Actions</th>
+      </tr></thead>
+      <tbody>
+        ${data.length ? data.map(r=>`
+          <tr style="border-bottom:1px solid var(--border)"
+            onmouseover="this.style.background='var(--bg3)'"
+            onmouseout="this.style.background=''">
+            <td style="padding:10px;font-weight:600">${fmtDate(r.DATE)}</td>
+            <td style="padding:10px">${r.HEURE||'—'}</td>
+            <td style="padding:10px">${r.PATIENT||'—'}</td>
+            <td style="padding:10px">${r.TYPE||'—'}</td>
+            <td style="padding:10px">${r.TECHNICIEN||'—'}</td>
+            <td style="padding:10px">
+              <span class="badge ${r.STATUT==='Confirmé'?'badge-success':r.STATUT==='Annulé'?'badge-danger':'badge-warning'}">
+                ${r.STATUT||'—'}
+              </span>
+            </td>
+            <td style="padding:10px;display:flex;gap:6px">
+              <button class="btn btn-primary btn-sm" onclick="editRdv('${r.ID}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteRdv('${r.ID}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>`).join('')
+        : '<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--text3)">Aucun RDV</td></tr>'}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function openNewRdv(){
+  sv('rdv-date',today()); sv('rdv-heure','08:00');
+  ['rdv-id','rdv-patient','rdv-adresse','rdv-notes'].forEach(id=>sv(id,''));
+  sv('rdv-type','Installation'); sv('rdv-statut','Confirmé');
+  populateRdvSelects();
+  openModal('modal-rdv');
+}
+
+function editRdv(id){
+  const r=STATE.planning.find(x=>x.ID===id); if(!r) return;
+  sv('rdv-id',r.ID); sv('rdv-date',r.DATE); sv('rdv-heure',r.HEURE);
+  sv('rdv-patient',r.PATIENT); sv('rdv-type',r.TYPE);
+  sv('rdv-adresse',r.ADRESSE); sv('rdv-statut',r.STATUT);
+  sv('rdv-notes',r.NOTES);
+  populateRdvSelects(); sv('rdv-tech',r.TECHNICIEN);
+  openModal('modal-rdv');
+}
+
+function populateRdvSelects(){
+  const ts=eid('rdv-tech'); if(ts){
+    ts.innerHTML=STATE.techniciens.map(t=>`
+      <option value="${t.NOM} ${t.PRENOM}">${t.NOM} ${t.PRENOM}</option>`).join('');
+  }
+  const lp=eid('listRdvPat'); if(lp){
+    lp.innerHTML=STATE.patients.map(p=>`<option value="${p.NOM} ${p.PRENOM}">`).join('');
+  }
+}
+
+function saveRdv(){
+  const date=gv('rdv-date');
+  if(!date){ toast('Date requise','error'); return; }
+  const id=gv('rdv-id')||uid();
+  const obj={
+    ID:id, DATE:date, HEURE:gv('rdv-heure'), PATIENT:gv('rdv-patient'),
+    TYPE:gv('rdv-type'), TECHNICIEN:gv('rdv-tech'),
+    ADRESSE:gv('rdv-adresse'), STATUT:gv('rdv-statut'), NOTES:gv('rdv-notes')
+  };
+  const i=STATE.planning.findIndex(x=>x.ID===id);
+  if(i>=0) STATE.planning[i]=obj; else STATE.planning.push(obj);
+  saveAllLocal(); pushToSheets('saveRdv',obj);
+  renderPlanning(); closeModal('modal-rdv');
+  toast('RDV sauvegardé','success');
+}
+
+function deleteRdv(id){
+  if(!confirm('Supprimer ce RDV ?')) return;
+  STATE.planning=STATE.planning.filter(r=>r.ID!==id);
+  saveAllLocal(); renderPlanning();
+  toast('RDV supprimé','warning');
+}
+
+// ── MAINTENANCES ──────────────────────────────────
+function renderMaintenances(){
+  const data=STATE.maintenances;
+  eid('page-content').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2><i class="fas fa-cog" style="color:var(--warning)"></i> Maintenances (${data.length})</h2>
+      <button class="btn btn-primary btn-sm" onclick="openNewMaint()">
+        <i class="fas fa-plus"></i> Nouvelle
+      </button>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr style="background:var(--bg3)">
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Équipement</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Type</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Dernière</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Prochaine</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Technicien</th>
+        <th style="padding:10px;text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase">Actions</th>
+      </tr></thead>
+      <tbody>
+        ${data.length ? data.map(m=>`
+          <tr style="border-bottom:1px solid var(--border)"
+            onmouseover="this.style.background='var(--bg3)'"
+            onmouseout="this.style.background=''">
+            <td style="padding:10px;font-family:monospace;font-weight:600">${m.EQUIPEMENT||'—'}</td>
+            <td style="padding:10px">${m.TYPE||'—'}</td>
+            <td style="padding:10px">${fmtDate(m.DATE)}</td>
+            <td style="padding:10px">
+              <span class="badge ${m.NEXT&&m.NEXT<today()?'badge-danger':m.NEXT?'badge-warning':'badge-secondary'}">
+                ${fmtDate(m.NEXT)}
+              </span>
+            </td>
+            <td style="padding:10px">${m.TECHNICIEN||'—'}</td>
+            <td style="padding:10px;display:flex;gap:6px">
+              <button class="btn btn-primary btn-sm" onclick="editMaint('${m.ID}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteMaint('${m.ID}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>`).join('')
+        : '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--text3)">Aucune maintenance</td></tr>'}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function openNewMaint(){
+  ['maint-id','maint-equip','maint-date','maint-next','maint-notes'].forEach(id=>sv(id,''));
+  sv('maint-date',today()); sv('maint-type','Préventive');
+  populateMaintSelects();
+  openModal('modal-maint');
+}
+
+function editMaint(id){
+  const m=STATE.maintenances.find(x=>x.ID===id); if(!m) return;
+  sv('maint-id',m.ID); sv('maint-equip',m.EQUIPEMENT);
+  sv('maint-type',m.TYPE); sv('maint-date',m.DATE);
+  sv('maint-next',m.NEXT); sv('maint-notes',m.NOTES);
+  populateMaintSelects(); sv('maint-tech',m.TECHNICIEN);
+  openModal('modal-maint');
+}
+
+function populateMaintSelects(){
+  const ts=eid('maint-tech'); if(ts){
+    ts.innerHTML=STATE.techniciens.map(t=>`
+      <option value="${t.NOM} ${t.PRENOM}">${t.NOM} ${t.PRENOM}</option>`).join('');
+  }
+  const le=eid('maint-equip-list'); if(le){
+    le.innerHTML=STATE.equipements.map(e=>`<option value="${e.SERIE}">`).join('');
+  }
+}
+
+function saveMaint(){
+  const equip=gv('maint-equip').trim();
+  if(!equip){ toast('Équipement requis','error'); return; }
+  const id=gv('m
