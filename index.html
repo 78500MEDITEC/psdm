@@ -2060,7 +2060,7 @@ function renderParc() {
       <td>${e.patient||'<span style="color:var(--text3)">--</span>'}</td>
       <td><span class="badge badge-${statBadge(e.statut)}">${e.statut}</span></td>
       <td>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=36x36&data=${encodeURIComponent(e.id)}"
+        <img src="://api.qrserver.com/v1/create-qr-code/?size=36x36&data=${encodeURIComponent(e.id)}"
           width="32" height="32" style="border-radius:4px;background:white;padding:2px;cursor:pointer"
           onclick="showToast('QR : ${e.id}','info')" title="QR Code ${e.id}">
       </td>
@@ -2193,7 +2193,7 @@ function renderMaintenance(){
 }
 
 function renderQRCodes(){
-  document.getElementById('qrGrid').innerHTML=DB.equipements.slice(0,6).map(e=>`<div style="text-align:center;padding:12px;background:var(--bg4);border-radius:10px;border:1px solid var(--border)"><img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(e.id+'|'+e.type+'|'+e.serie)}" style="border-radius:6px;background:white;padding:4px;width:80px;height:80px"><div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--accent);margin-top:6px">${e.id}</div><div style="font-size:10px;color:var(--text3)">${e.type}</div></div>`).join('');
+  document.getElementById('qrGrid').innerHTML=DB.equipements.slice(0,6).map(e=>`<div style="text-align:center;padding:12px;background:var(--bg4);border-radius:10px;border:1px solid var(--border)"><img src="://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(e.id+'|'+e.type+'|'+e.serie)}" style="border-radius:6px;background:white;padding:4px;width:80px;height:80px"><div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--accent);margin-top:6px">${e.id}</div><div style="font-size:10px;color:var(--text3)">${e.type}</div></div>`).join('');
 }
 
 function renderMobile(){
@@ -2289,7 +2289,7 @@ function showMatChecks(type){
 //  GOOGLE SHEETS CONFIG
 // =======================================================
 const SHEETS_CONFIG = {
-  url:          'https://script.google.com/macros/s/AKfycbyXFGK-ChsQGVk8zEwrsMkKCnHaagDZok_TQ3NgivrZlheqk_1ETJBQge1UAkwm2E8z/exec',
+  url:          'https://script.google.com/macros/s/AKfycbzzF2NXJwUF1Y4TmMzvfKK307YNdscfLu8d0gFd-POuv0mL2pnTkYjrXBM0ipOWo5Pg/exec',
   apiKey:       '78500Meditecpsdm',
   syncInterval: 30000,
   autoSync:     true
