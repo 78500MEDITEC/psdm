@@ -2104,7 +2104,9 @@ function renderPatients() {
     </td>
     <td style="font-size:12px">${p.naiss||p.DATE_NAISSANCE||'--'}</td>
     <td style="font-size:12px;font-family:'JetBrains Mono',monospace">${p.tel||p.TELEPHONE||'--'}</td>
-    <td style="font-size:12px">${p.cp||p.CP||''} ${p.ville||p.VILLE||p.adresse||p.ADRESSE||'--'}</td>
+    <td style="font-size:12px">
+  ${(p.cp||p.CP)||''} ${(p.ville||p.VILLE)||''}${((p.cp||p.CP)||(p.ville||p.VILLE)) ? '' : '--'}
+</td>
     <td><span class="badge badge-${(p.etab||p.ETABLISSEMENT||'')=='DOMICILE'?'green':(p.etab||p.ETABLISSEMENT||'')=='EHPAD'?'blue':'orange'}">${p.etab||p.ETABLISSEMENT||'--'}</span></td>
     <td style="font-size:12px">${p.equip||p.EQUIPEMENTS||'--'}</td>
     <td><div style="display:flex;gap:4px">
@@ -2363,9 +2365,13 @@ function normalizePatient(p) {
     prenom:  p.prenom || p.PRENOM || '',
     naiss:   p.naiss || p.DATE_NAISSANCE || p.NAISSANCE || '',
     adresse: p.adresse || p.ADRESSE || '',
+    cp:      p.cp || p.CP || '',
+    ville:   p.ville || p.VILLE || '',
     tel:     p.tel || p.TELEPHONE || p.TEL || '',
+    medecin: p.medecin || p.MEDECIN || '',
     etab:    (p.etab || p.ETABLISSEMENT || p.TYPE_ETABLISSEMENT || 'DOMICILE').toUpperCase(),
-    equip:   p.equip || p.NB_EQUIPEMENTS || p.EQUIPEMENTS || 0
+    equip:   p.equip || p.NB_EQUIPEMENTS || p.EQUIPEMENTS || 0,
+    observation: p.observation || p.OBSERVATION || ''
   };
 }
 
