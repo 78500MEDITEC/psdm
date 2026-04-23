@@ -552,7 +552,7 @@ canvas#sigCanvas,canvas#sigCanvas2{display:block;cursor:crosshair;touch-action:n
       <div class="user-avatar" id="sb-avatar">A</div>
       <div>
         <div class="user-name" id="sb-username">Admin</div>
-        <div class="user-role"><span class="live-dot"></span>Connecté</div>
+        <div class="user-role"><span class="live-dot"></span>Connecte <span id="sync-status-lbl" style="font-size:10px;margin-left:4px;color:var(--text3)">☁</span></div>
       </div>
       <div class="logout-link" onclick="doAdminLogout()" title="Déconnexion">
         <i class="fas fa-sign-out-alt"></i>
@@ -2299,12 +2299,28 @@ function showMatChecks(type){
 // =======================================================
 //  GOOGLE SHEETS CONFIG
 // =======================================================
-const SHEETS_CONFIG = {
-  url:          'https://script.google.com/macros/s/AKfycbzzF2NXJwUF1Y4TmMzvfKK307YNdscfLu8d0gFd-POuv0mL2pnTkYjrXBM0ipOWo5Pg/exec',
-  apiKey:       '78500Meditecpsdm',
-  syncInterval: 30000,
-  autoSync:     true
+// ── JSONBin — base de données partagée ───────────────────────────────────────
+const JSONBIN_API_KEY     = '$2a$10$5zO6qG217JnGLugyn8VrNesbvja1Yo8gLVIHtCTUWJlqwsMJefW7e';
+const JSONBIN_BIN_METIER  = '69e9c374856a68218962fe34';
+const JSONBIN_BIN_CLIENTS = '69e9c449aaba8821972b2e49';
+const JSONBIN_CONFIGURED  = true;
+
+const jbGet = async (binId) => {
+  const r = await fetch('https://api.jsonbin.io/v3/b/'+binId+'/latest',
+    {headers:{'X-Master-Key':JSONBIN_API_KEY}});
+  const d = await r.json(); return d.record || {};
 };
+const jbSave = async (binId, data) => {
+  await fetch('https://api.jsonbin.io/v3/b/'+binId, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_API_KEY},
+    body:JSON.stringify(data)
+  });
+};
+
+// Compatibilite — gardé pour ne pas casser le reste du code
+const SHEETS_CONFIG = { url:'', apiKey:'', syncInterval:60000, autoSync:true };
+async function sheetsGet(action, params={}) { throw new Error('JSONBin utilise'); }
 
 async function sheetsGet(action, params={}) {
   const qs = new URLSearchParams({action, key: SHEETS_CONFIG.apiKey, ...params});
@@ -2386,109 +2402,63 @@ function normalizeTech(t) {
 }
 
 async function syncFromSheets() {
+  if(!JSONBIN_CONFIGURED){
+    showToast('JSONBin non configure -- mode local uniquement','warning');
+    setSyncStatus('error'); return;
+  }
   try {
     setSyncStatus('syncing');
-    showToast(' Connexion Google Sheets...', 'info');
-    
-    // Appel direct getAll
-    const url = `${SHEETS_CONFIG.url}?action=getAll&key=${SHEETS_CONFIG.apiKey}`;
-    const r = await fetch(url);
-    
-    const text = await r.text();
-    let res;
-    try { res = JSON.parse(text); }
-    catch(e) {
-      // Si la reponse n'est pas du JSON => probleme de deploiement
-      console.error('Reponse Apps Script non-JSON:', text.substring(0,300));
-      throw new Error('Apps Script renvoie du HTML (redeploiement requis)');
-    }
-    
-    if(!res.ok) throw new Error(res.error || 'Erreur inconnue');
-    
-    // Mettre a jour DB uniquement si donnees recues
+    showToast('Synchronisation JSONBin...','info');
+    const metier = await jbGet(JSONBIN_BIN_METIER);
     let updated = [];
-    if(res.data.equipements?.length)   { DB.equipements=res.data.equipements.map(normalizeEquip);   updated.push(DB.equipements.length+' equip.'); }
-    if(res.data.interventions?.length) { DB.interventions=res.data.interventions; updated.push(res.data.interventions.length+' interv.'); }
-    if(res.data.patients?.length)      { DB.patients=res.data.patients.map(normalizePatient); updated.push(DB.patients.length+' patients'); }
-    if(res.data.techniciens?.length)   { DB.techniciens=res.data.techniciens.map(normalizeTech); }
-    if(res.data.maintenances?.length)  { DB.maintenances=res.data.maintenances; }
-    
-    // Charger aussi les clients
-    try {
-      const cliR = await fetch(`${SHEETS_CONFIG.url}?action=getClients&key=${SHEETS_CONFIG.apiKey}`);
-      const cliJ = await cliR.json();
-      if(cliJ.ok && cliJ.data?.length) {
-        CLIENTS_LIST = cliJ.data;
-        updated.push(cliJ.data.length+' clients');
-      }
-    } catch(e) {}
-    
-    // Rafraichir toutes les vues
+    if(metier.equipements?.length)   { DB.equipements  =metier.equipements.map(normalizeEquip);  updated.push(DB.equipements.length+' equip.'); }
+    if(metier.interventions?.length) { DB.interventions =metier.interventions;                    updated.push(DB.interventions.length+' interv.'); }
+    if(metier.patients?.length)      { DB.patients      =metier.patients.map(normalizePatient);   updated.push(DB.patients.length+' patients'); }
+    if(metier.techniciens?.length)   { DB.techniciens   =metier.techniciens.map(normalizeTech); }
+    if(metier.maintenances?.length)  { DB.maintenances  =metier.maintenances; }
+    const cliBin = await jbGet(JSONBIN_BIN_CLIENTS);
+    if(cliBin.clients?.length) { CLIENTS_LIST=cliBin.clients; updated.push(cliBin.clients.length+' clients'); }
+    if(cliBin.suivi?.length)   { SUIVI_DATA  =cliBin.suivi; }
+    if(cliBin.rapport?.length) { RAPPORT_LINES=cliBin.rapport; }
     renderDashboard();
-    if(currentPage === 'parc') renderParc();
-    if(currentPage === 'interventions') renderInterventions();
-    if(currentPage === 'patients') renderPatients();
-    if(currentPage === 'clients') renderClientsTable();
-    
+    if(currentPage==='parc')          renderParc();
+    if(currentPage==='interventions') renderInterventions();
+    if(currentPage==='patients')      renderPatients();
+    if(currentPage==='clients')       renderClientsTable();
+    if(currentPage==='suivi_client')  renderSuivi();
     setSyncStatus('ok');
-    saveLocal(); // Persister les donnees Sheets localement
-    const msg = updated.length ? ' Sheets synchronise -- ' + updated.join(' . ') : ' Connecte (Sheets vide)';
-    showToast(msg, 'success');
-    
-    // Mettre a jour le bouton wifi
-    const wifiBtn = document.getElementById('btn-test-cnx');
-    if(wifiBtn) { wifiBtn.style.borderColor='var(--green)'; wifiBtn.style.color='var(--green)'; }
-    
+    saveLocal();
+    showToast('JSONBin synchronise -- '+(updated.length?updated.join(', '):'bins vides'),'success');
+    const wifiBtn=document.getElementById('btn-test-cnx');
+    if(wifiBtn){wifiBtn.style.borderColor='var(--green)';wifiBtn.style.color='var(--green)';}
   } catch(e) {
     setSyncStatus('error');
-    console.error('Sync error:', e.message);
-    
-    // Message d'erreur precis
-    let msg = ' Hors-ligne';
-    if(e.name === 'AbortError' || e.message.includes('timeout')) {
-      msg = ' Timeout -- Apps Script trop lent ou non deploye';
-    } else if(e.message.includes('HTML')) {
-      msg = ' Redeploiement Apps Script requis (cliquez )';
-    } else if(e.message.includes('Failed to fetch') || e.message.includes('NetworkError')) {
-      msg = ' Pas de reseau ou URL invalide (cliquez )';
-    } else {
-      msg = ' ' + e.message.substring(0,60);
-    }
-    showToast(msg, 'warning');
-    
-    // Bouton wifi rouge
-    const wifiBtn = document.getElementById('btn-test-cnx');
-    if(wifiBtn) { wifiBtn.style.borderColor='var(--red)'; wifiBtn.style.color='var(--red)'; }
+    showToast('Sync JSONBin echoue: '+e.message.substring(0,60),'warning');
+    const wifiBtn=document.getElementById('btn-test-cnx');
+    if(wifiBtn){wifiBtn.style.borderColor='var(--red)';wifiBtn.style.color='var(--red)';}
   }
 }
 
 
 async function testConnexion() {
-  showToast(' Test de connexion...','info');
+  if(!JSONBIN_CONFIGURED){showToast('JSONBin non configure','warning');return;}
+  showToast('Test JSONBin...','info');
   try {
-    const res = await Promise.race([
-      fetch(SHEETS_CONFIG.url + '?action=ping&key=' + SHEETS_CONFIG.apiKey),
-      new Promise((_,r) => setTimeout(() => r(new Error('timeout 8s')), 8000))
-    ]);
-    const json = await res.json();
-    if(json.ok) {
-      showToast(' Connexion OK -- Apps Script v'+json.version,'success');
-    } else {
-      showToast(' Apps Script repond: ' + json.error,'error');
-    }
-  } catch(e) {
-    showToast(' Connexion impossible: ' + e.message,'error');
-    // Ouvrir l'URL dans un nouvel onglet pour voir l'erreur
-    if(confirm('Connexion echouee. Ouvrir l\'URL Apps Script dans un nouvel onglet pour diagnostiquer ?')) {
-      window.open(SHEETS_CONFIG.url + '?action=ping&key=' + SHEETS_CONFIG.apiKey, '_blank');
-    }
-  }
+    await jbGet(JSONBIN_BIN_METIER);
+    showToast('JSONBin connecte !','success');
+    const b=document.getElementById('btn-test-cnx');
+    if(b){b.style.borderColor='var(--green)';b.style.color='var(--green)';}
+  } catch(e){showToast('JSONBin inaccessible: '+e.message,'error');}
 }
-
 function setSyncStatus(status){
-  const bar=document.getElementById('sync-bar');if(!bar)return;
-  bar.style.background=status==='syncing'?'#00d4ff':status==='ok'?'#00e5a0':'#ff4757';
-  bar.style.opacity=status==='ok'?'0':'1';
+  const bar=document.getElementById('sync-bar');if(bar){
+    bar.style.background=status==='syncing'?'#00d4ff':status==='ok'?'#00e5a0':'#ff4757';
+    bar.style.opacity=status==='ok'?'0':'1';
+  }
+  const lbl=document.getElementById('sync-status-lbl');if(lbl){
+    lbl.textContent=status==='syncing'?'Sync...':status==='ok'?'Synchronise':'Hors-ligne';
+    lbl.style.color=status==='syncing'?'var(--accent)':status==='ok'?'var(--green)':'var(--red)';
+  }
 }
 
 // =======================================================
@@ -2570,8 +2540,15 @@ function saveLocal() {
   LS.save('suivi',      SUIVI_DATA);
   LS.save('rapport',    RAPPORT_LINES);
   LS.save('mercuriales', CURRENT_MERC);
-  LS.save('sheets_url', SHEETS_CONFIG.url);
-  LS.save('sheets_key', SHEETS_CONFIG.apiKey);
+  pushToJSONBin();
+}
+async function pushToJSONBin() {
+  if(!JSONBIN_CONFIGURED) return;
+  try {
+    await jbSave(JSONBIN_BIN_CLIENTS, {clients:CLIENTS_LIST, suivi:SUIVI_DATA, rapport:RAPPORT_LINES});
+    await jbSave(JSONBIN_BIN_METIER,  {equipements:DB.equipements, interventions:DB.interventions, patients:DB.patients, maintenances:DB.maintenances, techniciens:DB.techniciens});
+    setSyncStatus('ok');
+  } catch(e){ console.warn('JSONBin push:',e.message); setSyncStatus('error'); }
 }
 
 function loadLocal() {
@@ -2584,8 +2561,7 @@ function loadLocal() {
   if(clients.length)  CLIENTS_LIST  = clients;
   if(suivi.length)    SUIVI_DATA    = suivi;
   if(rapport.length)  RAPPORT_LINES = rapport;
-  if(url)             SHEETS_CONFIG.url    = url;
-  if(key)             SHEETS_CONFIG.apiKey = key;
+  // JSONBin — sheets_url/key ignores
   
   const total = clients.length + suivi.length;
   if(total > 0) console.log('[Local] Charge:', clients.length, 'clients,', suivi.length, 'mouvements');
@@ -3142,8 +3118,7 @@ function initApp(){
   loadLocal();
   
   // Pre-remplir l'URL dans le modal config (apres loadLocal pour avoir l'URL sauvee)
-  const cfgUrl = document.getElementById('cfg-sheets-url');
-  if(cfgUrl) cfgUrl.value = SHEETS_CONFIG.url;
+  // JSONBin configure — pas d'URL Sheets a afficher
   // Mettre a jour lastLogin pour l'utilisateur connecte
   const currentUser = document.getElementById('sb-username')?.textContent?.toLowerCase();
   if(currentUser && typeof ADMIN_META !== 'undefined') {
